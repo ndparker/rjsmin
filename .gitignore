@@ -1,0 +1,13 @@
+Makefile
+*.py[cod]
+*.so
+dist
+build
+__pycache__
+docs/_userdoc/_build/
+docs/apidoc/
+docs/userdoc/
+_website/
+*.ebuild
+.*.sw?
+MANIFEST

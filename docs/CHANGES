@@ -1,0 +1,58 @@
+Changes with version 1.0.7
+
+ *) Fix inconsistency between Python and C (Python implementation was buggy).
+    Spotted by: Dave Smith <dave thesmithfam.org>
+
+ *) Added support for jython 2.7
+
+
+Changes with version 1.0.6
+
+ *) Added compat option to setup.py supporting the pip installer
+
+ *) Added support for pypy (1.9, 2.0)
+
+ *) Added support for jython (2.5)
+
+
+Changes with version 1.0.5
+
+ *) Newline removal before ! operator was made more sensible.
+
+
+Changes with version 1.0.4
+
+ *) Added support for Python 3.3
+
+ *) Collapsion protection was reduced to "+ +" and "- -" sequences (which
+    still includes longer sequences like "+ ++")
+
+
+Changes with version 1.0.3
+
+ *) "+ ++" and "- --" sequences are no longer collapsed. They were before,
+    because the original jsmin collapsed them, too.
+
+ *) Updated benchmarks, added slimit and removed jsmin v8 (because it produced
+    invalid results).
+
+ *) Removed "classic" regex variant.
+
+
+Changes with version 1.0.2
+
+ *) Although it should work, python 2.3 is no longer supported.
+    (No suitable test environment)
+
+ *) "return /regex/" is now recognized as regex expression. It wasn't before,
+    because the original jsmin ignored that, too.
+
+
+Changes with version 1.0.1
+
+ *) Add C extension reimplementing the regex from rjsmin.py
+
+
+Changes with version 1.0.0
+
+ *) First stable release.

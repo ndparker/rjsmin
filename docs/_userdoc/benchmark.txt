@@ -1,0 +1,174 @@
+.. license:
+    Copyright 2011 - 2013
+    André Malo or his licensors, as applicable
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+:orphan:
+
+
+====================
+ rJSmin - Benchmark
+====================
+
+The following numbers have been measured with the bench.py script
+provided in the source distribution. Since the numbers don't vary much
+between python minor releases (e.g. 2.6 vs 2.7), only the benchmarks for
+2.7 and 3.3 are given below. The :file:`docs/BENCHMARKS` file in the source
+distribution contains the full list.
+
+Here's the list of benchmarked implementations:
+
+- Simple port is the original jsmin.py port by Baruch Even
+- jsmin 2.0.2 is a speed-refactored python port by Dave St.Germain
+- slimit 0.7 is a minifier based on a parse/generate-iteration. It's
+  available for python 2 only.
+- slimit 0.7 (mangle) is slimit 0.7 with name mangeling enabled
+- |rjsmin| is this very project
+- _\ |rjsmin| is the C reimplementation of |rjsmin|
+
+Note that jsmin 2.0.2 and slimit produce output different from
+the original jsmin.c. Also the simple port was modified to use cStringIO
+if available (it's faster then) or io (for python 3).
+
+And here's a list of the benchmarked javascript files:
+
+- apiviewer is a file from the qooxdoo framework. Very big and already
+  compressed.
+- bootstrap is the popular twitter toolkit, version 2.0.4
+- jquery is jquery-1.7.1.js; the uncompressed development download.
+- knockout is knockout-2.0.0.js, the compressed download.
+- markermanager is the V3 port of the google maps markermanager.
+
+Inside the parentheses are size information in KiB (actually: number of
+characters/1024). The sign behind the size value denotes the size difference
+in relation to the simple port (i.e. jsmin itself).
+
+
+Python 3.3.2
+~~~~~~~~~~~~
+
+.. rst-class:: benchmark
+
++---------------------+-----------------------+----------------------+
+| Name                | apiviewer (953.2)     | bootstrap (49.0)     |
++=====================+=======================+======================+
+| Simple Port         |  3072.57 ms (951.5 \*)|  130.17 ms (26.4 \*) |
++---------------------+-----------------------+----------------------+
+| jsmin 2.0.2         |   617.54 ms (951.4 <) |   21.93 ms (26.4 >)  |
++---------------------+-----------------------+----------------------+
+| slimit 0.7          | n/a                   | n/a                  |
++---------------------+-----------------------+----------------------+
+| slimit 0.7 (mangle) | n/a                   | n/a                  |
++---------------------+-----------------------+----------------------+
+| |rjsmin|            |    87.38 ms (951.5 =) |   21.41 ms (26.4 >)  |
++---------------------+-----------------------+----------------------+
+| _\ |rjsmin|         |     3.54 ms (951.5 =) |    0.24 ms (26.4 >)  |
++---------------------+-----------------------+----------------------+
+
+.. rst-class:: benchmark
+
++---------------------+-----------------------+----------------------+
+| Name                | jquery (242.4)        | knockout (38.9)      |
++=====================+=======================+======================+
+| Simple Port         |   682.02 ms (135.9 \*)|  122.96 ms (38.6 \*) |
++---------------------+-----------------------+----------------------+
+| jsmin 2.0.2         |   142.79 ms (136.5 >) |   26.48 ms (38.6 >)  |
++---------------------+-----------------------+----------------------+
+| slimit 0.7          | n/a                   | n/a                  |
++---------------------+-----------------------+----------------------+
+| slimit 0.7 (mangle) | n/a                   | n/a                  |
++---------------------+-----------------------+----------------------+
+| |rjsmin|            |   143.68 ms (135.9 =) |    4.81 ms (38.6 >)  |
++---------------------+-----------------------+----------------------+
+| _\ |rjsmin|         |     1.28 ms (135.9 =) |    0.14 ms (38.6 >)  |
++---------------------+-----------------------+----------------------+
+
+.. rst-class:: benchmark
+
++---------------------+-----------------------+----------------------+
+| Name                | markermanager (28.6)  |                      |
++=====================+=======================+======================+
+| Simple Port         |    63.52 ms (11.6 \*) |                      |
++---------------------+-----------------------+----------------------+
+| jsmin 2.0.2         |    14.63 ms (11.6 >)  |                      |
++---------------------+-----------------------+----------------------+
+| slimit 0.7          | n/a                   |                      |
++---------------------+-----------------------+----------------------+
+| slimit 0.7 (mangle) | n/a                   |                      |
++---------------------+-----------------------+----------------------+
+| |rjsmin|            |    9.14 ms (11.6 =)   |                      |
++---------------------+-----------------------+----------------------+
+| _\ |rjsmin|         |    0.12 ms (11.6 =)   |                      |
++---------------------+-----------------------+----------------------+
+
+
+Python 2.7.3
+~~~~~~~~~~~~
+
+.. rst-class:: benchmark
+
++---------------------+-----------------------+----------------------+
+| Name                | apiviewer (953.2)     | bootstrap (49.0)     |
++=====================+=======================+======================+
+| Simple Port         |  3598.04 ms (951.5 \*)|  145.62 ms (26.4 \*) |
++---------------------+-----------------------+----------------------+
+| jsmin 2.0.2         |   733.59 ms (951.4 <) |   31.66 ms (26.4 >)  |
++---------------------+-----------------------+----------------------+
+| slimit 0.7          | 16410.85 ms (944.3 <) |  465.21 ms (26.5 >)  |
++---------------------+-----------------------+----------------------+
+| slimit 0.7 (mangle) | 20213.29 ms (922.8 <) |  496.30 ms (22.2 <)  |
++---------------------+-----------------------+----------------------+
+| |rjsmin|            |    65.71 ms (951.5 =) |   17.40 ms (26.4 >)  |
++---------------------+-----------------------+----------------------+
+| _\ |rjsmin|         |     3.17 ms (951.5 =) |    0.22 ms (26.4 >)  |
++---------------------+-----------------------+----------------------+
+
+.. rst-class:: benchmark
+
++---------------------+-----------------------+----------------------+
+| Name                | jquery (242.4)        | knockout (38.9)      |
++=====================+=======================+======================+
+| Simple Port         |   765.49 ms (135.9 \*)|  146.34 ms (38.6 \*) |
++---------------------+-----------------------+----------------------+
+| jsmin 2.0.2         |   171.20 ms (136.5 >) |   31.57 ms (38.6 >)  |
++---------------------+-----------------------+----------------------+
+| slimit 0.7          |  2187.47 ms (134.0 <) |  858.22 ms (39.0 >)  |
++---------------------+-----------------------+----------------------+
+| slimit 0.7 (mangle) |  2614.89 ms ( 95.0 <) | 1036.05 ms (38.9 >)  |
++---------------------+-----------------------+----------------------+
+| |rjsmin|            |   117.15 ms (135.9 =) |    3.73 ms (38.6 >)  |
++---------------------+-----------------------+----------------------+
+| _\ |rjsmin|         |     1.22 ms (135.9 =) |    0.14 ms (38.6 >)  |
++---------------------+-----------------------+----------------------+
+
+.. rst-class:: benchmark
+
++---------------------+-----------------------+----------------------+
+| Name                | markermanager (28.6)  |                      |
++=====================+=======================+======================+
+| Simple Port         |    72.23 ms (11.6 \*) |                      |
++---------------------+-----------------------+----------------------+
+| jsmin 2.0.2         |    17.08 ms (11.6 >)  |                      |
++---------------------+-----------------------+----------------------+
+| slimit 0.7          |   177.14 ms (11.5 <)  |                      |
++---------------------+-----------------------+----------------------+
+| slimit 0.7 (mangle) |   202.09 ms ( 9.3 <)  |                      |
++---------------------+-----------------------+----------------------+
+| |rjsmin|            |     7.32 ms (11.6 =)  |                      |
++---------------------+-----------------------+----------------------+
+| _\ |rjsmin|         |     0.10 ms (11.6 =)  |                      |
++---------------------+-----------------------+----------------------+
+
+
+.. vim: ft=rest tw=72
