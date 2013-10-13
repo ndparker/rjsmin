@@ -91,6 +91,15 @@ directory of the source distribution package or online at
 .. placeholder: Download
 
 
+Bugs
+~~~~
+
+No bugs, of course. ;-)
+But if you've found one or have an idea how to improve |rjsmin|, feel free
+to send a pull request on `github <https://github.com/ndparker/rjsmin>`_
+or send a mail to <rjsmin-bugs@perlig.de>.
+
+
 Author Information
 ~~~~~~~~~~~~~~~~~~
 

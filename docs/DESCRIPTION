@@ -53,8 +53,9 @@ Bugs
 ~~~~
 
 No bugs, of course. ;-)
-But if you've found one or have an idea how to improve rjsmin, please
-send a mail to <rjsmin-bugs@perlig.de>.
+But if you've found one or have an idea how to improve rjsmin, feel free
+to send a pull request on `github <https://github.com/ndparker/rjsmin>`_
+or send a mail to <rjsmin-bugs@perlig.de>.
 
 
 Author Information

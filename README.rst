@@ -1,7 +1,11 @@
 .. -*- coding: utf-8 -*-
 
+===========================================
+ rJSmin - A Javascript Minifier For Python
+===========================================
+
 TABLE OF CONTENTS
-=================
+-----------------
 
 1. Introduction
 2. Copyright and License
@@ -13,7 +17,7 @@ TABLE OF CONTENTS
 
 
 INTRODUCTION
-============
+------------
 
 rJSmin is a javascript minifier written in python.
 
@@ -49,7 +53,7 @@ rjsmin.c is a reimplementation of rjsmin.py in C and speeds it up even more.
 
 
 COPYRIGHT AND LICENSE
-=====================
+---------------------
 
 Copyright 2011 - 2013
 André Malo or his licensors, as applicable.
@@ -61,13 +65,13 @@ root directory of the distribution or online at:
 
 
 SYSTEM REQUIREMENTS
-===================
+-------------------
 
 Both python 2 (>=2.4) and python 3 are supported.
 
 
 INSTALLATION
-============
+------------
 
 rJSmin is set up using the standard python distutils. So you can install
 it using the usual command:
@@ -92,7 +96,7 @@ Alternatively just copy rjsmin.py into your project and use it.
 
 
 DOCUMENTATION
-=============
+-------------
 
 A generated API documentation is available in the docs/apidoc/ directory.
 But you can just look into the module. It provides a simple function,
@@ -109,19 +113,20 @@ The latest documentation is also available online at
 
 
 BUGS
-====
+----
 
 No bugs, of course. ;-)
-But if you've found one or have an idea how to improve rjsmin,
-please send a mail to <rjsmin-bugs@perlig.de>.
+But if you've found one or have an idea how to improve rjsmin, feel free
+to send a pull request on `github <https://github.com/ndparker/rjsmin>`_
+or send a mail to <rjsmin-bugs@perlig.de>.
 
 
 AUTHOR INFORMATION
-==================
+------------------
 
 André "nd" Malo <nd@perlig.de>
 GPG: 0x8103A37E
 
 
-If God intended people to be naked, they would be born that way.
-                                                 -- Oscar Wilde
+  If God intended people to be naked, they would be born that way.
+                                                   -- Oscar Wilde
