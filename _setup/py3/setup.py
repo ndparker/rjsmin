@@ -183,7 +183,7 @@ def find_packages(manifest):
         sep = _os.path.join('1', '2')[1:-1]
     for root in collect:
         for dirpath, _, filenames in _shell.walk(_os.path.join(lib, root)):
-            if dirpath.find('.svn') >= 0:
+            if dirpath.find('.svn') >= 0 or dirpath.find('.git') >= 0:
                 continue
             if '__init__.py' in filenames:
                 packages[

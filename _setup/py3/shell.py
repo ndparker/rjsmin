@@ -272,7 +272,7 @@ def spawn(*argv, **kwargs):
 walk = _os.walk
 
 
-def files(base, wildcard='[!.]*', recursive=1, prune=('.svn', 'CVS')):
+def files(base, wildcard='[!.]*', recursive=1, prune=('.git', '.svn', 'CVS')):
     """ Determine a filelist """
     for dirpath, dirnames, filenames in walk(native(base)):
         for item in prune:
@@ -298,7 +298,7 @@ def files(base, wildcard='[!.]*', recursive=1, prune=('.svn', 'CVS')):
         dirnames.sort()
 
 
-def dirs(base, wildcard='[!.]*', recursive=1, prune=('.svn', 'CVS')):
+def dirs(base, wildcard='[!.]*', recursive=1, prune=('.git', '.svn', 'CVS')):
     """ Determine a filelist """
     for dirpath, dirnames, filenames in walk(native(base)):
         for item in prune:

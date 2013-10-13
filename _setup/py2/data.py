@@ -97,7 +97,7 @@ class Data(object):
         result = []
         for filename in files.files:
             _, elems = splitpath(filename)
-            if '.svn' in elems:
+            if '.svn' in elems or '.git' in elems:
                 continue
             result.append(filename)
         return cls(result, **kwargs)
