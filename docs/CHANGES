@@ -1,3 +1,17 @@
+Changes with version
+
+ *) Added command line option for keeping comments starting with an exclamation
+    mark (-b)
+
+ *) Added command line option for disabling the C implemention (-p)
+
+ *) Added support for python 3.4
+
+ *) Added support for keeping comments starting with an exclamation mark. This
+   feature can be enabled by passing keep_bang_comments=True to the jsmin
+   function.
+
+
 Changes with version 1.0.7
 
  *) Fix inconsistency between Python and C (Python implementation was buggy).

@@ -19,6 +19,7 @@ same results as the original ``jsmin.c``. It differs in the following ways:
 - "return /regex/" is recognized correctly.
 - "+ +" and "- -" sequences are not collapsed to '++' or '--'
 - Newlines before ! operators are removed more sensibly
+- Comments starting with an exclamation mark (``!``) can be kept optionally
 - rJSmin does not handle streams, but only complete strings. (However, the
   module provides a "streamy" interface).
 
@@ -40,7 +41,7 @@ Both python 2 (>=2.4) and python 3 are supported.
 Copyright and License
 ~~~~~~~~~~~~~~~~~~~~~
 
-Copyright 2011 - 2013
+Copyright 2011 - 2014
 André Malo or his licensors, as applicable.
 
 The whole package (except for the files in the bench/ directory) is

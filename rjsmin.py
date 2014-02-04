@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: ascii -*-
 #
-# Copyright 2011 - 2013
+# Copyright 2011 - 2014
 # Andr\xe9 Malo or his licensors, as applicable
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,6 +37,7 @@ same results as the original ``jsmin.c``. It differs in the following ways:
 - "return /regex/" is recognized correctly.
 - "+ +" and "- -" sequences are not collapsed to '++' or '--'
 - Newlines before ! operators are removed more sensibly
+- Comments starting with an exclamation mark (``!``) can be kept optionally
 - rJSmin does not handle streams, but only complete strings. (However, the
   module provides a "streamy" interface).
 
@@ -97,6 +98,9 @@ def _make_jsmin(python_only=False):
 
     line_comment = r'(?://[^\r\n]*)'
     space_comment = r'(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)'
+    space_comment_nobang = r'(?:/\*(?!!)[^*]*\*+(?:[^/*][^*]*\*+)*/)'
+    bang_comment = r'(?:/\*![^*]*\*+(?:[^/*][^*]*\*+)*/)'
+
     string1 = \
         r'(?:\047[^\047\\\r\n]*(?:\\(?:[^\r\n]|\r?\n|\r)[^\047\\\r\n]*)*\047)'
     string2 = r'(?:"[^"\\\r\n]*(?:\\(?:[^\r\n]|\r?\n|\r)[^"\\\r\n]*)*")'
@@ -108,6 +112,7 @@ def _make_jsmin(python_only=False):
         nospecial, charclass, nospecial
     )
     space = r'(?:%s|%s)' % (space_chars, space_comment)
+    space_nobang = r'(?:%s|%s)' % (space_chars, space_comment_nobang)
     newline = r'(?:%s?[\r\n])' % line_comment
 
     def fix_charclass(result):
@@ -173,7 +178,7 @@ def _make_jsmin(python_only=False):
 
     dull = r'[^\047"/\000-\040]'
 
-    space_sub = _re.compile((
+    space_sub_simple = _re.compile((
         r'(%(dull)s+)'
         r'|(%(strings)s%(dull)s*)'
         r'|(?<=%(preregex1)s)'
@@ -191,9 +196,9 @@ def _make_jsmin(python_only=False):
         r'|%(space)s+'
         r'|(?:%(newline)s%(space)s*)+'
     ) % locals()).sub
-    #print space_sub.__self__.pattern
+    #print space_sub_simple.__self__.pattern
 
-    def space_subber(match):
+    def space_subber_simple(match):
         """ Substitution callback """
         # pylint: disable = C0321, R0911
         groups = match.groups()
@@ -205,7 +210,41 @@ def _make_jsmin(python_only=False):
         elif groups[5] or groups[6] or groups[7]: return ' '
         else: return ''
 
-    def jsmin(script): # pylint: disable = W0621
+    space_sub_banged = _re.compile((
+        r'(%(dull)s+)'
+        r'|(%(strings)s%(dull)s*)'
+        r'|(%(bang_comment)s%(dull)s*)'
+        r'|(?<=%(preregex1)s)'
+            r'%(space)s*(?:%(newline)s%(space)s*)*'
+            r'(%(regex)s%(dull)s*)'
+        r'|(?<=%(preregex2)s)'
+            r'%(space)s*(?:%(newline)s%(space)s)*'
+            r'(%(regex)s%(dull)s*)'
+        r'|(?<=%(id_literal_close)s)'
+            r'%(space)s*(?:(%(newline)s)%(space)s*)+'
+            r'(?=%(id_literal_open)s)'
+        r'|(?<=%(id_literal)s)(%(space)s)+(?=%(id_literal)s)'
+        r'|(?<=\+)(%(space)s)+(?=\+)'
+        r'|(?<=-)(%(space)s)+(?=-)'
+        r'|%(space)s+'
+        r'|(?:%(newline)s%(space)s*)+'
+    ) % dict(locals(), space=space_nobang)).sub
+    #print space_sub_banged.__self__.pattern
+
+    def space_subber_banged(match):
+        """ Substitution callback """
+        # pylint: disable = C0321, R0911
+        groups = match.groups()
+        if groups[0]: return groups[0]
+        elif groups[1]: return groups[1]
+        elif groups[2]: return groups[2]
+        elif groups[3]: return groups[3]
+        elif groups[4]: return groups[4]
+        elif groups[5]: return '\n'
+        elif groups[6] or groups[7] or groups[8]: return ' '
+        else: return ''
+
+    def jsmin(script, keep_bang_comments=False): # pylint: disable = W0621
         r"""
         Minify javascript based on `jsmin.c by Douglas Crockford`_\.
 
@@ -220,17 +259,27 @@ def _make_jsmin(python_only=False):
           `script` : ``str``
             Script to minify
 
+          `keep_bang_comments` : ``bool``
+            Keep comments starting with an exclamation mark? (``/*!...*/``)
+
         :Return: Minified script
         :Rtype: ``str``
         """
-        return space_sub(space_subber, '\n%s\n' % script).strip()
+        if keep_bang_comments:
+            return space_sub_banged(
+                space_subber_banged, '\n%s\n' % script
+            ).strip()
+        else:
+            return space_sub_simple(
+                space_subber_simple, '\n%s\n' % script
+            ).strip()
 
     return jsmin
 
 jsmin = _make_jsmin()
 
 
-def jsmin_for_posers(script):
+def jsmin_for_posers(script, keep_bang_comments=False):
     r"""
     Minify javascript based on `jsmin.c by Douglas Crockford`_\.
 
@@ -242,59 +291,124 @@ def jsmin_for_posers(script):
        http://www.crockford.com/javascript/jsmin.c
 
     :Warning: This function is the digest of a _make_jsmin() call. It just
-              utilizes the resulting regex. It's just for fun here and may
+              utilizes the resulting regexes. It's here for fun and may
               vanish any time. Use the `jsmin` function instead.
 
     :Parameters:
       `script` : ``str``
         Script to minify
 
+      `keep_bang_comments` : ``bool``
+        Keep comments starting with an exclamation mark? (``/*!...*/``)
+
     :Return: Minified script
     :Rtype: ``str``
     """
-    def subber(match):
-        """ Substitution callback """
-        groups = match.groups()
-        return (
-            groups[0] or
-            groups[1] or
-            groups[2] or
-            groups[3] or
-            (groups[4] and '\n') or
-            (groups[5] and ' ') or
-            (groups[6] and ' ') or
-            (groups[7] and ' ') or
-            ''
+    if not keep_bang_comments:
+        rex = (
+            r'([^\047"/\000-\040]+)|((?:(?:\047[^\047\\\r\n]*(?:\\(?:[^\r\n]'
+            r'|\r?\n|\r)[^\047\\\r\n]*)*\047)|(?:"[^"\\\r\n]*(?:\\(?:[^\r\n]'
+            r'|\r?\n|\r)[^"\\\r\n]*)*"))[^\047"/\000-\040]*)|(?<=[(,=:\[!&|?'
+            r'{};\r\n])(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*'
+            r'][^*]*\*+)*/))*(?:(?:(?://[^\r\n]*)?[\r\n])(?:[\000-\011\013\0'
+            r'14\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*)*((?:/(?![\r'
+            r'\n/*])[^/\\\[\r\n]*(?:(?:\\[^\r\n]|(?:\[[^\\\]\r\n]*(?:\\[^\r'
+            r'\n][^\\\]\r\n]*)*\]))[^/\\\[\r\n]*)*/)[^\047"/\000-\040]*)|(?<'
+            r'=[\000-#%-,./:-@\[-^`{-~-]return)(?:[\000-\011\013\014\016-\04'
+            r'0]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*(?:(?:(?://[^\r\n]*)?['
+            r'\r\n])(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^'
+            r'*]*\*+)*/)))*((?:/(?![\r\n/*])[^/\\\[\r\n]*(?:(?:\\[^\r\n]|(?:'
+            r'\[[^\\\]\r\n]*(?:\\[^\r\n][^\\\]\r\n]*)*\]))[^/\\\[\r\n]*)*/)['
+            r'^\047"/\000-\040]*)|(?<=[^\000-!#%&(*,./:-@\[\\^`{|~])(?:[\000'
+            r'-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*(?'
+            r':((?:(?://[^\r\n]*)?[\r\n]))(?:[\000-\011\013\014\016-\040]|(?'
+            r':/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*)+(?=[^\000-\040"#%-\047)*,.'
+            r'/:-@\\-^`|-~])|(?<=[^\000-#%-,./:-@\[-^`{-~-])((?:[\000-\011\0'
+            r'13\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=[^\00'
+            r'0-#%-,./:-@\[-^`{-~-])|(?<=\+)((?:[\000-\011\013\014\016-\040]'
+            r'|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=\+)|(?<=-)((?:[\000-'
+            r'\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?'
+            r'=-)|(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]'
+            r'*\*+)*/))+|(?:(?:(?://[^\r\n]*)?[\r\n])(?:[\000-\011\013\014\0'
+            r'16-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*)+'
         )
+        def subber(match):
+            """ Substitution callback """
+            groups = match.groups()
+            return (
+                groups[0] or
+                groups[1] or
+                groups[2] or
+                groups[3] or
+                (groups[4] and '\n') or
+                (groups[5] and ' ') or
+                (groups[6] and ' ') or
+                (groups[7] and ' ') or
+                ''
+            )
+    else:
+        rex = (
+            r'([^\047"/\000-\040]+)|((?:(?:\047[^\047\\\r\n]*(?:\\(?:[^\r\n]'
+            r'|\r?\n|\r)[^\047\\\r\n]*)*\047)|(?:"[^"\\\r\n]*(?:\\(?:[^\r\n]'
+            r'|\r?\n|\r)[^"\\\r\n]*)*"))[^\047"/\000-\040]*)|((?:/\*![^*]*\*'
+            r'+(?:[^/*][^*]*\*+)*/)[^\047"/\000-\040]*)|(?<=[(,=:\[!&|?{};\r'
+            r'\n])(?:[\000-\011\013\014\016-\040]|(?:/\*(?!!)[^*]*\*+(?:[^/*'
+            r'][^*]*\*+)*/))*(?:(?:(?://[^\r\n]*)?[\r\n])(?:[\000-\011\013\0'
+            r'14\016-\040]|(?:/\*(?!!)[^*]*\*+(?:[^/*][^*]*\*+)*/))*)*((?:/('
+            r'?![\r\n/*])[^/\\\[\r\n]*(?:(?:\\[^\r\n]|(?:\[[^\\\]\r\n]*(?:'
+            r'\\[^\r\n][^\\\]\r\n]*)*\]))[^/\\\[\r\n]*)*/)[^\047"/\000-\040]'
+            r'*)|(?<=[\000-#%-,./:-@\[-^`{-~-]return)(?:[\000-\011\013\014\0'
+            r'16-\040]|(?:/\*(?!!)[^*]*\*+(?:[^/*][^*]*\*+)*/))*(?:(?:(?://['
+            r'^\r\n]*)?[\r\n])(?:[\000-\011\013\014\016-\040]|(?:/\*(?!!)[^*'
+            r']*\*+(?:[^/*][^*]*\*+)*/)))*((?:/(?![\r\n/*])[^/\\\[\r\n]*(?:('
+            r'?:\\[^\r\n]|(?:\[[^\\\]\r\n]*(?:\\[^\r\n][^\\\]\r\n]*)*\]))[^/'
+            r'\\\[\r\n]*)*/)[^\047"/\000-\040]*)|(?<=[^\000-!#%&(*,./:-@\[\\'
+            r'^`{|~])(?:[\000-\011\013\014\016-\040]|(?:/\*(?!!)[^*]*\*+(?:['
+            r'^/*][^*]*\*+)*/))*(?:((?:(?://[^\r\n]*)?[\r\n]))(?:[\000-\011'
+            r'\013\014\016-\040]|(?:/\*(?!!)[^*]*\*+(?:[^/*][^*]*\*+)*/))*)+'
+            r'(?=[^\000-\040"#%-\047)*,./:-@\\-^`|-~])|(?<=[^\000-#%-,./:-@'
+            r'\[-^`{-~-])((?:[\000-\011\013\014\016-\040]|(?:/\*(?!!)[^*]*\*'
+            r'+(?:[^/*][^*]*\*+)*/)))+(?=[^\000-#%-,./:-@\[-^`{-~-])|(?<=\+)'
+            r'((?:[\000-\011\013\014\016-\040]|(?:/\*(?!!)[^*]*\*+(?:[^/*][^'
+            r'*]*\*+)*/)))+(?=\+)|(?<=-)((?:[\000-\011\013\014\016-\040]|(?:'
+            r'/\*(?!!)[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=-)|(?:[\000-\011\013'
+            r'\014\016-\040]|(?:/\*(?!!)[^*]*\*+(?:[^/*][^*]*\*+)*/))+|(?:(?'
+            r':(?://[^\r\n]*)?[\r\n])(?:[\000-\011\013\014\016-\040]|(?:/\*('
+            r'?!!)[^*]*\*+(?:[^/*][^*]*\*+)*/))*)+'
+        )
+        def subber(match):
+            """ Substitution callback """
+            groups = match.groups()
+            return (
+                groups[0] or
+                groups[1] or
+                groups[2] or
+                groups[3] or
+                groups[4] or
+                (groups[5] and '\n') or
+                (groups[6] and ' ') or
+                (groups[7] and ' ') or
+                (groups[8] and ' ') or
+                ''
+            )
 
-    return _re.sub(
-        r'([^\047"/\000-\040]+)|((?:(?:\047[^\047\\\r\n]*(?:\\(?:[^\r\n]|\r?'
-        r'\n|\r)[^\047\\\r\n]*)*\047)|(?:"[^"\\\r\n]*(?:\\(?:[^\r\n]|\r?\n|'
-        r'\r)[^"\\\r\n]*)*"))[^\047"/\000-\040]*)|(?<=[(,=:\[!&|?{};\r\n])(?'
-        r':[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*'
-        r'(?:(?:(?://[^\r\n]*)?[\r\n])(?:[\000-\011\013\014\016-\040]|(?:/\*'
-        r'[^*]*\*+(?:[^/*][^*]*\*+)*/))*)*((?:/(?![\r\n/*])[^/\\\[\r\n]*(?:('
-        r'?:\\[^\r\n]|(?:\[[^\\\]\r\n]*(?:\\[^\r\n][^\\\]\r\n]*)*\]))[^/\\\['
-        r'\r\n]*)*/)[^\047"/\000-\040]*)|(?<=[\000-#%-,./:-@\[-^`{-~-]return'
-        r')(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/'
-        r'))*(?:(?:(?://[^\r\n]*)?[\r\n])(?:[\000-\011\013\014\016-\040]|(?:'
-        r'/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))*((?:/(?![\r\n/*])[^/\\\[\r\n]*(?'
-        r':(?:\\[^\r\n]|(?:\[[^\\\]\r\n]*(?:\\[^\r\n][^\\\]\r\n]*)*\]))[^/'
-        r'\\\[\r\n]*)*/)[^\047"/\000-\040]*)|(?<=[^\000-!#%&(*,./:-@\[\\^`{|'
-        r'~])(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)'
-        r'*/))*(?:((?:(?://[^\r\n]*)?[\r\n]))(?:[\000-\011\013\014\016-\040]'
-        r'|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*)+(?=[^\000-\040"#%-\047)*,./'
-        r':-@\\-^`|-~])|(?<=[^\000-#%-,./:-@\[-^`{-~-])((?:[\000-\011\013\01'
-        r'4\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=[^\000-#%-,./:'
-        r'-@\[-^`{-~-])|(?<=\+)((?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*'
-        r'\*+(?:[^/*][^*]*\*+)*/)))+(?=\+)|(?<=-)((?:[\000-\011\013\014\016-'
-        r'\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=-)|(?:[\000-\011\013'
-        r'\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))+|(?:(?:(?://[^'
-        r'\r\n]*)?[\r\n])(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^'
-        r'/*][^*]*\*+)*/))*)+', subber, '\n%s\n' % script
-    ).strip()
+    return _re.sub(rex, subber, '\n%s\n' % script).strip()
 
 
 if __name__ == '__main__':
-    import sys as _sys
-    _sys.stdout.write(jsmin(_sys.stdin.read()))
+    def main():
+        """ Main """
+        import sys as _sys
+        keep_bang_comments = (
+            '-b' in _sys.argv[1:]
+            or '-bp' in _sys.argv[1:]
+            or '-pb' in _sys.argv[1:]
+        )
+        if '-p' in _sys.argv[1:] or '-bp' in _sys.argv[1:] \
+                or '-pb' in _sys.argv[1:]:
+            global jsmin # pylint: disable = W0603
+            jsmin = _make_jsmin(python_only=True)
+        _sys.stdout.write(jsmin(
+            _sys.stdin.read(), keep_bang_comments=keep_bang_comments
+        ))
+    main()

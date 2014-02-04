@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, 2012
+ * Copyright 2011 - 2014
  * Andr\xe9 Malo or his licensors, as applicable
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -83,7 +83,8 @@ static const unsigned short rjsmin_charmask[128] = {
 };
 
 static Py_ssize_t
-rjsmin(const rchar *source, rchar *target, Py_ssize_t length)
+rjsmin(const rchar *source, rchar *target, Py_ssize_t length,
+       int keep_bang_comments)
 {
     const rchar *reset, *sentinel = source + length;
     rchar *tstart = target;
@@ -228,21 +229,44 @@ rjsmin(const rchar *source, rchar *target, Py_ssize_t length)
                     if (source < sentinel) {
                         switch (*source) {
                         case U('*'):
-                            reset = source;
-                            c = *source++;
-                            while (source < sentinel) {
-                                c = *source++;
-                                if (c == U('*') && source < sentinel
-                                    && *source == U('/')) {
-                                    ++source;
-                                    reset = NULL;
-                                    break;
+                            reset = source++;
+                            /* copy bang comment, if requested */
+                            if (   keep_bang_comments && source < sentinel
+                                && *source == U('!')) {
+                                *target++ = U('/');
+                                *target++ = U('*');
+                                *target++ = *source++;
+                                while (source < sentinel) {
+                                    c = *source++;
+                                    *target++ = c;
+                                    if (c == U('*') && source < sentinel
+                                        && *source == U('/')) {
+                                        *target++ = *source++;
+                                        reset = NULL;
+                                        break;
+                                    }
                                 }
+                                if (!reset)
+                                    continue;
+                                target -= source - reset;
+                                source = reset;
                             }
-                            if (!reset)
-                                continue;
-                            source = reset;
-                            *target++ = U('/');
+                            /* strip regular comment */
+                            else {
+                                while (source < sentinel) {
+                                    c = *source++;
+                                    if (c == U('*') && source < sentinel
+                                        && *source == U('/')) {
+                                        ++source;
+                                        reset = NULL;
+                                        break;
+                                    }
+                                }
+                                if (!reset)
+                                    continue;
+                                source = reset;
+                                *target++ = U('/');
+                            }
                             goto cont;
                         case U('/'):
                             ++source;
@@ -311,15 +335,19 @@ substitution regex.\n\
   `script` : ``str``\n\
     Script to minify\n\
 \n\
+  `keep_bang_comments` : ``bool``\n\
+    Keep comments starting with an exclamation mark? (``/*!...*/``)\n\
+\n\
 :Return: Minified script\n\
 :Rtype: ``str``");
 
 static PyObject *
 rjsmin_jsmin(PyObject *self, PyObject *args, PyObject *kwds)
 {
-    PyObject *script, *result;
-    static char *kwlist[] = {"script", NULL};
+    PyObject *script, *keep_bang_comments_ = NULL, *result;
+    static char *kwlist[] = {"script", "keep_bang_comments", NULL};
     Py_ssize_t slength, length;
+    int keep_bang_comments;
 #ifdef EXT2
     int uni;
 #define UOBJ "O"
@@ -328,9 +356,17 @@ rjsmin_jsmin(PyObject *self, PyObject *args, PyObject *kwds)
 #define UOBJ "U"
 #endif
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, UOBJ, kwlist,
-                                     &script))
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, UOBJ "|O", kwlist,
+                                     &script, &keep_bang_comments_))
         return NULL;
+
+    if (!keep_bang_comments_)
+        keep_bang_comments = 0;
+    else {
+        keep_bang_comments = PyObject_IsTrue(keep_bang_comments_);
+        if (keep_bang_comments == -1)
+            return NULL;
+    }
 
 #ifdef EXT2
     if (PyUnicode_Check(script)) {
@@ -361,7 +397,7 @@ rjsmin_jsmin(PyObject *self, PyObject *args, PyObject *kwds)
     Py_BEGIN_ALLOW_THREADS
     length = rjsmin((rchar *)PyString_AS_STRING(script),
                     (rchar *)PyString_AS_STRING(result),
-                    slength);
+                    slength, keep_bang_comments);
     Py_END_ALLOW_THREADS
 
     Py_DECREF(script);

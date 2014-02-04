@@ -36,6 +36,7 @@ same results as the original ``jsmin.c``. It differs in the following ways:
 - "return /regex/" is recognized correctly.
 - "+ +" and "- -" sequences are not collapsed to '++' or '--'
 - Newlines before ! operators are removed more sensibly
+- Comments starting with an exclamation mark (``!``) can be kept optionally
 - rJSmin does not handle streams, but only complete strings. (However, the
   module provides a "streamy" interface).
 
@@ -55,7 +56,7 @@ rjsmin.c is a reimplementation of rjsmin.py in C and speeds it up even more.
 COPYRIGHT AND LICENSE
 ---------------------
 
-Copyright 2011 - 2013
+Copyright 2011 - 2014
 André Malo or his licensors, as applicable.
 
 The whole package (except for the files in the bench/ directory)
@@ -73,26 +74,29 @@ Both python 2 (>=2.4) and python 3 are supported.
 INSTALLATION
 ------------
 
-rJSmin is set up using the standard python distutils. So you can install
-it using the usual command:
+Using pip
+~~~~~~~~~
+
+$ pip install rjsmin
+
+
+Using distutils
+~~~~~~~~~~~~~~~
 
 $ python setup.py install
 
-The command above will install rJSmin into python's library path.
-
-Additionally it will install the documentation. On unices it will be
-installed by default into <prefix>/share/doc/rjsmin.
-
-For customization options please study the output of
-
-$ python setup.py --help
-
-Especially the following options may be interesting for you:
+The following extra options to the install command may be of interest:
 
   --without-c-extensions  Don't install C extensions
   --without-docs          Do not install documentation files
 
-Alternatively just copy rjsmin.py into your project and use it.
+
+Drop-in
+~~~~~~~
+
+rJSmin effectively consists of two files: rjsmin.py and rjsmin.c, the
+latter being entirely optional. So, for simple integration you can just
+copy rjsmin.py into your project and use it.
 
 
 DOCUMENTATION
@@ -107,6 +111,11 @@ The module additionally provides a "streamy" interface similar to the one
 jsmin.c provides:
 
 $ python -mrjsmin <script >minified
+
+It takes two options:
+
+  -b  Keep bang-comments (Comments starting with an exclamation mark)
+  -p  Force using the python implementation (not the C implementation)
 
 The latest documentation is also available online at
 <http://opensource.perlig.de/rjsmin/>.
