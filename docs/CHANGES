@@ -1,5 +1,7 @@
 Changes with version
 
+ *) Updated benchmarks
+
  *) Added command line option for keeping comments starting with an exclamation
     mark (-b)
 
