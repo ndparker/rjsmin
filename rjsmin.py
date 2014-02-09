@@ -1,28 +1,32 @@
 #!/usr/bin/env python
 # -*- coding: ascii -*-
-#
-# Copyright 2011 - 2014
-# Andr\xe9 Malo or his licensors, as applicable
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-r"""
+u"""
+:Copyright:
+
+ Copyright 2011 - 2014
+ Andr\xe9 Malo or his licensors, as applicable
+
+:License:
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
 =====================
  Javascript Minifier
 =====================
 
 rJSmin is a javascript minifier written in python.
 
-The minifier is based on the semantics of `jsmin.c by Douglas Crockford`_\.
+The minifier is based on the semantics of `jsmin.c by Douglas Crockford`_\\.
 
 The module is a re-implementation aiming for speed, so it can be used at
 runtime (rather than during a preprocessing step). Usually it produces the
@@ -31,7 +35,7 @@ same results as the original ``jsmin.c``. It differs in the following ways:
 - there is no error detection: unterminated string, regex and comment
   literals are treated as regular javascript code and minified as such.
 - Control characters inside string and regex literals are left untouched; they
-  are not converted to spaces (nor to \n)
+  are not converted to spaces (nor to \\n)
 - Newline characters are not allowed inside string and regex literals, except
   for line continuations in string literals (ECMA-5).
 - "return /regex/" is recognized correctly.
