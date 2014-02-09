@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: ascii -*-
-u"""
+"""
 :Copyright:
 
  Copyright 2011 - 2014
@@ -60,6 +60,7 @@ Both python 2 and python 3 are supported.
 .. _jsmin.c by Douglas Crockford:
    http://www.crockford.com/javascript/jsmin.c
 """
+__doc__ = getattr(__doc__, 'decode', lambda x: __doc__)('latin-1')
 __author__ = "Andr\xe9 Malo"
 __author__ = getattr(__author__, 'decode', lambda x: __author__)('latin-1')
 __docformat__ = "restructuredtext en"
