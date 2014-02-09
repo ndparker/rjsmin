@@ -1,5 +1,6 @@
 Makefile
 *.py[cod]
+*$py.class
 *.so
 dist
 build
