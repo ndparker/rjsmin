@@ -48,25 +48,22 @@ class jsmins(object):
         from bench import jsmin_2_0_9 as p_02_jsmin_2_0_9
     else:
         print("jsmin_2_0_9 available for python 2.4 and later...")
-    if _sys.version_info < (3, 0):
-        try:
-            import slimit as _slimit_0_7
-        except ImportError:
-            print("slimit_0_7 not installed for python %d.%d..." %
-                _sys.version_info[:2]
-            )
-        else:
-            class p_03_slimit_0_7(object):
-                pass
-            p_03_slimit_0_7 = p_03_slimit_0_7()
-            p_03_slimit_0_7.jsmin = _slimit_0_7.minify
-            class p_04_slimit_0_7_mangle(object):
-                pass
-            p_04_slimit_0_7_mangle = p_04_slimit_0_7_mangle()
-            p_04_slimit_0_7_mangle.jsmin = \
-                lambda x, s=_slimit_0_7: s.minify(x, True)
+    try:
+        import slimit as _slimit_0_8_1
+    except ImportError:
+        print("slimit_0_8_1 not installed for python %d.%d..." %
+            _sys.version_info[:2]
+        )
     else:
-        print("slimit_0_7 not available for python 3...")
+        class p_03_slimit_0_8_1(object):
+            pass
+        p_03_slimit_0_8_1 = p_03_slimit_0_8_1()
+        p_03_slimit_0_8_1.jsmin = _slimit_0_8_1.minify
+        class p_04_slimit_0_8_1_mangle(object):
+            pass
+        p_04_slimit_0_8_1_mangle = p_04_slimit_0_8_1_mangle()
+        p_04_slimit_0_8_1_mangle.jsmin = \
+            lambda x, s=_slimit_0_8_1: s.minify(x, True)
 
     import rjsmin as p_05_rjsmin
     try:
@@ -125,7 +122,6 @@ def bench(filenames, count):
     ports.sort()
     space = max(map(len, ports)) - 4
     ports = [(item[5:], getattr(jsmins, item).jsmin) for item in ports]
-    counted = [None for _ in xrange(count)]
     flush = _sys.stdout.flush
 
     inputs = [(filename, slurp(filename)) for filename in filenames]
@@ -145,11 +141,21 @@ def bench(filenames, count):
                     ['=', '>', '<'][cmp(len(outputs[idx]), len(outputs[0]))],
             ), end=" ")
             flush()
-            start = _time.time()
-            for _ in counted:
-                jsmin(script)
-            end = _time.time()
-            times.append((end - start) * 1000 / count)
+
+            xcount = count
+            while True:
+                counted = [None for _ in xrange(xcount)]
+                start = _time.time()
+                for _ in counted:
+                    jsmin(script)
+                end = _time.time()
+                result = (end - start) * 1000
+                if result < 10: # avoid measuring within the error
+                    xcount *= 10
+                    continue
+                times.append(result / xcount)
+                break
+
             print_("%8.2f ms" % times[-1], end=" ")
             flush()
             if len(times) <= 1:
