@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: ascii -*-
-"""
+r"""
 :Copyright:
 
  Copyright 2011 - 2014
@@ -62,9 +62,8 @@ Both python 2 and python 3 are supported.
 """
 if 1:
     # pylint: disable = W0622
-    __doc__ = getattr(__doc__, 'decode', lambda x: __doc__)('latin-1')
-__author__ = "Andr\xe9 Malo"
-__author__ = getattr(__author__, 'decode', lambda x: __author__)('latin-1')
+    __doc__ = __doc__.encode('ascii').decode('unicode_escape')
+__author__ = r"Andr\xe9 Malo".encode('ascii').decode('unicode_escape')
 __docformat__ = "restructuredtext en"
 __license__ = "Apache License, Version 2.0"
 __version__ = '1.0.8'
