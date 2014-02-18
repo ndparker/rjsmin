@@ -317,7 +317,7 @@ rjsmin(const rchar *source, rchar *target, Py_ssize_t length,
 
 
 PyDoc_STRVAR(rjsmin_jsmin__doc__,
-"jsmin(script)\n\
+"jsmin(script, keep_bang_comments=False)\n\
 \n\
 Minify javascript based on `jsmin.c by Douglas Crockford`_\\.\n\
 \n\
