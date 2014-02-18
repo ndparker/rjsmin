@@ -1,21 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: ascii -*-
-#
-# Copyright 2011, 2012
-# Andr\xe9 Malo or his licensors, as applicable
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-"""
+r"""
+:Copyright:
+
+ Copyright 2011 - 2014
+ Andr\xe9 Malo or his licensors, as applicable
+
+:License:
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
 =================================
  Benchmark jsmin implementations
 =================================
@@ -29,8 +33,8 @@ Usage::
     -c COUNT  number of runs per jsfile and minifier. Defaults to 10.
 
 """
-__author__ = "Andr\xe9 Malo"
-__author__ = getattr(__author__, 'decode', lambda x: __author__)('latin-1')
+__doc__ = __doc__.encode('ascii').decode('unicode_escape')
+__author__ = r"Andr\xe9 Malo".encode('ascii').decode('unicode_escape')
 __docformat__ = "restructuredtext en"
 __license__ = "Apache License, Version 2.0"
 __version__ = "1.0.0"
@@ -41,9 +45,9 @@ import time as _time
 class jsmins(object):
     from bench import jsmin as p_01_simple_port
     if _sys.version_info >= (2, 4):
-        from bench import jsmin_2_0_2 as p_02_jsmin_2_0_2
+        from bench import jsmin_2_0_9 as p_02_jsmin_2_0_9
     else:
-        print("jsmin_2_0_2 available for python 2.4 and later...")
+        print("jsmin_2_0_9 available for python 2.4 and later...")
     if _sys.version_info < (3, 0):
         try:
             import slimit as _slimit_0_7

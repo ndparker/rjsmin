@@ -1,34 +1,28 @@
-#!/usr/bin/env python
-
 # This code is original from jsmin by Douglas Crockford, it was translated to
-# Python by Baruch Even. It was refactored by Dave St.Germain for speed.
-# The original code had the following copyright and license.
+# Python by Baruch Even. It was rewritten by Dave St.Germain for speed.
 #
-# /* jsmin.c
-#    2007-01-08
-#
-# Copyright (c) 2002 Douglas Crockford  (www.crockford.com)
-#
+# The MIT License (MIT)
+# 
+# Copyright (c) 2013 Dave St.Germain
+# 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-#
+# 
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-#
-# The Software shall be used for Good, not Evil.
-#
+# 
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-# */
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
 
 import sys
 is_3 = sys.version_info >= (3, 0)
@@ -43,7 +37,7 @@ else:
 
 
 __all__ = ['jsmin', 'JavascriptMinify']
-__version__ = '2.0.2'
+__version__ = '2.0.9'
 
 
 def jsmin(js):
@@ -78,7 +72,20 @@ class JavascriptMinify(object):
     def minify(self, instream=None, outstream=None):
         if instream and outstream:
             self.ins, self.outs = instream, outstream
-        write = self.outs.write
+        
+        self.is_return = False
+        self.return_buf = ''
+        
+        def write(char):
+            # all of this is to support literal regular expressions.
+            # sigh
+            if char in 'return':
+                self.return_buf += char
+                self.is_return = self.return_buf == 'return'
+            self.outs.write(char)
+            if self.is_return:
+                self.return_buf = ''
+
         read = self.ins.read
 
         space_strings = "abcdefghijklmnopqrstuvwxyz"\
@@ -88,20 +95,25 @@ class JavascriptMinify(object):
         newlineend_strings = enders + space_strings
         do_newline = False
         do_space = False
+        escape_slash_count = 0
         doing_single_comment = False
         previous_before_comment = ''
         doing_multi_comment = False
         in_re = False
         in_quote = ''
         quote_buf = []
-
+        
         previous = read(1)
+        if previous == '\\':
+            escape_slash_count += 1
         next1 = read(1)
         if previous == '/':
             if next1 == '/':
                 doing_single_comment = True
             elif next1 == '*':
                 doing_multi_comment = True
+                previous = next1
+                next1 = read(1)
             else:
                 write(previous)
         elif not previous:
@@ -122,6 +134,8 @@ class JavascriptMinify(object):
                 last = next1.strip()
                 if not (doing_single_comment or doing_multi_comment)\
                     and last not in ('', '/'):
+                    if in_quote:
+                        write(''.join(quote_buf))
                     write(last)
                 break
             if doing_multi_comment:
@@ -133,8 +147,12 @@ class JavascriptMinify(object):
                     doing_single_comment = False
                     while next2 in '\r\n':
                         next2 = read(1)
+                        if not next2:
+                            break
                     if previous_before_comment in ')}]':
                         do_newline = True
+                    elif previous_before_comment in space_strings:
+                        write('\n')
             elif in_quote:
                 quote_buf.append(next1)
 
@@ -166,18 +184,29 @@ class JavascriptMinify(object):
                     or previous_non_space > '~') \
                     and (next2 in space_strings or next2 > '~'):
                     do_space = True
+                elif previous_non_space in '-+' and next2 == previous_non_space:
+                    # protect against + ++ or - -- sequences
+                    do_space = True
+                elif self.is_return and next2 == '/':
+                    # returning a regex...
+                    write(' ')
             elif next1 == '/':
-                if (previous in ';\n\r{}' or previous < '!') and next2 in '/*':
-                    if next2 == '/':
-                        doing_single_comment = True
-                        previous_before_comment = previous_non_space
-                    elif next2 == '*':
-                        doing_multi_comment = True
+                if do_space:
+                    write(' ')
+                if in_re:
+                    if previous != '\\' or (not escape_slash_count % 2) or next2 in 'gimy':
+                        in_re = False
+                    write('/')
+                elif next2 == '/':                    
+                    doing_single_comment = True
+                    previous_before_comment = previous_non_space
+                elif next2 == '*':
+                    doing_multi_comment = True
+                    previous = next1
+                    next1 = next2
+                    next2 = read(1)
                 else:
-                    if not in_re:
-                        in_re = previous_non_space in '(,=:[?!&|'
-                    elif previous_non_space != '\\':
-                        in_re = not in_re
+                    in_re = previous_non_space in '(,=:[?!&|' or self.is_return # literal regular expression
                     write('/')
             else:
                 if do_space:
@@ -186,17 +215,19 @@ class JavascriptMinify(object):
                 if do_newline:
                     write('\n')
                     do_newline = False
+                    
                 write(next1)
                 if not in_re and next1 in "'\"":
                     in_quote = next1
                     quote_buf = []
+
             previous = next1
             next1 = next2
 
             if previous >= '!':
                 previous_non_space = previous
 
-
-if __name__ == '__main__':
-    import sys as _sys
-    _sys.stdout.write(jsmin(_sys.stdin.read()))
+            if previous == '\\':
+                escape_slash_count += 1
+            else:
+                escape_slash_count = 0
