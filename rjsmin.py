@@ -60,7 +60,9 @@ Both python 2 and python 3 are supported.
 .. _jsmin.c by Douglas Crockford:
    http://www.crockford.com/javascript/jsmin.c
 """
-__doc__ = __doc__.encode('ascii').decode('unicode_escape') # pylint: disable = W0622, C0301
+if __doc__:
+    # pylint: disable = W0622
+    __doc__ = __doc__.encode('ascii').decode('unicode_escape')
 __author__ = r"Andr\xe9 Malo".encode('ascii').decode('unicode_escape')
 __docformat__ = "restructuredtext en"
 __license__ = "Apache License, Version 2.0"
