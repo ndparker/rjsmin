@@ -128,42 +128,54 @@ def bench(filenames, count):
     for filename, script in inputs:
         print_("Benchmarking %r..." % filename, end=" ")
         flush()
-        outputs = [jsmin(script) for _, jsmin in ports]
+        outputs = []
+        for _, jsmin in ports:
+            try:
+                outputs.append(jsmin(script))
+            except (SystemExit, KeyboardInterrupt):
+                raise
+            except:
+                outputs.append(None)
         print_("(%.1f KiB)" % (len(script) / 1024.0))
         flush()
         times = []
         for idx, (name, jsmin) in enumerate(ports):
-            print_("  Timing %s%s... (%5.1f KiB %s)" % (
-                name,
-                " " * (space - len(name)),
-                len(outputs[idx]) / 1024.0,
-                idx == 0 and '*' or
-                    ['=', '>', '<'][cmp(len(outputs[idx]), len(outputs[0]))],
-            ), end=" ")
-            flush()
-
-            xcount = count
-            while True:
-                counted = [None for _ in xrange(xcount)]
-                start = _time.time()
-                for _ in counted:
-                    jsmin(script)
-                end = _time.time()
-                result = (end - start) * 1000
-                if result < 10: # avoid measuring within the error
-                    xcount *= 10
-                    continue
-                times.append(result / xcount)
-                break
-
-            print_("%8.2f ms" % times[-1], end=" ")
-            flush()
-            if len(times) <= 1:
-                print_()
+            if outputs[idx] is None:
+                print_("  FAILED %s" % (name,))
             else:
-                print_("(factor: %s)" % (', '.join([
-                    '%.2f' % (timed / times[-1]) for timed in times[:-1]
-                ])))
+                print_("  Timing %s%s... (%5.1f KiB %s)" % (
+                    name,
+                    " " * (space - len(name)),
+                    len(outputs[idx]) / 1024.0,
+                    idx == 0 and '*' or ['=', '>', '<'][
+                        cmp(len(outputs[idx]), len(outputs[0]))
+                    ],
+                ), end=" ")
+                flush()
+
+                xcount = count
+                while True:
+                    counted = [None for _ in xrange(xcount)]
+                    start = _time.time()
+                    for _ in counted:
+                        jsmin(script)
+                    end = _time.time()
+                    result = (end - start) * 1000
+                    if result < 10: # avoid measuring within the error range
+                        xcount *= 10
+                        continue
+                    times.append(result / xcount)
+                    break
+
+                print_("%8.2f ms" % times[-1], end=" ")
+                flush()
+                if len(times) <= 1:
+                    print_()
+                else:
+                    print_("(factor: %s)" % (', '.join([
+                        '%.2f' % (timed / times[-1]) for timed in times[:-1]
+                    ])))
+
             flush()
         print_()
 
