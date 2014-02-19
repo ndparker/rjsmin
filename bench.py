@@ -33,7 +33,8 @@ Usage::
     -c COUNT  number of runs per jsfile and minifier. Defaults to 10.
 
 """
-__doc__ = __doc__.encode('ascii').decode('unicode_escape')
+if __doc__:
+    __doc__ = __doc__.encode('ascii').decode('unicode_escape')
 __author__ = r"Andr\xe9 Malo".encode('ascii').decode('unicode_escape')
 __docformat__ = "restructuredtext en"
 __license__ = "Apache License, Version 2.0"
