@@ -21,7 +21,7 @@
  rJSmin - Benchmark
 ====================
 
-The following numbers have been measured with the bench.py script
+The following numbers have been measured with the bench package
 provided in the source distribution. Since the numbers don't vary much
 between python minor releases (e.g. 2.6 vs 2.7), only the benchmarks for
 2.7 and 3.4 are given below. The :file:`docs/BENCHMARKS` file in the source

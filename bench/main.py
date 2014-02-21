@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: ascii -*-
 r"""
+=================================
+ Benchmark jsmin implementations
+=================================
+
+Benchmark jsmin implementations.
+
 :Copyright:
 
  Copyright 2011 - 2014
@@ -20,17 +26,12 @@ r"""
  See the License for the specific language governing permissions and
  limitations under the License.
 
-=================================
- Benchmark jsmin implementations
-=================================
-
-Benchmark jsmin implementations.
-
 Usage::
 
-    bench.py [-c COUNT] jsfile ...
+    python -mbench.main [-c COUNT] [-p file] jsfile ...
 
     -c COUNT  number of runs per jsfile and minifier. Defaults to 10.
+    -p file   File to write the benchmark results in (pickled)
 
 """
 if __doc__:
@@ -43,18 +44,21 @@ __version__ = "1.0.0"
 import sys as _sys
 import time as _time
 
+import_notes = []
 class jsmins(object):
     from bench import jsmin as p_01_simple_port
     if _sys.version_info >= (2, 4):
         from bench import jsmin_2_0_9 as p_02_jsmin_2_0_9
     else:
-        print("jsmin_2_0_9 available for python 2.4 and later...")
+        import_notes.append(
+            "jsmin_2_0_9 available for python 2.4 and later..."
+        )
+        print(import_notes[-1])
     try:
         import slimit as _slimit_0_8_1
-    except ImportError:
-        print("slimit_0_8_1 not installed for python %d.%d..." %
-            _sys.version_info[:2]
-        )
+    except (ImportError, SyntaxError):
+        import_notes.append("slimit_0_8_1 could not be imported")
+        print(import_notes[-1])
     else:
         class p_03_slimit_0_8_1(object):
             pass
@@ -70,7 +74,8 @@ class jsmins(object):
     try:
         import _rjsmin as p_06__rjsmin
     except ImportError:
-        print("_rjsmin (C-Port) not available")
+        import_notes.append("_rjsmin (C-Port) not available")
+        print(import_notes[-1])
 jsmins.p_05_rjsmin.jsmin = jsmins.p_05_rjsmin._make_jsmin(
     python_only=True
 )
@@ -125,6 +130,7 @@ def bench(filenames, count):
     ports = [(item[5:], getattr(jsmins, item).jsmin) for item in ports]
     flush = _sys.stdout.flush
 
+    struct = []
     inputs = [(filename, slurp(filename)) for filename in filenames]
     for filename, script in inputs:
         print_("Benchmarking %r..." % filename, end=" ")
@@ -137,12 +143,22 @@ def bench(filenames, count):
                 raise
             except:
                 outputs.append(None)
-        print_("(%.1f KiB)" % (len(script) / 1024.0))
+        struct.append(dict(
+            filename=filename,
+            sizes=[
+                (item is not None and len(item) or None) for item in outputs
+            ],
+            size=len(script),
+            messages=[],
+            times=[],
+        ))
+        print_("(%.1f KiB)" % (struct[-1]['size'] / 1024.0,))
         flush()
         times = []
         for idx, (name, jsmin) in enumerate(ports):
             if outputs[idx] is None:
                 print_("  FAILED %s" % (name,))
+                struct[-1]['times'].append((name, None))
             else:
                 print_("  Timing %s%s... (%5.1f KiB %s)" % (
                     name,
@@ -176,20 +192,58 @@ def bench(filenames, count):
                     print_("(factor: %s)" % (', '.join([
                         '%.2f' % (timed / times[-1]) for timed in times[:-1]
                     ])))
+                struct[-1]['times'].append((name, times[-1]))
 
             flush()
         print_()
 
+    return struct
 
-def main(argv):
+
+def main(argv=None):
     """ Main """
-    count, idx = 10, 0
-    if argv and argv[0] == '-c':
-        count, idx = int(argv[1]), 2
-    elif argv and argv[0].startswith('-c'):
-        count, idx = int(argv[0][2:]), 1
-    bench(argv[idx:], count)
+    import getopt as _getopt
+    import os as _os
+    import pickle as _pickle
+
+    if argv is None:
+        argv = _sys.argv[1:]
+    try:
+        opts, args = _getopt.getopt(argv, "hc:p:", ["help"])
+    except getopt.GetoptError:
+        e = _sys.exc_info()[0](_sys.exc_info()[1])
+        print >> _sys.stderr, "%s\nTry %s -mbench.main --help" % (
+            e,
+            _os.path.basename(_sys.executable),
+        )
+        _sys.exit(2)
+
+    count, pickle = 10, None
+    for key, value in opts:
+        if key in ("-h", "--help"):
+            print >> _sys.stderr, (
+                "%s -mbench.main [-c count] [-p file] cssfile ..." % (
+                    _os.path.basename(_sys.executable),
+                )
+            )
+            _sys.exit(0)
+        elif key == '-c':
+            count = int(value)
+        elif key == '-p':
+            pickle = str(value)
+
+    struct = bench(args, count)
+    if pickle:
+        fp = open(pickle, 'wb')
+        try:
+            fp.write(_pickle.dumps((
+                ".".join(map(str, _sys.version_info[:3])),
+                import_notes,
+                struct,
+            ), 0))
+        finally:
+            fp.close()
 
 
 if __name__ == '__main__':
-    main(_sys.argv[1:])
+    main()
