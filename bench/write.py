@@ -28,9 +28,10 @@ Write benchmark results.
 
 Usage::
 
-    python -mbench.write -p plain-file <pickled
+    python -mbench.write [-p plain] [-t table] <pickled
 
-    -p plain-file  Plain file to write to (like docs/BENCHAMRKS).
+    -p plain  Plain file to write to (like docs/BENCHMARKS).
+    -t table  Table file to write to (like docs/_userdoc/benchmark.txt).
 
 """
 if __doc__:
@@ -40,7 +41,190 @@ __docformat__ = "restructuredtext en"
 __license__ = "Apache License, Version 2.0"
 __version__ = "1.0.0"
 
+import os as _os
+import re as _re
 import sys as _sys
+
+
+try:
+    unicode
+except NameError:
+    def uni(v):
+        if hasattr(v, 'decode'):
+            return v.decode('latin-1')
+        return str(v)
+else:
+    def uni(v):
+        if isinstance(v, unicode):
+            return v.encode('utf-8')
+        return str(v)
+
+
+def write_table(filename, results):
+    """
+    Output tabled benchmark results
+
+    :Parameters:
+      `filename` : ``str``
+        Filename to write to
+
+      `results` : ``list``
+        Results
+    """
+    try:
+        next
+    except NameError:
+        next = lambda i: (getattr(i, 'next', None) or i.__next__)()
+    try:
+        cmp
+    except NameError:
+        cmp = lambda a, b: (a > b) - (a < b)
+
+    names = [
+        ('simple_port', 'Simple Port'),
+        ('jsmin_2_0_9', 'jsmin 2.0.9'),
+        ('slimit_0_8_1', 'slimit 0.8.1'),
+        ('slimit_0_8_1_mangle', 'slimit 0.8.1 (mangle)'),
+        ('rjsmin', '|rjsmin|'),
+        ('_rjsmin', r'_\ |rjsmin|'),
+    ]
+    benched_per_table = 2
+
+    results = sorted(results, reverse=True)
+
+    # First we transform our data into a table (list of lists)
+    pythons, widths = [], [0] * (benched_per_table + 1)
+    last_version = None
+    for version, _, result in results:
+        version = uni(version)
+        if not(last_version is None or version.startswith('2.')):
+            continue
+        last_version = version
+
+        namesub = _re.compile(r'(?:-\d+(?:\.\d+)*)?\.js$').sub
+        result = iter(result)
+        tables = []
+
+        # given our data it's easier to create the table transposed...
+        for benched in result:
+            rows = [['Name'] + [desc for _, desc in names]]
+            for _ in range(benched_per_table):
+                if _:
+                    try:
+                        benched = next(result)
+                    except StopIteration:
+                        rows.append([''] + ['' for _ in names])
+                        continue
+
+                times = dict((
+                    uni(port), (time, benched['sizes'][idx])
+                ) for idx, (port, time) in enumerate(benched['times']))
+                columns = ['%s (%.1f)' % (
+                    namesub('', _os.path.basename(uni(benched['filename']))),
+                    benched['size'] / 1024.0,
+                )]
+                for idx, (port, _) in enumerate(names):
+                    if port not in times:
+                        columns.append('n/a')
+                        continue
+                    time, size = times[port]
+                    if time is None:
+                        columns.append('(failed)')
+                        continue
+                    columns.append('%s%.2f ms (%.1f %s)' % (
+                        idx == 0 and ' ' or '',
+                        time,
+                        size / 1024.0,
+                        idx == 0 and '\\*' or ['=', '>', '<'][
+                            cmp(size, benched['sizes'][0])
+                        ],
+                    ))
+                rows.append(columns)
+
+            # calculate column widths (global for all tables)
+            for idx, row in enumerate(rows):
+                widths[idx] = max(widths[idx], max(map(len, row)))
+
+            # ... and transpose it back.
+            tables.append(zip(*rows))
+        pythons.append((version, tables))
+
+        if last_version.startswith('2.'):
+            break
+
+    # Second we create a rest table from it
+    lines = []
+    separator = lambda c='-': '+'.join([''] + [
+        c * (width + 2) for width in widths
+    ] + [''])
+
+    for idx, (version, tables) in enumerate(pythons):
+        if idx:
+            lines.append('')
+            lines.append('')
+
+        line = 'Python %s' % (version,)
+        lines.append(line)
+        lines.append('~' * len(line))
+
+        for table in tables:
+            lines.append('')
+            lines.append('.. rst-class:: benchmark')
+            lines.append('')
+
+            for idx, row in enumerate(table):
+                if idx == 0:
+                    # header
+                    lines.append(separator())
+                    lines.append('|'.join([''] + [
+                        ' %s%*s ' % (col, len(col) - width, '')
+                        for width, col in zip(widths, row)
+                    ] + ['']))
+                    lines.append(separator('='))
+                else: # data
+                    lines.append('|'.join([''] + [
+                        j == 0 and (
+                            ' %s%*s ' % (col, len(col) - widths[j], '')
+                        ) or (
+                            ['%*s  ', ' %*s '][idx == 1] % (widths[j], col)
+                        )
+                        for j, col in enumerate(row)
+                    ] + ['']))
+                    lines.append(separator())
+
+    fplines = []
+    fp = open(filename)
+    try:
+        fpiter = iter(fp)
+        for line in fpiter:
+            line = line.rstrip()
+            if line == '.. begin tables':
+                buf = []
+                for line in fpiter:
+                    line = line.rstrip()
+                    if line == '.. end tables':
+                        fplines.append('.. begin tables')
+                        fplines.append('')
+                        fplines.extend(lines)
+                        fplines.append('')
+                        fplines.append('.. end tables')
+                        buf = []
+                        break
+                    else:
+                        buf.append(line)
+                else:
+                    fplines.extend(buf)
+                    _sys.stderr.write("Placeholder container not found!\n")
+            else:
+                fplines.append(line)
+    finally:
+        fp.close()
+
+    fp = open(filename, 'w')
+    try:
+        fp.write('\n'.join(fplines) + '\n')
+    finally:
+        fp.close()
 
 
 def write_plain(filename, results):
@@ -54,19 +238,6 @@ def write_plain(filename, results):
       `results` : ``list``
         Results
     """
-    try:
-        unicode
-    except NameError:
-        def uni(v):
-            if hasattr(v, 'decode'):
-                return v.decode('latin-1')
-            return str(v)
-    else:
-        def uni(v):
-            if isinstance(v, unicode):
-                return v.encode('utf-8')
-            return str(v)
-
     lines = []
     results = sorted(results, reverse=True)
     for idx, (version, import_notes, result) in enumerate(results):
@@ -126,13 +297,12 @@ def write_plain(filename, results):
 def main(argv=None):
     """ Main """
     import getopt as _getopt
-    import os as _os
     import pickle as _pickle
 
     if argv is None:
         argv = _sys.argv[1:]
     try:
-        opts, args = _getopt.getopt(argv, "hp:", ["help"])
+        opts, args = _getopt.getopt(argv, "hp:t:", ["help"])
     except getopt.GetoptError:
         e = _sys.exc_info()[0](_sys.exc_info()[1])
         print >> _sys.stderr, "%s\nTry %s -mbench.write --help" % (
@@ -141,19 +311,22 @@ def main(argv=None):
         )
         _sys.exit(2)
 
-    plain = None
+    plain, table = None, None
     for key, value in opts:
         if key in ("-h", "--help"):
             print >> _sys.stderr, (
-                "%s -mbench.write [-p plain-file] <pickled" % (
+                "%s -mbench.write [-p plain] [-t table] <pickled" % (
                     _os.path.basename(_sys.executable),
                 )
             )
             _sys.exit(0)
         elif key == '-p':
             plain = str(value)
+        elif key == '-t':
+            table = str(value)
 
     struct = []
+    _sys.stdin = getattr(_sys.stdin, 'detach', lambda: _sys.stdin)()
     try:
         while True:
             version, import_notes, result = _pickle.load(_sys.stdin)
@@ -165,6 +338,9 @@ def main(argv=None):
 
     if plain:
         write_plain(plain, struct)
+
+    if table:
+        write_table(table, struct)
 
 
 if __name__ == '__main__':
