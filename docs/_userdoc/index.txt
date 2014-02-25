@@ -1,7 +1,8 @@
-.. license:
+.. copyright:
     Copyright 2011 - 2014
     André Malo or his licensors, as applicable
 
+.. license:
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
@@ -47,7 +48,7 @@ faster than the original python port of ``jsmin.c`` by Baruch Even. The speed
 factor varies between about 6 and 55 depending on input and python version
 (it gets faster the more compressed the input already is). Compared to the
 speed-refactored python port by Dave St.Germain the performance gain is less
-dramatic but still between 1.2 and 7.
+dramatic but still between 3 and 50 (for huge inputs).
 
 |rjsmin| comes with an optional C-reimplementation of the python/regex
 implementation, which speeds up the minifying process even more.

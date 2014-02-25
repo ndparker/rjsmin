@@ -30,7 +30,7 @@ same results as the original ``jsmin.c``. It differs in the following ways:
 - there is no error detection: unterminated string, regex and comment
   literals are treated as regular javascript code and minified as such.
 - Control characters inside string and regex literals are left untouched; they
-  are not converted to spaces (nor to \n)
+  are not converted to spaces (nor to \\n)
 - Newline characters are not allowed inside string and regex literals, except
   for line continuations in string literals (ECMA-5).
 - "return /regex/" is recognized correctly.
@@ -40,13 +40,13 @@ same results as the original ``jsmin.c``. It differs in the following ways:
 - rJSmin does not handle streams, but only complete strings. (However, the
   module provides a "streamy" interface).
 
-Since most parts of the logic are handled by the regex engine it's way
-faster than the original python port of ``jsmin.c`` by Baruch Even. The speed
-factor varies between about 6 and 55 depending on input and python version
-(it gets faster the more compressed the input already is). Compared to the
+Since most parts of the logic are handled by the regex engine it's way faster
+than the original python port of ``jsmin.c`` by Baruch Even. The speed factor
+varies between about 6 and 55 depending on input and python version (it gets
+faster the more compressed the input already is).  Compared to the
 speed-refactored python port by Dave St.Germain the performance gain is less
-dramatic but still between 1.2 and 7. See the docs/BENCHMARKS file for
-details.
+dramatic but still between 3 and 50 (for huge inputs). See the docs/BENCHMARKS
+file for details.
 
 rjsmin.c is a reimplementation of rjsmin.py in C and speeds it up even more.
 
