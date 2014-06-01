@@ -21,7 +21,7 @@ from _setup import run
 
 def setup(args=None, _manifest=0):
     """ Main setup function """
-    # Use this for extensions:
+    # Use may want to use this for extensions:
     #from _setup.ext import Extension
 
     return run(
