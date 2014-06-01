@@ -1,0 +1,40 @@
+=============
+ Setup Tools
+=============
+
+The setup tools are used to simplify the development and distribution of
+python projects. The stuff found in this package has been collected over the
+time and finally been separated into its own package. It's a neverending
+task nevertheless...
+
+
+Copyright and License
+~~~~~~~~~~~~~~~~~~~~~
+
+Copyright 2005 - 2014
+André Malo or his licensors, as applicable.
+
+The whole package is distributed under the Apache License Version 2.0.
+You'll find a copy in the root directory of the distribution or online
+at: <http://www.apache.org/licenses/LICENSE-2.0>.
+
+
+Bugs
+~~~~
+
+No bugs, of course. ;-)
+But if you've found one or have an idea how to improve the setup tools, please
+send a mail to <setup-bugs@perlig.de>.
+
+
+Author Information
+~~~~~~~~~~~~~~~~~~
+
+André "nd" Malo <nd perlig.de>
+GPG: 0x8103A37E
+
+
+    If God intended people to be naked, they would be born that way.
+    -- Oscar Wilde
+
+.. vim:tw=72 syntax=rest
