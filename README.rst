@@ -40,7 +40,7 @@ You need python 2 (>= 2.2) or python 3.
 INSTALLATION
 ============
 
-Copy the _setup directory into your project.
+Copy the directory into your project (as /_setup)
 
 
 DOCUMENTATION
