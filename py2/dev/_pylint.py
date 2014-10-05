@@ -1,6 +1,6 @@
 # -*- coding: ascii -*-
 #
-# Copyright 2006, 2007, 2008, 2009, 2010, 2011
+# Copyright 2006 - 2014
 # Andr\xe9 Malo or his licensors, as applicable
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,8 +34,10 @@ from _setup import shell as _shell
 class NotFinished(Exception):
     """ Exception used for message passing in the stream filter """
 
+
 class NotParseable(Exception):
     """ Exception used for message passing in the stream filter """
+
 
 class SpecialMessage(Exception):
     """ Exception used for message passing in the stream filter """
@@ -121,9 +123,11 @@ class FilterStream(object):
         """ Print literal """
         suppress = (
             line.startswith('Unable to get imported names for ') or
-            line.startswith("Exception exceptions.RuntimeError: 'generator "
+            line.startswith(
+                "Exception exceptions.RuntimeError: 'generator "
                 "ignored GeneratorExit' in <generator object at") or
-            line.startswith("Exception RuntimeError: 'generator "
+            line.startswith(
+                "Exception RuntimeError: 'generator "
                 "ignored GeneratorExit' in <generator object") or
             not line.strip()
         )
@@ -136,7 +140,7 @@ class FilterStream(object):
         """ Deal with special messages """
         if e.args[0] == 'R0401':
             pos = self._buffer.find('\n')
-            line, self._buffer = (
+            _, self._buffer = (
                 self._buffer[:pos + 1], self._buffer[pos + 1:]
             )
             term = self._term
@@ -217,10 +221,9 @@ def run(config, *args):
 
     if config is None:
         config = _shell.native('pylint.conf')
-    argv = ['--rcfile', config,
+    argv = [
+        '--rcfile', config,
         '--reports', 'no',
-        '--output-format', 'parseable',
-        '--include-ids', 'yes'
     ]
 
     stream = FilterStream(_term.terminfo())
@@ -230,21 +233,31 @@ def run(config, *args):
         # pylint: disable = E1101
         _sys.stderr = stream
         from pylint import __pkginfo__
-        if __pkginfo__.numversion < (0, 13):
-            # The lint tool is not very user friendly, so we need a hack here.
-            lint.REPORTER_OPT_MAP['parseable'] = \
-                lambda: text.TextReporter2(stream)
-            reporter = text.TextReporter2(stream)
+        if __pkginfo__.numversion >= (1, 0, 0):
+            reporter = text.TextReporter(stream)
+            argv.extend([
+                '--msg-template',
+                '{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}'
+            ])
         else:
-            reporter = text.ParseableTextReporter(stream)
-            lint.REPORTER_OPT_MAP['parseable'] = lambda: reporter
+            argv.extend([
+                '--output-format', 'parseable',
+                '--include-ids', 'yes'
+            ])
+            if __pkginfo__.numversion < (0, 13):
+                lint.REPORTER_OPT_MAP['parseable'] = \
+                    lambda: text.TextReporter2(stream)
+                reporter = text.TextReporter2(stream)
+            else:
+                reporter = text.ParseableTextReporter(stream)
+                lint.REPORTER_OPT_MAP['parseable'] = lambda: reporter
 
         for path in args:
             try:
                 try:
                     lint.Run(argv + [path], reporter=reporter)
                 except SystemExit:
-                    pass # don't accept the exit. strange errors happen...
+                    pass  # don't accept the exit. strange errors happen...
 
                 if stream.written:
                     print
