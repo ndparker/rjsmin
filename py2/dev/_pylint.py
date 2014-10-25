@@ -220,7 +220,7 @@ def run(config, *args):
         return 2
 
     if config is None:
-        config = _shell.native('pylint.conf')
+        config = _shell.native('pylintrc')
     argv = [
         '--rcfile', config,
         '--reports', 'no',
