@@ -340,7 +340,7 @@ def run(config=('package.cfg',), ext=None, script_args=None, manifest_only=0):
         ext = []
 
     cfg = _util.SafeConfigParser()
-    cfg.read(config)
+    cfg.read(config, encoding="utf8")
     pkg = dict(cfg.items('package'))
     python_min = pkg.get('python.min') or None
     python_max = pkg.get('python.max') or None
