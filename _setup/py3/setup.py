@@ -27,6 +27,7 @@ __docformat__ = "restructuredtext en"
 import configparser as _config_parser
 from distutils import core as _core
 import os as _os
+import io as _io
 import posixpath as _posixpath
 import sys as _sys
 
@@ -88,7 +89,7 @@ def find_description(docs):
     summary = None
     filename = docs.get('meta.summary', 'SUMMARY').strip()
     if filename and _os.path.isfile(filename):
-        fp = open(filename)
+        fp = _io.open(filename, encoding="utf8")
         try:
             try:
                 summary = fp.read().strip().splitlines()[0].rstrip()
@@ -100,7 +101,7 @@ def find_description(docs):
     description = None
     filename = docs.get('meta.description', 'DESCRIPTION').strip()
     if filename and _os.path.isfile(filename):
-        fp = open(filename)
+        fp = _io.open(filename, encoding="utf8")
         try:
             description = fp.read().rstrip()
         finally:
@@ -126,7 +127,7 @@ def find_classifiers(docs):
     """
     filename = docs.get('meta.classifiers', 'CLASSIFIERS').strip()
     if filename and _os.path.isfile(filename):
-        fp = open(filename)
+        fp = _io.open(filename, encoding="utf8")
         try:
             content = fp.read()
         finally:
@@ -145,7 +146,7 @@ def find_provides(docs):
     """
     filename = docs.get('meta.provides', 'PROVIDES').strip()
     if filename and _os.path.isfile(filename):
-        fp = open(filename)
+        fp = _io.open(filename, encoding="utf8")
         try:
             content = fp.read()
         finally:
@@ -164,7 +165,7 @@ def find_license(docs):
     """
     filename = docs.get('meta.license', 'LICENSE').strip()
     if filename and _os.path.isfile(filename):
-        fp = open(filename)
+        fp = _io.open(filename, encoding="utf8")
         try:
             return fp.read().rstrip()
         finally:
