@@ -28,6 +28,7 @@ __docformat__ = "restructuredtext en"
 
 import errno as _errno
 import os as _os
+import io as _io
 import re as _re
 import sys as _sys
 
@@ -261,19 +262,19 @@ class Website(Target):
         filename = _os.path.join(
             self.dirs['_website'], 'src', 'website_download.txt'
         )
-        fp = open(filename)
+        fp = _io.open(filename, encoding="utf8")
         try:
             download = fp.read()
         finally:
             fp.close()
         filename = _os.path.join(self.dirs['_website'], 'src', 'index.txt')
-        fp = open(filename)
+        fp = _io.open(filename, encoding="utf8")
         try:
             indexlines = fp.readlines()
         finally:
             fp.close()
 
-        fp = open(filename, 'w')
+        fp = _io.open(filename, 'w', encoding="utf8")
         try:
             for line in indexlines:
                 if line.startswith('.. placeholder: Download'):
@@ -294,7 +295,7 @@ class Website(Target):
         )
         fp = open(_os.path.join(
             self.dirs['_website'], 'src', 'conf.py'
-        ), 'a')
+        ), 'a', encoding="utf8")
         try:
             fp.write("\nepydoc = dict(rjsmin=%r)\n" % (
                 _os.path.join(
@@ -496,12 +497,12 @@ class Version(Target):
     def _version_init(self, strversion):
         """ Modify version in __init__ """
         filename = _os.path.join(self.dirs['lib'], 'rjsmin.py')
-        fp = open(filename)
+        fp = _io.open(filename, encoding="utf8")
         try:
             initlines = fp.readlines()
         finally:
             fp.close()
-        fp = open(filename, 'w')
+        fp = _io.open(filename, 'w', encoding="utf8")
         replaced = False
         try:
             for line in initlines:
@@ -516,12 +517,12 @@ class Version(Target):
     def _version_changes(self, strversion):
         """ Modify version in changes """
         filename = _os.path.join(shell.native(self.dirs['docs']), 'CHANGES')
-        fp = open(filename)
+        fp = _io.open(filename, encoding="utf8")
         try:
             initlines = fp.readlines()
         finally:
             fp.close()
-        fp = open(filename, 'w')
+        fp = _io.open(filename, 'w', encoding="utf8")
         try:
             for line in initlines:
                 if line.rstrip() == "Changes with version":
@@ -535,13 +536,13 @@ class Version(Target):
         filename = _os.path.join(self.dirs['userdoc_source'], 'conf.py')
         shortversion = '.'.join(strversion.split('.')[:2])
         longversion = strversion
-        fp = open(filename)
+        fp = _io.open(filename, encoding="utf8")
         try:
             initlines = fp.readlines()
         finally:
             fp.close()
         replaced = 0
-        fp = open(filename, 'w')
+        fp = _io.open(filename, 'w', encoding="utf8")
         try:
             for line in initlines:
                 if line.startswith('version'):
@@ -561,13 +562,13 @@ class Version(Target):
             self.dirs['userdoc_source'], 'website_download.txt'
         )
         VERSION, PATH = strversion, ''
-        fp = open(filename + '.in')
+        fp = _io.open(filename + '.in', encoding="utf8")
         try:
             dllines = fp.readlines()
         finally:
             fp.close()
         instable = []
-        fp = open(filename, 'w')
+        fp = _io.open(filename, 'w', encoding="utf8")
         try:
             for line in dllines:
                 if instable:
