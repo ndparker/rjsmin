@@ -63,7 +63,7 @@ class MakefileTarget(_make.Target):
                 names.append(name)
         names.sort()
 
-        fp = open(_shell.native('Makefile'), 'w')
+        fp = open(_shell.native('Makefile'), 'w', encoding='utf-8')
         print(decorate("Generated Makefile, DO NOT EDIT"), file=fp)
         print(decorate("python %s %s" % (
             _os.path.basename(script), self.NAME

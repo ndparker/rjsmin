@@ -187,7 +187,7 @@ class Distribution(_make.Target):
         return sig.hexdigest()
 
         param = {'sig': sig.hexdigest(), 'file': _os.path.basename(filename)}
-        fp = open("%s.%s" % (filename, name), "w")
+        fp = open("%s.%s" % (filename, name), "w", encoding='utf-8')
         fp.write("%(sig)s *%(file)s\n" % param)
         fp.close()
 
@@ -265,9 +265,9 @@ class Distribution(_make.Target):
 
         sig.seek(0, 0)
         if detach:
-            open("%s.asc" % filename, "w").write(sig.read())
+            open("%s.asc" % filename, "w", encoding='utf-8').write(sig.read())
         else:
-            open(filename, "w").write(sig.read())
+            open(filename, "w", encoding='utf-8').write(sig.read())
 
         return True
 
@@ -309,7 +309,7 @@ class Manifest(_make.Target):
     def run(self):
         _term.green("Creating %(name)s...", name=self.NAME)
         dest = _shell.native(self.NAME)
-        dest = open(dest, 'w')
+        dest = open(dest, 'w', encoding='utf-8')
         for name in self.manifest_names():
             dest.write("%s\n" % name)
         dest.close()

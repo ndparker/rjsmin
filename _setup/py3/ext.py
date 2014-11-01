@@ -179,7 +179,7 @@ class ConfTest(object):
         """
         self._tempdir = tempdir = _tempfile.mkdtemp()
         src = _os.path.join(tempdir, 'conftest.c')
-        fp = open(src, 'w')
+        fp = open(src, 'w', encoding='utf-8')
         try:
             fp.write(source)
         finally:

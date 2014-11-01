@@ -204,7 +204,7 @@ sys.exit(result & 7)
             'outfile': repr(_pickle.dumps(_os.path.abspath(outfile))),
             'argv': repr(_pickle.dumps(argv)),
             'env': repr(_pickle.dumps(env)),
-        }))
+        }).encode('utf-8'))
         fd, _ = None, _os.close(fd)
         if _sys.platform == 'win32':
             argv = []
