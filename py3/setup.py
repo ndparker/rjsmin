@@ -88,7 +88,7 @@ def find_description(docs):
     summary = None
     filename = docs.get('meta.summary', 'SUMMARY').strip()
     if filename and _os.path.isfile(filename):
-        fp = open(filename)
+        fp = open(filename, encoding='utf-8')
         try:
             try:
                 summary = fp.read().strip().splitlines()[0].rstrip()
@@ -100,7 +100,7 @@ def find_description(docs):
     description = None
     filename = docs.get('meta.description', 'DESCRIPTION').strip()
     if filename and _os.path.isfile(filename):
-        fp = open(filename)
+        fp = open(filename, encoding='utf-8')
         try:
             description = fp.read().rstrip()
         finally:
@@ -126,7 +126,7 @@ def find_classifiers(docs):
     """
     filename = docs.get('meta.classifiers', 'CLASSIFIERS').strip()
     if filename and _os.path.isfile(filename):
-        fp = open(filename)
+        fp = open(filename, encoding='utf-8')
         try:
             content = fp.read()
         finally:
@@ -145,7 +145,7 @@ def find_provides(docs):
     """
     filename = docs.get('meta.provides', 'PROVIDES').strip()
     if filename and _os.path.isfile(filename):
-        fp = open(filename)
+        fp = open(filename, encoding='utf-8')
         try:
             content = fp.read()
         finally:
@@ -164,7 +164,7 @@ def find_license(docs):
     """
     filename = docs.get('meta.license', 'LICENSE').strip()
     if filename and _os.path.isfile(filename):
-        fp = open(filename)
+        fp = open(filename, encoding='utf-8')
         try:
             return fp.read().rstrip()
         finally:
@@ -339,7 +339,7 @@ def run(config=('package.cfg',), ext=None, script_args=None, manifest_only=0):
         ext = []
 
     cfg = _util.SafeConfigParser()
-    cfg.read(config)
+    cfg.read(config, encoding='utf-8')
     pkg = dict(cfg.items('package'))
     python_min = pkg.get('python.min') or None
     python_max = pkg.get('python.max') or None
