@@ -1,3 +1,11 @@
+Changes with version
+
+ *) Relint with newer pylint
+
+ *) Fix locale problem with the setup script on python3.
+    Submitted by https://github.com/svenstaro
+
+
 Changes with version 1.0.9
 
  *) Documentation and benchmark updates
@@ -15,8 +23,8 @@ Changes with version 1.0.8
  *) Added support for python 3.4
 
  *) Added support for keeping comments starting with an exclamation mark. This
-   feature can be enabled by passing keep_bang_comments=True to the jsmin
-   function.
+    feature can be enabled by passing keep_bang_comments=True to the jsmin
+    function.
 
 
 Changes with version 1.0.7
