@@ -130,7 +130,7 @@ class Check(Target):
     def run(self):
         from _setup.dev import analysis
         term.green('Linting rjsmin sources...')
-        res = analysis.pylint('_pkg/pylint.conf', 'rjsmin')
+        res = analysis.pylint('pylintrc', 'rjsmin')
         if res == 2:
             make.warn('pylint not found', self.NAME)
 
