@@ -26,7 +26,6 @@ __author__ = "Andr\xe9 Malo"
 __author__ = getattr(__author__, 'decode', lambda x: __author__)('latin-1')
 __docformat__ = "restructuredtext en"
 
-import errno as _errno
 import os as _os
 import re as _re
 import sys as _sys
@@ -39,9 +38,9 @@ from _setup.make import targets, default_targets
 
 
 if _sys.version_info[0] == 3:
-    def textopen(*args):
-        return open(*args, encoding='utf-8')
     cfgread = dict(encoding='utf-8')
+    def textopen(*args):
+        return open(*args, **cfgread)
 else:
     textopen = open
     cfgread = {}
@@ -184,6 +183,8 @@ class Compile(Target):
         for name in shell.dirs('.', '__pycache__'):
             shell.rm_rf(name)
         for name in shell.files('.', '*.py[co]'):
+            shell.rm(name)
+        for name in shell.files('.', '*$py.class'):
             shell.rm(name)
 
         term.green("Removing c extensions...")
