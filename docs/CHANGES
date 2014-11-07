@@ -1,5 +1,7 @@
 Changes with version
 
+ *) Added support for pypy 2.2
+
  *) Relint with newer pylint
 
  *) Fix locale problem with the setup script on python3.
