@@ -1,3 +1,9 @@
+Changes with version
+
+ *) Lift max restrictions for pypy versions. Added pypy3 support.
+    Submitted by https://github.com/tony
+
+
 Changes with version 1.0.10
 
  *) Added support for pypy 2.2
