@@ -87,7 +87,7 @@ def find_description(docs):
     summary = None
     filename = docs.get('meta.summary', 'SUMMARY').strip()
     if filename and _os.path.isfile(filename):
-        fp = open(filename, encoding='utf-8')
+        fp = open(filename)
         try:
             try:
                 summary = fp.read().strip().splitlines()[0].rstrip()
@@ -99,7 +99,7 @@ def find_description(docs):
     description = None
     filename = docs.get('meta.description', 'DESCRIPTION').strip()
     if filename and _os.path.isfile(filename):
-        fp = open(filename, encoding='utf-8')
+        fp = open(filename)
         try:
             description = fp.read().rstrip()
         finally:
@@ -125,7 +125,7 @@ def find_classifiers(docs):
     """
     filename = docs.get('meta.classifiers', 'CLASSIFIERS').strip()
     if filename and _os.path.isfile(filename):
-        fp = open(filename, encoding='utf-8')
+        fp = open(filename)
         try:
             content = fp.read()
         finally:
@@ -144,7 +144,7 @@ def find_provides(docs):
     """
     filename = docs.get('meta.provides', 'PROVIDES').strip()
     if filename and _os.path.isfile(filename):
-        fp = open(filename, encoding='utf-8')
+        fp = open(filename)
         try:
             content = fp.read()
         finally:
@@ -163,7 +163,7 @@ def find_license(docs):
     """
     filename = docs.get('meta.license', 'LICENSE').strip()
     if filename and _os.path.isfile(filename):
-        fp = open(filename, encoding='utf-8')
+        fp = open(filename)
         try:
             return fp.read().rstrip()
         finally:
@@ -338,7 +338,7 @@ def run(config=('package.cfg',), ext=None, script_args=None, manifest_only=0):
         ext = []
 
     cfg = _util.SafeConfigParser()
-    cfg.read(config, encoding='utf-8')
+    cfg.read(config)
     pkg = dict(cfg.items('package'))
     python_min = pkg.get('python.min') or None
     python_max = pkg.get('python.max') or None
@@ -368,13 +368,13 @@ def run(config=('package.cfg',), ext=None, script_args=None, manifest_only=0):
         keywords = keywords.split()
     revision = pkg.get('version.revision', '').strip()
     if revision:
-        revision = "-r%s" % (revision,)
+        revision = int(revision)
 
     kwargs = {
         'name': pkg['name'],
         'version': "%s%s" % (
             pkg['version.number'],
-            ["", "-dev%s" % (revision,)][_util.humanbool(
+            ["", ".dev%d" % (revision,)][_util.humanbool(
                 'version.dev', pkg.get('version.dev', 'false')
             )],
         ),

@@ -1,6 +1,6 @@
 # -*- coding: ascii -*-
 #
-# Copyright 2007, 2008, 2009, 2010, 2011
+# Copyright 2007 - 2015
 # Andr\xe9 Malo or his licensors, as applicable
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -54,8 +54,7 @@ class _INFO(dict):
                     """ Make color control string """
                     seq = _curses.tigetstr('setaf')
                     if seq is not None:
-                        # XXX may fail - need better logic
-                        seq = seq.replace("%p1", "") % color
+                        seq = _curses.tparm(seq, color)
                     return seq
 
                 self['NORMAL'] = _curses.tigetstr('sgr0')
@@ -71,7 +70,7 @@ class _INFO(dict):
 
     def __getitem__(self, key):
         """ Deliver always """
-        dict.get(self, key) or ""
+        return dict.get(self, key) or ""
 
 
 def terminfo():
@@ -111,5 +110,3 @@ def announce(fmt, **kwargs):
     write(fmt, **kwargs)
     _sys.stdout.write("\n")
     _sys.stdout.flush()
-
-

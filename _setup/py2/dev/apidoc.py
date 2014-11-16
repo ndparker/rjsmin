@@ -41,7 +41,7 @@ def _cleanup_epydoc(target):
     """
     search = _re.compile(r'<table[^<>]+width="100%%"').search
     for filename in _shell.files(target, '*.html'):
-        fp = open(filename, 'r', encoding='latin-1')
+        fp = open(filename, 'r')
         try:
             html = fp.read()
         finally:
@@ -53,7 +53,7 @@ def _cleanup_epydoc(target):
             if end >= 0:
                 end += len('</table>') + 1
         html = html[:start] + html[end:]
-        fp = open(filename, 'w', encoding='latin-1')
+        fp = open(filename, 'w')
         try:
             fp.write(html)
         finally:
