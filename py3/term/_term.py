@@ -50,21 +50,28 @@ class _INFO(dict):
             except (TypeError, _curses.error):
                 pass
             else:
+                try:
+                    _curses.tigetstr('sgr0')
+                except TypeError:  # pypy3
+                    bc = lambda val: val.encode('ascii')
+                else:
+                    bc = lambda val: val
+
                 def make_color(color):
                     """ Make color control string """
-                    seq = _curses.tigetstr('setaf').decode('ascii')
+                    seq = _curses.tigetstr(bc('setaf')).decode('ascii')
                     if seq is not None:
                         # XXX may fail - need better logic
                         seq = seq.replace("%p1", "") % color
                     return seq
 
-                self['NORMAL'] = _curses.tigetstr('sgr0').decode('ascii')
-                self['BOLD'] = _curses.tigetstr('bold').decode('ascii')
+                self['NORMAL'] = _curses.tigetstr(bc('sgr0')).decode('ascii')
+                self['BOLD'] = _curses.tigetstr(bc('bold')).decode('ascii')
 
-                erase = _curses.tigetstr('el1').decode('ascii')
+                erase = _curses.tigetstr(bc('el1')).decode('ascii')
                 if erase is not None:
                     self['ERASE'] = erase + \
-                        _curses.tigetstr('cr').decode('ascii')
+                        _curses.tigetstr(bc('cr')).decode('ascii')
 
                 self['RED'] = make_color(_curses.COLOR_RED)
                 self['YELLOW'] = make_color(_curses.COLOR_YELLOW)
