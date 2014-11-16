@@ -41,7 +41,7 @@ def check_python_version(impl, version_min, version_max):
     """ Check python version """
     if impl == 'python':
         version_info = _sys.version_info
-    elif impl == 'pypy':
+    elif impl == 'pypy3':
         version_info = getattr(_sys, 'pypy_version_info', None)
         if not version_info:
             return
@@ -50,7 +50,7 @@ def check_python_version(impl, version_min, version_max):
             return
         version_info = _sys.version_info
     else:
-        raise AssertionError("impl not in ('python', 'pypy', 'jython')")
+        raise AssertionError("impl not in ('python', 'pypy3', 'jython')")
 
     pyversion = list(map(int, version_info[:3]))
     if version_min:
@@ -344,9 +344,9 @@ def run(config=('package.cfg',), ext=None, script_args=None, manifest_only=0):
     python_min = pkg.get('python.min') or None
     python_max = pkg.get('python.max') or None
     check_python_version('python', python_min, python_max)
-    pypy_min = pkg.get('pypy.min') or None
-    pypy_max = pkg.get('pypy.max') or None
-    check_python_version('pypy', pypy_min, pypy_max)
+    pypy_min = pkg.get('pypy3.min') or None
+    pypy_max = pkg.get('pypy3.max') or None
+    check_python_version('pypy3', pypy_min, pypy_max)
     jython_min = pkg.get('jython.min') or None
     jython_max = pkg.get('jython.max') or None
     check_python_version('jython', jython_min, jython_max)
