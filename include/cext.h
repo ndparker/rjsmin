@@ -62,6 +62,10 @@
 
 #define EXT3
 
+#define Py_TPFLAGS_HAVE_CLASS (0)
+#define Py_TPFLAGS_HAVE_WEAKREFS (0)
+#define Py_TPFLAGS_HAVE_ITER (0)
+
 #ifndef PyMODINIT_FUNC
 #define EXT_INIT_FUNC PyObject *CONCATENATE(PyInit_, EXT_MODULE)(void)
 #else
@@ -88,6 +92,11 @@ static struct PyModuleDef EXT_DEFINE_VAR = { \
 #else /* end py3k */
 
 #define EXT2
+
+#ifndef PyVarObject_HEAD_INIT
+    #define PyVarObject_HEAD_INIT(type, size) \
+        PyObject_HEAD_INIT(type) size,
+#endif
 
 #ifndef PyMODINIT_FUNC
 #define EXT_INIT_FUNC void CONCATENATE(init, EXT_MODULE)(void)
