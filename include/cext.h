@@ -62,9 +62,17 @@
 
 #define EXT3
 
+#ifndef Py_TPFLAGS_HAVE_CLASS
 #define Py_TPFLAGS_HAVE_CLASS (0)
+#endif
+
+#ifndef Py_TPFLAGS_HAVE_WEAKREFS
 #define Py_TPFLAGS_HAVE_WEAKREFS (0)
+#endif
+
+#ifndef Py_TPFLAGS_HAVE_ITER
 #define Py_TPFLAGS_HAVE_ITER (0)
+#endif
 
 #ifndef PyMODINIT_FUNC
 #define EXT_INIT_FUNC PyObject *CONCATENATE(PyInit_, EXT_MODULE)(void)

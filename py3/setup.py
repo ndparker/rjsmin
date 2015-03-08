@@ -250,14 +250,14 @@ def make_manifest(manifest, config, docs, kwargs):
     kwargs['packages'] = list(kwargs.get('packages') or ()) + [
         '_setup', '_setup.py2', '_setup.py3',
     ] + list(manifest.get('packages.extra', '').split() or ())
-    _core._setup_stop_after = "commandline"
+    _core._setup_stop_after = "commandline"  # noqa pylint: disable = protected-access
     try:
         dist = _core.setup(**kwargs)
     finally:
-        _core._setup_stop_after = None
+        _core._setup_stop_after = None  # pylint: disable = protected-access
 
     result = ['MANIFEST', 'PKG-INFO', 'setup.py'] + list(config)
-    # TODO: work with default values:
+    # xx: work with default values?
     for key in ('classifiers', 'description', 'summary', 'provides',
                 'license'):
         filename = docs.get('meta.' + key, '').strip()
@@ -266,7 +266,7 @@ def make_manifest(manifest, config, docs, kwargs):
 
     cmd = dist.get_command_obj("build_py")
     cmd.ensure_finalized()
-    #from pprint import pprint; pprint(("build_py", cmd.get_source_files()))
+    # from pprint import pprint; pprint(("build_py", cmd.get_source_files()))
     for item in cmd.get_source_files():
         result.append(_posixpath.sep.join(
             _os.path.normpath(item).split(_os.path.sep)
@@ -274,7 +274,7 @@ def make_manifest(manifest, config, docs, kwargs):
 
     cmd = dist.get_command_obj("build_ext")
     cmd.ensure_finalized()
-    #from pprint import pprint; pprint(("build_ext", cmd.get_source_files()))
+    # from pprint import pprint; pprint(("build_ext", cmd.get_source_files()))
     for item in cmd.get_source_files():
         result.append(_posixpath.sep.join(
             _os.path.normpath(item).split(_os.path.sep)
@@ -288,7 +288,7 @@ def make_manifest(manifest, config, docs, kwargs):
     cmd = dist.get_command_obj("build_clib")
     cmd.ensure_finalized()
     if cmd.libraries:
-        #import pprint; pprint.pprint(("build_clib", cmd.get_source_files()))
+        # import pprint; pprint.pprint(("build_clib", cmd.get_source_files()))
         for item in cmd.get_source_files():
             result.append(_posixpath.sep.join(
                 _os.path.normpath(item).split(_os.path.sep)
@@ -301,7 +301,7 @@ def make_manifest(manifest, config, docs, kwargs):
 
     cmd = dist.get_command_obj("build_scripts")
     cmd.ensure_finalized()
-    #import pprint; pprint.pprint(("build_scripts", cmd.get_source_files()))
+    # import pprint; pprint.pprint(("build_scripts", cmd.get_source_files()))
     if cmd.get_source_files():
         for item in cmd.get_source_files():
             result.append(_posixpath.sep.join(
@@ -310,7 +310,7 @@ def make_manifest(manifest, config, docs, kwargs):
 
     cmd = dist.get_command_obj("install_data")
     cmd.ensure_finalized()
-    #from pprint import pprint; pprint(("install_data", cmd.get_inputs()))
+    # from pprint import pprint; pprint(("install_data", cmd.get_inputs()))
     try:
         strings = str
     except NameError:
@@ -335,11 +335,15 @@ def make_manifest(manifest, config, docs, kwargs):
 
 def run(config=('package.cfg',), ext=None, script_args=None, manifest_only=0):
     """ Main runner """
+    # pylint: disable = too-many-locals
     if ext is None:
         ext = []
 
     cfg = _util.SafeConfigParser()
-    cfg.read(config, encoding='utf-8')
+    if (3, 0, 0) <= _sys.version_info < (3, 2, 0):
+        cfg.read(config)
+    else:
+        cfg.read(config, encoding='utf-8')
     pkg = dict(cfg.items('package'))
     python_min = pkg.get('python.min') or None
     python_max = pkg.get('python.max') or None
