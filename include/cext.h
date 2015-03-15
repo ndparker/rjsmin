@@ -249,13 +249,17 @@ typedef int Py_ssize_t;
 #define PyType_IS_GC(t) PyType_HasFeature((t), Py_TPFLAGS_HAVE_GC)
 #endif
 
-#define DEFINE_GENERIC_DEALLOC(prefix)                      \
-static void prefix##_dealloc(void *self)                    \
-{                                                           \
-    if (PyType_IS_GC(((PyObject *)self)->ob_type))          \
-        PyObject_GC_UnTrack(self);                          \
-    (void)prefix##_clear(self);                             \
-    ((PyObject *)self)->ob_type->tp_free((PyObject *)self); \
+#ifndef Py_TYPE
+#define Py_TYPE(ob) (((PyObject*)(ob))->ob_type)
+#endif
+
+#define DEFINE_GENERIC_DEALLOC(prefix)          \
+static void prefix##_dealloc(void *self)        \
+{                                               \
+    if (PyType_IS_GC(Py_TYPE(self)))            \
+        PyObject_GC_UnTrack(self);              \
+    (void)prefix##_clear(self);                 \
+    (Py_TYPE(self))->tp_free((PyObject *)self); \
 }
 
 #endif /* SETUP_CEXT_H */
