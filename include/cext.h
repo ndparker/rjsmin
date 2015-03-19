@@ -97,6 +97,8 @@ static struct PyModuleDef EXT_DEFINE_VAR = { \
 #define EXT_INIT_ERROR(module) do {Py_XDECREF(module); return NULL;} while(0)
 #define EXT_INIT_RETURN(module) return module
 
+#define EXT_DOC_UNICODE(m)
+
 #else /* end py3k */
 
 #define EXT2
@@ -133,6 +135,25 @@ static struct EXT_DEFINE__STRUCT EXT_DEFINE_VAR = { \
 )
 #define EXT_INIT_ERROR(module) return
 #define EXT_INIT_RETURN(module) return
+
+#define EXT_DOC_UNICODE(m) do {                                         \
+    PyObject *doc__, *uni__;                                            \
+    int res__;                                                          \
+                                                                        \
+    if ((doc__ = PyObject_GetAttrString(m, "__doc__"))) {               \
+        uni__ = PyUnicode_FromEncodedObject(doc__, "utf-8", "strict");  \
+        Py_DECREF(doc__);                                               \
+        if (!uni__)                                                     \
+            EXT_INIT_ERROR(m);                                          \
+        res__ = PyObject_SetAttrString(m, "__doc__", uni__);            \
+        Py_DECREF(uni__);                                               \
+        if (res__ == -1)                                                \
+            EXT_INIT_ERROR(m);                                          \
+    }                                                                   \
+    else if (!(PyErr_Occurred()                                         \
+               && PyErr_ExceptionMatches(PyExc_AttributeError)))        \
+        EXT_INIT_ERROR(m);                                              \
+} while(0)
 
 #endif /* end py2K */
 
