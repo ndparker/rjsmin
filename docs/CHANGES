@@ -1,5 +1,7 @@
 Changes with version
 
+ *) Benchmark updates
+
  *) Lift max restrictions for CPython and Jython as well.
 
  *) Lift max restrictions for pypy versions. Added pypy3 support.
