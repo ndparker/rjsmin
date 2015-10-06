@@ -1,5 +1,7 @@
 Changes with version
 
+ *) Lift max restrictions for CPython and Jython as well.
+
  *) Lift max restrictions for pypy versions. Added pypy3 support.
     Submitted by https://github.com/tony
 
