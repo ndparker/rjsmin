@@ -374,6 +374,8 @@ def run(config=('package.cfg',), ext=None, script_args=None, manifest_only=0):
     revision = pkg.get('version.revision', '').strip()
     if revision:
         revision = int(revision)
+    else:
+        revision = 0
 
     kwargs = {
         'name': pkg['name'],
