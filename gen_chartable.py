@@ -1,20 +1,36 @@
 #!/usr/bin/env python
-# -*- coding: ascii -*-
-#
-# Copyright 2011
-# Andr\xe9 Malo or his licensors, as applicable
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+r"""
+========================================
+ Character table generator for rjsmin.c
+========================================
+
+Character table generator for rjsmin.c
+
+:Copyright:
+
+ Copyright 2011 - 2015
+ Andr\xe9 Malo or his licensors, as applicable
+
+:License:
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+"""
+if __doc__:
+    # pylint: disable = W0622
+    __doc__ = __doc__.encode('ascii').decode('unicode_escape')
+__author__ = r"Andr\xe9 Malo".encode('ascii').decode('unicode_escape')
+__docformat__ = "restructuredtext en"
+__license__ = "Apache License, Version 2.0"
 
 import re as _re
 
@@ -24,13 +40,15 @@ static const unsigned short rjsmin_charmask[128] = {
 };
 """.strip() + "\n"
 
+
 def _make_charmask():
+    """ Generate character mask table """
+    # pylint: disable = too-many-branches
+
     dull = r'[^\047"/\000-\040]'
     pre_regex = r'[(,=:\[!&|?{};\r\n]'
     regex_dull = r'[^/\\\[\r\n]'
     regex_cc_dull = r'[^\\\]\r\n]'
-
-    newline = r'[\r\n]'
 
     id_literal = r'[^\000-#%-,./:-@\[-^`{-~-]'
     id_literal_open = r'[^\000-\040"#%-\047)*,./:-@\\-^`|-~]'
@@ -41,9 +59,9 @@ def _make_charmask():
     space = r'[\000-\011\013\014\016-\040]'
 
     charmask = []
-    for x in range(8):
+    for x in range(8):  # pylint: disable = invalid-name
         maskline = []
-        for y in range(16):
+        for y in range(16):  # pylint: disable = invalid-name
             c, mask = chr(x*16 + y), 0
             if _re.match(dull, c):
                 mask |= 1
