@@ -11,7 +11,7 @@ The minifier is based on the semantics of `jsmin.c by Douglas Crockford`_\\.
 
 :Copyright:
 
- Copyright 2011 - 2014
+ Copyright 2011 - 2015
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -149,7 +149,7 @@ def _make_jsmin(python_only=False):
                 chr(first),
                 last > first + 1 and '-' or '',
                 last != first and chr(last) or ''
-            ) for first, last in result])
+            ) for first, last in result])  # noqa
 
         return _re.sub(
             r'([\000-\040\047])',  # \047 for better portability
@@ -207,7 +207,8 @@ def _make_jsmin(python_only=False):
         r'|%(space)s+'
         r'|(?:%(newline)s%(space)s*)+'
     ) % locals()).sub
-    #print space_sub_simple.__self__.pattern
+
+    # print space_sub_simple.__self__.pattern
 
     def space_subber_simple(match):
         """ Substitution callback """
@@ -250,7 +251,8 @@ def _make_jsmin(python_only=False):
         r'|%(space)s+'
         r'|(?:%(newline)s%(space)s*)+'
     ) % dict(locals(), space=space_nobang)).sub
-    #print space_sub_banged.__self__.pattern
+
+    # print space_sub_banged.__self__.pattern
 
     def space_subber_banged(match):
         """ Substitution callback """
