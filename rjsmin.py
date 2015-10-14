@@ -184,6 +184,7 @@ def _make_jsmin(python_only=False):
     id_literal = id_literal_(r'[a-zA-Z0-9_$]')
     id_literal_open = id_literal_(r'[a-zA-Z0-9_${\[(!+-]')
     id_literal_close = id_literal_(r'[a-zA-Z0-9_$}\])"\047+-]')
+    post_regex_off = id_literal_(r'[^\000-\040}\])?:|,;.&=+-]')
 
     dull = r'[^\047"/\000-\040]'
 
@@ -194,16 +195,20 @@ def _make_jsmin(python_only=False):
         r'|(%(strings)s%(dull)s*)'                             # 1
         r'|(?<=%(preregex1)s)'
             r'%(space)s*(?:%(newline)s%(space)s*)*'
-            r'(%(regex)s%(dull)s*)'                            # 2
+            r'(%(regex)s)'                                     # 2
+            r'(%(space)s*(?:%(newline)s%(space)s*)+'           # 3
+                r'(?=%(post_regex_off)s))?'
         r'|(?<=%(preregex2)s)'
             r'%(space)s*(?:%(newline)s%(space)s)*'
-            r'(%(regex)s%(dull)s*)'                            # 3
+            r'(%(regex)s)'                                     # 4
+            r'(%(space)s*(?:%(newline)s%(space)s*)+'           # 5
+                r'(?=%(post_regex_off)s))?'
         r'|(?<=%(id_literal_close)s)'
-            r'%(space)s*(?:(%(newline)s)%(space)s*)+'          # 4
+            r'%(space)s*(?:(%(newline)s)%(space)s*)+'          # 6
             r'(?=%(id_literal_open)s)'
-        r'|(?<=%(id_literal)s)(%(space)s)+(?=%(id_literal)s)'  # 5
-        r'|(?<=\+)(%(space)s)+(?=\+)'                          # 6
-        r'|(?<=-)(%(space)s)+(?=-)'                            # 7
+        r'|(?<=%(id_literal)s)(%(space)s)+(?=%(id_literal)s)'  # 7
+        r'|(?<=\+)(%(space)s)+(?=\+)'                          # 8
+        r'|(?<=-)(%(space)s)+(?=-)'                            # 9
         r'|%(space)s+'
         r'|(?:%(newline)s%(space)s*)+'
     ) % locals()).sub
@@ -220,12 +225,16 @@ def _make_jsmin(python_only=False):
         elif groups[1]:
             return groups[1]
         elif groups[2]:
+            if groups[3]:
+                return groups[2] + '\n'
             return groups[2]
-        elif groups[3]:
-            return groups[3]
         elif groups[4]:
+            if groups[5]:
+                return groups[4] + '\n'
+            return groups[4]
+        elif groups[6]:
             return '\n'
-        elif groups[5] or groups[6] or groups[7]:
+        elif groups[7] or groups[8] or groups[9]:
             return ' '
         else:
             return ''
@@ -238,16 +247,20 @@ def _make_jsmin(python_only=False):
         r'|(%(bang_comment)s%(dull)s*)'                        # 2
         r'|(?<=%(preregex1)s)'
             r'%(space)s*(?:%(newline)s%(space)s*)*'
-            r'(%(regex)s%(dull)s*)'                            # 3
+            r'(%(regex)s)'                                     # 3
+            r'(%(space)s*(?:%(newline)s%(space)s*)+'           # 4
+                r'(?=%(post_regex_off)s))?'
         r'|(?<=%(preregex2)s)'
             r'%(space)s*(?:%(newline)s%(space)s)*'
-            r'(%(regex)s%(dull)s*)'                            # 4
+            r'(%(regex)s)'                                     # 5
+            r'(%(space)s*(?:%(newline)s%(space)s*)+'           # 6
+                r'(?=%(post_regex_off)s))?'
         r'|(?<=%(id_literal_close)s)'
-            r'%(space)s*(?:(%(newline)s)%(space)s*)+'          # 5
+            r'%(space)s*(?:(%(newline)s)%(space)s*)+'          # 7
             r'(?=%(id_literal_open)s)'
-        r'|(?<=%(id_literal)s)(%(space)s)+(?=%(id_literal)s)'  # 6
-        r'|(?<=\+)(%(space)s)+(?=\+)'                          # 7
-        r'|(?<=-)(%(space)s)+(?=-)'                            # 8
+        r'|(?<=%(id_literal)s)(%(space)s)+(?=%(id_literal)s)'  # 8
+        r'|(?<=\+)(%(space)s)+(?=\+)'                          # 9
+        r'|(?<=-)(%(space)s)+(?=-)'                            # 10
         r'|%(space)s+'
         r'|(?:%(newline)s%(space)s*)+'
     ) % dict(locals(), space=space_nobang)).sub
@@ -266,12 +279,16 @@ def _make_jsmin(python_only=False):
         elif groups[2]:
             return groups[2]
         elif groups[3]:
+            if groups[4]:
+                return groups[3] + '\n'
             return groups[3]
-        elif groups[4]:
-            return groups[4]
         elif groups[5]:
+            if groups[6]:
+                return groups[5] + '\n'
+            return groups[5]
+        elif groups[7]:
             return '\n'
-        elif groups[6] or groups[7] or groups[8]:
+        elif groups[8] or groups[9] or groups[10]:
             return ' '
         else:
             return ''
