@@ -190,20 +190,20 @@ def _make_jsmin(python_only=False):
     space_sub_simple = _re.compile((
         # noqa pylint: disable = C0330
 
-        r'(%(dull)s+)'
-        r'|(%(strings)s%(dull)s*)'
+        r'(%(dull)s+)'                                         # 0
+        r'|(%(strings)s%(dull)s*)'                             # 1
         r'|(?<=%(preregex1)s)'
             r'%(space)s*(?:%(newline)s%(space)s*)*'
-            r'(%(regex)s%(dull)s*)'
+            r'(%(regex)s%(dull)s*)'                            # 2
         r'|(?<=%(preregex2)s)'
             r'%(space)s*(?:%(newline)s%(space)s)*'
-            r'(%(regex)s%(dull)s*)'
+            r'(%(regex)s%(dull)s*)'                            # 3
         r'|(?<=%(id_literal_close)s)'
-            r'%(space)s*(?:(%(newline)s)%(space)s*)+'
+            r'%(space)s*(?:(%(newline)s)%(space)s*)+'          # 4
             r'(?=%(id_literal_open)s)'
-        r'|(?<=%(id_literal)s)(%(space)s)+(?=%(id_literal)s)'
-        r'|(?<=\+)(%(space)s)+(?=\+)'
-        r'|(?<=-)(%(space)s)+(?=-)'
+        r'|(?<=%(id_literal)s)(%(space)s)+(?=%(id_literal)s)'  # 5
+        r'|(?<=\+)(%(space)s)+(?=\+)'                          # 6
+        r'|(?<=-)(%(space)s)+(?=-)'                            # 7
         r'|%(space)s+'
         r'|(?:%(newline)s%(space)s*)+'
     ) % locals()).sub
@@ -233,21 +233,21 @@ def _make_jsmin(python_only=False):
     space_sub_banged = _re.compile((
         # noqa pylint: disable = C0330
 
-        r'(%(dull)s+)'
-        r'|(%(strings)s%(dull)s*)'
-        r'|(%(bang_comment)s%(dull)s*)'
+        r'(%(dull)s+)'                                         # 0
+        r'|(%(strings)s%(dull)s*)'                             # 1
+        r'|(%(bang_comment)s%(dull)s*)'                        # 2
         r'|(?<=%(preregex1)s)'
             r'%(space)s*(?:%(newline)s%(space)s*)*'
-            r'(%(regex)s%(dull)s*)'
+            r'(%(regex)s%(dull)s*)'                            # 3
         r'|(?<=%(preregex2)s)'
             r'%(space)s*(?:%(newline)s%(space)s)*'
-            r'(%(regex)s%(dull)s*)'
+            r'(%(regex)s%(dull)s*)'                            # 4
         r'|(?<=%(id_literal_close)s)'
-            r'%(space)s*(?:(%(newline)s)%(space)s*)+'
+            r'%(space)s*(?:(%(newline)s)%(space)s*)+'          # 5
             r'(?=%(id_literal_open)s)'
-        r'|(?<=%(id_literal)s)(%(space)s)+(?=%(id_literal)s)'
-        r'|(?<=\+)(%(space)s)+(?=\+)'
-        r'|(?<=-)(%(space)s)+(?=-)'
+        r'|(?<=%(id_literal)s)(%(space)s)+(?=%(id_literal)s)'  # 6
+        r'|(?<=\+)(%(space)s)+(?=\+)'                          # 7
+        r'|(?<=-)(%(space)s)+(?=-)'                            # 8
         r'|%(space)s+'
         r'|(?:%(newline)s%(space)s*)+'
     ) % dict(locals(), space=space_nobang)).sub
