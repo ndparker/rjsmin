@@ -1,10 +1,18 @@
+Changes with version
+
+ *) Benchmark updates, dropped slimit benchmarks, because of installation
+    trouble
+
+ *) Handle line terminators after regex literals more sensible 
+
+
 Changes with version 1.0.11
 
  *) Benchmark updates
 
- *) Lift max restrictions for CPython and Jython as well.
+ *) Lifted max restrictions for CPython and Jython as well.
 
- *) Lift max restrictions for pypy versions. Added pypy3 support.
+ *) Lifted max restrictions for pypy versions. Added pypy3 support.
     Submitted by https://github.com/tony
 
 
