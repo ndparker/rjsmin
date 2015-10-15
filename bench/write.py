@@ -9,7 +9,7 @@ Write benchmark results.
 
 :Copyright:
 
- Copyright 2014
+ Copyright 2014 - 2015
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:

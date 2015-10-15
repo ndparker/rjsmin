@@ -1,5 +1,5 @@
 .. copyright:
-    Copyright 2011 - 2014
+    Copyright 2011 - 2015
     André Malo or his licensors, as applicable
 
 .. license:
@@ -24,7 +24,7 @@
 
 The following numbers have been measured with the bench package provided
 in the source distribution. Since the numbers don't vary much between
-python minor releases (e.g. 2.6 vs 2.7), only one benchmark per major
+python minor releases (e.g. 3.3 vs 3.4), only one benchmark per major
 version is given below. The :file:`docs/BENCHMARKS` file in the source
 distribution contains a more comprehensive list.
 
@@ -37,17 +37,6 @@ Here's the list of benchmarked implementations:
   A speed-refactored python port by Dave St.Germain. There are some
   spikes in lower Python 3 versions (especially for the big file
   [apiviewer.js]).
-
-**slimit 0.8.1**
-  A minifier based on a parse/generate-iteration. Its Python3 support
-  seems to be incomplete as it fails with several inputs. Python2
-  support actually starts with Python 2.6 (name mangeling uses Python
-  2.6 features)
-
-  It could not be installed with Python 3.0 and Python 2.4.
-
-**slimit 0.8.1 (mangle)**
-  Same as slimit 0.8.1, but with name mangeling enabled.
 
 |**rjsmin**|
   this very project
