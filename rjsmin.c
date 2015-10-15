@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 - 2014
+ * Copyright 2011 - 2015
  * Andr\xe9 Malo or his licensors, as applicable
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,15 +18,16 @@
 #include "cext.h"
 EXT_INIT_FUNC;
 
-#define RJSMIN_DULL_BIT          (1 << 0)
-#define RJSMIN_PRE_REGEX_BIT     (1 << 1)
-#define RJSMIN_REGEX_DULL_BIT    (1 << 2)
-#define RJSMIN_REGEX_CC_DULL_BIT (1 << 3)
-#define RJSMIN_ID_LIT_BIT        (1 << 4)
-#define RJSMIN_ID_LIT_O_BIT      (1 << 5)
-#define RJSMIN_ID_LIT_C_BIT      (1 << 6)
-#define RJSMIN_STRING_DULL_BIT   (1 << 7)
-#define RJSMIN_SPACE_BIT         (1 << 8)
+#define RJSMIN_DULL_BIT           (1 << 0)
+#define RJSMIN_PRE_REGEX_BIT      (1 << 1)
+#define RJSMIN_REGEX_DULL_BIT     (1 << 2)
+#define RJSMIN_REGEX_CC_DULL_BIT  (1 << 3)
+#define RJSMIN_ID_LIT_BIT         (1 << 4)
+#define RJSMIN_ID_LIT_O_BIT       (1 << 5)
+#define RJSMIN_ID_LIT_C_BIT       (1 << 6)
+#define RJSMIN_STRING_DULL_BIT    (1 << 7)
+#define RJSMIN_SPACE_BIT          (1 << 8)
+#define RJSMIN_POST_REGEX_OFF_BIT (1 << 9)
 
 #ifdef EXT3
 typedef Py_UNICODE rchar;
@@ -56,6 +57,9 @@ typedef unsigned char rchar;
 #define RJSMIN_IS_ID_LITERAL_CLOSE(c) ((U(c) > 127) || \
     (rjsmin_charmask[U(c) & 0x7F] & RJSMIN_ID_LIT_C_BIT))
 
+#define RJSMIN_IS_POST_REGEX_OFF(c) ((U(c) > 127) || \
+    (rjsmin_charmask[U(c) & 0x7F] & RJSMIN_POST_REGEX_OFF_BIT))
+
 #define RJSMIN_IS_SPACE(c) ((U(c) <= 127) && \
     (rjsmin_charmask[U(c) & 0x7F] & RJSMIN_SPACE_BIT))
 
@@ -68,18 +72,18 @@ static const unsigned short rjsmin_charmask[128] = {
     396, 396,   2, 396, 396,   2, 396, 396,
     396, 396, 396, 396, 396, 396, 396, 396,
     396, 396, 396, 396, 396, 396, 396, 396,
-    396, 175,  76, 141, 253, 141, 143,  76,
-    175, 205, 141, 237, 143, 237, 141, 136,
-    253, 253, 253, 253, 253, 253, 253, 253,
-    253, 253, 143, 143, 141, 143, 141, 143,
-    141, 253, 253, 253, 253, 253, 253, 253,
-    253, 253, 253, 253, 253, 253, 253, 253,
-    253, 253, 253, 253, 253, 253, 253, 253,
-    253, 253, 253, 171,   1, 197, 141, 253,
-    141, 253, 253, 253, 253, 253, 253, 253,
-    253, 253, 253, 253, 253, 253, 253, 253,
-    253, 253, 253, 253, 253, 253, 253, 253,
-    253, 253, 253, 175, 143, 207, 141, 253
+    396, 687, 588, 653, 765, 653, 143, 588,
+    687, 205, 653, 237, 143, 237, 141, 648,
+    765, 765, 765, 765, 765, 765, 765, 765,
+    765, 765, 143, 143, 653, 143, 653, 143,
+    653, 765, 765, 765, 765, 765, 765, 765,
+    765, 765, 765, 765, 765, 765, 765, 765,
+    765, 765, 765, 765, 765, 765, 765, 765,
+    765, 765, 765, 683, 513, 197, 653, 765,
+    653, 765, 765, 765, 765, 765, 765, 765,
+    765, 765, 765, 765, 765, 765, 765, 765,
+    765, 765, 765, 765, 765, 765, 765, 765,
+    765, 765, 765, 687, 143, 207, 653, 765
 };
 
 static Py_ssize_t

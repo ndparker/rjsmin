@@ -53,6 +53,7 @@ def _make_charmask():
     id_literal = r'[^\000-#%-,./:-@\[-^`{-~-]'
     id_literal_open = r'[^\000-\040"#%-\047)*,./:-@\\-^`|-~]'
     id_literal_close = r'[^\000-!#%&(*,./:-@\[\\^`{|~]'
+    post_regex_off = r'[^\000-\040&)+,.:;=?\]|}-]'
 
     string_dull = r'[^\047"\\\r\n]'
 
@@ -81,6 +82,8 @@ def _make_charmask():
                 mask |= 128
             if _re.match(space, c):
                 mask |= 256
+            if _re.match(post_regex_off, c):
+                mask |= 512
 
             if mask < 10:
                 mask = '  ' + str(mask)
