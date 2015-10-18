@@ -158,6 +158,7 @@ rjsmin(const rchar *source, rchar *target, Py_ssize_t length,
                     goto skip_or_copy_ws;
 
                 default:
+                    xtarget = NULL;
                     if (   target == tstart
                         || RJSMIN_IS_PRE_REGEX_1(*((pctoken ? pctoken : target)
                                                    - 1))
@@ -182,8 +183,9 @@ rjsmin(const rchar *source, rchar *target, Py_ssize_t length,
 
                         reset = source;
                         if (spaced == U('\n')) {
-                            *target++ = U('\n');
                             spaced = U(' ');
+                            if (xtarget)
+                                *target++ = U('\n');
                         }
 
                         *target++ = U('/');
