@@ -159,8 +159,7 @@ rjsmin(const rchar *source, rchar *target, Py_ssize_t length,
                         || RJSMIN_IS_PRE_REGEX_1(*((pctoken ? pctoken : target)
                                                    - 1))
                         || (
-                            (!pctoken || spaced == U(' '))
-                            && (xtarget = pctoken ? pctoken : target)
+                            (xtarget = pctoken ? pctoken : target)
                             && (xtarget - tstart >= 6)
                             && *(xtarget - 1) == U('n')
                             && *(xtarget - 2) == U('r')
@@ -176,9 +175,13 @@ rjsmin(const rchar *source, rchar *target, Py_ssize_t length,
 
             /* Regex */
                         if (post_regex) post_regex = 0;
-                        if (pctoken) pctoken = NULL;
-
                         reset = source;
+
+                        if (pctoken) {
+                            pctoken = NULL;
+                            if (spaced == U('\n'))
+                                *target++ = U('\n');
+                        }
                         *target++ = U('/');
                         while (source < sentinel) {
                             c = *source++;
