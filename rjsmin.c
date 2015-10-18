@@ -101,6 +101,7 @@ rjsmin(const rchar *source, rchar *target, Py_ssize_t length,
         if (RJSMIN_IS_DULL(c)) {
             if (post_regex) post_regex = 0;
             if (pctoken) pctoken = NULL;
+            if (spaced == U('\n')) spaced = U(' ');
 
             *target++ = c;
             continue;
@@ -111,6 +112,7 @@ rjsmin(const rchar *source, rchar *target, Py_ssize_t length,
         case U('\''): case U('"'):
             if (post_regex) post_regex = 0;
             if (pctoken) pctoken = NULL;
+            if (spaced == U('\n')) spaced = U(' ');
 
             reset = source;
             *target++ = quote = c;
@@ -145,6 +147,7 @@ rjsmin(const rchar *source, rchar *target, Py_ssize_t length,
             if (!(source < sentinel)) {
                 if (post_regex) post_regex = 0;
                 if (pctoken) pctoken = NULL;
+                if (spaced == U('\n')) spaced = U(' ');
 
                 *target++ = c;
             }
@@ -175,13 +178,14 @@ rjsmin(const rchar *source, rchar *target, Py_ssize_t length,
 
             /* Regex */
                         if (post_regex) post_regex = 0;
-                        reset = source;
+                        if (pctoken) pctoken = NULL;
 
-                        if (pctoken) {
-                            pctoken = NULL;
-                            if (spaced == U('\n'))
-                                *target++ = U('\n');
+                        reset = source;
+                        if (spaced == U('\n')) {
+                            *target++ = U('\n');
+                            spaced = U(' ');
                         }
+
                         *target++ = U('/');
                         while (source < sentinel) {
                             c = *source++;
@@ -232,6 +236,7 @@ rjsmin(const rchar *source, rchar *target, Py_ssize_t length,
             /* Just a slash */
                         if (post_regex) post_regex = 0;
                         if (pctoken) pctoken = NULL;
+                        if (spaced == U('\n')) spaced = U(' ');
 
                         *target++ = c;
                     }
