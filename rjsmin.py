@@ -62,7 +62,7 @@ Both python 2 and python 3 are supported.
    http://www.crockford.com/javascript/jsmin.c
 """
 if __doc__:
-    # pylint: disable = W0622
+    # pylint: disable = redefined-builtin
     __doc__ = __doc__.encode('ascii').decode('unicode_escape')
 __author__ = r"Andr\xe9 Malo".encode('ascii').decode('unicode_escape')
 __docformat__ = "restructuredtext en"
@@ -88,11 +88,12 @@ def _make_jsmin(python_only=False):
     :Return: Minifier
     :Rtype: ``callable``
     """
-    # pylint: disable = R0912, R0914, W0612
+    # pylint: disable = unused-variable
+    # pylint: disable = too-many-locals
 
     if not python_only:
         try:
-            import _rjsmin  # pylint: disable = F0401
+            import _rjsmin
         except ImportError:
             pass
         else:
@@ -100,7 +101,7 @@ def _make_jsmin(python_only=False):
     try:
         xrange
     except NameError:
-        xrange = range  # pylint: disable = W0622
+        xrange = range  # pylint: disable = redefined-builtin
 
     space_chars = r'[\000-\011\013\014\016-\040]'
 
@@ -189,7 +190,7 @@ def _make_jsmin(python_only=False):
     dull = r'[^\047"/\000-\040]'
 
     space_sub_simple = _re.compile((
-        # noqa pylint: disable = C0330
+        # noqa pylint: disable = bad-continuation
 
         r'(%(dull)s+)'                                         # 0
         r'|(%(strings)s%(dull)s*)'                             # 1
@@ -217,7 +218,7 @@ def _make_jsmin(python_only=False):
 
     def space_subber_simple(match):
         """ Substitution callback """
-        # pylint: disable = R0911
+        # pylint: disable = too-many-return-statements
 
         groups = match.groups()
         if groups[0]:
@@ -240,7 +241,7 @@ def _make_jsmin(python_only=False):
             return ''
 
     space_sub_banged = _re.compile((
-        # noqa pylint: disable = C0330
+        # noqa pylint: disable = bad-continuation
 
         r'(%(dull)s+)'                                         # 0
         r'|(%(strings)s%(dull)s*)'                             # 1
@@ -267,8 +268,6 @@ def _make_jsmin(python_only=False):
     # print space_sub_banged.__self__.pattern
 
     keep = _re.compile((
-        # noqa pylint: disable = C0330
-
         r'%(space_chars)s+|%(space_comment_nobang)s+|%(newline)s+'
         r'|(%(bang_comment)s+)'
     ) % locals()).sub
@@ -278,7 +277,7 @@ def _make_jsmin(python_only=False):
 
     def space_subber_banged(match):
         """ Substitution callback """
-        # pylint: disable = R0911
+        # pylint: disable = too-many-return-statements
 
         groups = match.groups()
         if groups[0]:
@@ -306,7 +305,7 @@ def _make_jsmin(python_only=False):
         else:
             return keep(keeper, groups[12] or groups[13])
 
-    def jsmin(script, keep_bang_comments=False):  # pylint: disable = W0621
+    def jsmin(script, keep_bang_comments=False):
         r"""
         Minify javascript based on `jsmin.c by Douglas Crockford`_\.
 
@@ -327,6 +326,8 @@ def _make_jsmin(python_only=False):
         :Return: Minified script
         :Rtype: ``str``
         """
+        # pylint: disable = redefined-outer-name
+
         if keep_bang_comments:
             return space_sub_banged(
                 space_subber_banged, '\n%s\n' % script
@@ -489,16 +490,16 @@ if __name__ == '__main__':
     def main():
         """ Main """
         import sys as _sys
-        keep_bang_comments = (
-            '-b' in _sys.argv[1:]
-            or '-bp' in _sys.argv[1:]
-            or '-pb' in _sys.argv[1:]
-        )
-        if '-p' in _sys.argv[1:] or '-bp' in _sys.argv[1:] \
-                or '-pb' in _sys.argv[1:]:
-            global jsmin  # pylint: disable = W0603
-            jsmin = _make_jsmin(python_only=True)
-        _sys.stdout.write(jsmin(
+
+        argv = _sys.argv[1:]
+        keep_bang_comments = '-b' in argv or '-bp' in argv or '-pb' in argv
+        if '-p' in argv or '-bp' in argv or '-pb' in argv:
+            xjsmin = _make_jsmin(python_only=True)
+        else:
+            xjsmin = jsmin
+
+        _sys.stdout.write(xjsmin(
             _sys.stdin.read(), keep_bang_comments=keep_bang_comments
         ))
+
     main()
