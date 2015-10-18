@@ -67,7 +67,7 @@ if __doc__:
 __author__ = r"Andr\xe9 Malo".encode('ascii').decode('unicode_escape')
 __docformat__ = "restructuredtext en"
 __license__ = "Apache License, Version 2.0"
-__version__ = '1.0.11'
+__version__ = '1.0.12'
 __all__ = ['jsmin']
 
 import re as _re

@@ -4,7 +4,7 @@ Download
 Change Log
 ----------
 
-`CHANGES file <http://storage.perlig.de/rjsmin/CHANGES-1.0.11>`_
+`CHANGES file <http://storage.perlig.de/rjsmin/CHANGES-1.0.12>`_
 
 
 Source Packages
@@ -15,11 +15,11 @@ Source Packages
 Current Stable Version
 ''''''''''''''''''''''
 
-- `rjsmin-1.0.11.tar.xz <http://storage.perlig.de/rjsmin/rjsmin-1.0.11.tar.xz>`_
-- `rjsmin-1.0.11.tar.bz2 <http://storage.perlig.de/rjsmin/rjsmin-1.0.11.tar.bz2>`_
-- `rjsmin-1.0.11.tar.gz <http://storage.perlig.de/rjsmin/rjsmin-1.0.11.tar.gz>`_
-- `rjsmin-1.0.11.zip <http://storage.perlig.de/rjsmin/rjsmin-1.0.11.zip>`_
-- `rjsmin-1.0.11.digests <http://storage.perlig.de/rjsmin/rjsmin-1.0.11.digests>`_
+- `rjsmin-1.0.12.tar.xz <http://storage.perlig.de/rjsmin/rjsmin-1.0.12.tar.xz>`_
+- `rjsmin-1.0.12.tar.bz2 <http://storage.perlig.de/rjsmin/rjsmin-1.0.12.tar.bz2>`_
+- `rjsmin-1.0.12.tar.gz <http://storage.perlig.de/rjsmin/rjsmin-1.0.12.tar.gz>`_
+- `rjsmin-1.0.12.zip <http://storage.perlig.de/rjsmin/rjsmin-1.0.12.zip>`_
+- `rjsmin-1.0.12.digests <http://storage.perlig.de/rjsmin/rjsmin-1.0.12.digests>`_
 
 .. end stable
 
@@ -29,17 +29,17 @@ Integrity Check
 
 There are hashes (MD5, SHA1 and SHA256) of the download packages stored
 in the `digests file
-<http://storage.perlig.de/rjsmin/rjsmin-1.0.11.digests>`_\.
+<http://storage.perlig.de/rjsmin/rjsmin-1.0.12.digests>`_\.
 In order to check the integrity of the downloaded file, use a tool like
 md5sum (or sha1sum, sha256sum accordingly), e.g.:
 
 .. sourcecode:: console
 
-    $ md5sum -c rjsmin-1.0.11.digests
-    rjsmin-1.0.11.tar.bz2: OK
-    rjsmin-1.0.11.tar.gz: OK
-    rjsmin-1.0.11.tar.xz: OK
-    rjsmin-1.0.11.zip: OK
+    $ md5sum -c rjsmin-1.0.12.digests
+    rjsmin-1.0.12.tar.bz2: OK
+    rjsmin-1.0.12.tar.gz: OK
+    rjsmin-1.0.12.tar.xz: OK
+    rjsmin-1.0.12.zip: OK
 
 In order to check the integrity of the digest file itself, you can check
 the PGP signature of that file. The file is signed by André Malo, Key-ID
@@ -47,7 +47,7 @@ the PGP signature of that file. The file is signed by André Malo, Key-ID
 
 .. sourcecode:: console
 
-    $ gpg --verify rjsmin-1.0.11.digests
+    $ gpg --verify rjsmin-1.0.12.digests
     gpg: Signature made Sun Oct 11 15:38:49 2015 CEST using DSA key ID 8103A37E
     gpg: Good signature from "Andre Malo <nd@apache.org>"
     gpg:                 aka "Andr\xe9\x20Malo <nd@perlig.de>"
