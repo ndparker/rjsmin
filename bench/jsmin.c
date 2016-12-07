@@ -135,7 +135,7 @@ action(int d)
         putc(theA, stdout);
     case 2:
         theA = theB;
-        if (theA == '\'' || theA == '"') {
+        if (theA == '\'' || theA == '"' || theA == '`') {
             for (;;) {
                 putc(theA, stdout);
                 theA = get();
@@ -257,6 +257,7 @@ jsmin()
                 case '-':
                 case '"':
                 case '\'':
+                case '`':
                     action(1);
                     break;
                 default:
