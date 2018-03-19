@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: ascii -*-
-r"""
+u"""
 =====================
  Javascript Minifier
 =====================
@@ -11,7 +11,7 @@ The minifier is based on the semantics of `jsmin.c by Douglas Crockford`_\\.
 
 :Copyright:
 
- Copyright 2011 - 2015
+ Copyright 2011 - 2019
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -61,15 +61,13 @@ Both python 2 and python 3 are supported.
 .. _jsmin.c by Douglas Crockford:
    http://www.crockford.com/javascript/jsmin.c
 """
-if __doc__:
-    # pylint: disable = redefined-builtin
-    __doc__ = __doc__.encode('ascii').decode('unicode_escape')
-__author__ = r"Andr\xe9 Malo".encode('ascii').decode('unicode_escape')
+__author__ = u"Andr\xe9 Malo"
 __docformat__ = "restructuredtext en"
 __license__ = "Apache License, Version 2.0"
 __version__ = '1.0.12'
 __all__ = ['jsmin']
 
+import functools as _ft
 import re as _re
 
 
@@ -267,7 +265,7 @@ def _make_jsmin(python_only=False):
         r'|((?:%(newline)s%(space)s*)+)'                       # 14
     ) % locals()).sub
 
-    # print space_sub_banged.__self__.pattern
+    # print(space_sub_banged.__self__.pattern)
 
     keep = _re.compile((
         r'%(space_chars)s+|%(space_comment_nobang)s+|%(newline)s+'
@@ -275,7 +273,7 @@ def _make_jsmin(python_only=False):
     ) % locals()).sub
     keeper = lambda m: m.groups()[0] or ''
 
-    # print keep.__self__.pattern
+    # print(keep.__self__.pattern)
 
     def space_subber_banged(match):
         """ Substitution callback """
@@ -308,6 +306,9 @@ def _make_jsmin(python_only=False):
         else:
             return keep(keeper, groups[13] or groups[14])
 
+    banged = _ft.partial(space_sub_banged, space_subber_banged)
+    simple = _ft.partial(space_sub_simple, space_subber_simple)
+
     def jsmin(script, keep_bang_comments=False):
         r"""
         Minify javascript based on `jsmin.c by Douglas Crockford`_\.
@@ -331,18 +332,32 @@ def _make_jsmin(python_only=False):
         """
         # pylint: disable = redefined-outer-name
 
-        if keep_bang_comments:
-            return space_sub_banged(
-                space_subber_banged, '\n%s\n' % script
-            ).strip()
-        else:
-            return space_sub_simple(
-                space_subber_simple, '\n%s\n' % script
-            ).strip()
+        is_bytes, script = _as_str(script)
+        script = (banged if keep_bang_comments else simple)(
+            '\n%s\n' % script
+        ).strip()
+        if is_bytes:
+            return script.encode('latin-1')
+        return script
 
     return jsmin
 
 jsmin = _make_jsmin()
+
+
+def _as_str(script):
+    """ Make sure the script is a text string """
+    is_bytes = False
+    if str is bytes:
+        if not isinstance(script, basestring):  # noqa pylint: disable = undefined-variable
+            raise TypeError("Unexpected type")
+    elif isinstance(script, (bytes, bytearray)):
+        is_bytes = True
+        script = script.decode('latin-1')
+    elif not isinstance(script, str):
+        raise TypeError("Unexpected type")
+
+    return is_bytes, script
 
 
 def jsmin_for_posers(script, keep_bang_comments=False):
@@ -459,11 +474,11 @@ def jsmin_for_posers(script, keep_bang_comments=False):
             r'\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*)+)'
         )
 
-        keep = _re.compile((
+        keep = _re.compile(
             r'[\000-\011\013\014\016-\040]+|(?:/\*(?!!)[^*]*\*+(?:[^/*][^*]*'
             r'\*+)*/)+|(?:(?://[^\r\n]*)?[\r\n])+|((?:/\*![^*]*\*+(?:[^/*][^'
             r'*]*\*+)*/)+)'
-        ) % locals()).sub
+        ).sub
         keeper = lambda m: m.groups()[0] or ''
 
         def subber(match):
@@ -472,27 +487,31 @@ def jsmin_for_posers(script, keep_bang_comments=False):
             return (
                 groups[0] or
                 groups[1] or
-                (groups[3] and "%s%s%s%s" % (
+                groups[3] and "%s%s%s%s" % (
                     keep(keeper, groups[2]),
                     groups[3],
                     keep(keeper, groups[4] or ''),
                     groups[4] and '\n' or '',
-                )) or
-                (groups[7] and "%s%s%s%s%s" % (
+                ) or
+                groups[7] and "%s%s%s%s%s" % (
                     keep(keeper, groups[5]),
                     groups[6] and '\n' or '',
                     groups[7],
                     keep(keeper, groups[8] or ''),
                     groups[8] and '\n' or '',
-                )) or
-                (groups[9] and keep(keeper, groups[9] + '\n')) or
-                (groups[10] and keep(keeper, groups[10]) or ' ') or
-                (groups[11] and keep(keeper, groups[11]) or ' ') or
-                (groups[12] and keep(keeper, groups[12]) or ' ') or
+                ) or
+                groups[9] and (keep(keeper, groups[9]) + '\n') or
+                groups[10] and (keep(keeper, groups[10]) or ' ') or
+                groups[11] and (keep(keeper, groups[11]) or ' ') or
+                groups[12] and (keep(keeper, groups[12]) or ' ') or
                 keep(keeper, groups[13] or groups[14])
             )
 
-    return _re.sub(rex, subber, '\n%s\n' % script).strip()
+    is_bytes, script = _as_str(script)
+    script = _re.sub(rex, subber, '\n%s\n' % script).strip()
+    if is_bytes:
+        return script.encode('latin-1')
+    return script
 
 
 if __name__ == '__main__':

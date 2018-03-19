@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 - 2015
+ * Copyright 2011 - 2019
  * Andr\xe9 Malo or his licensors, as applicable
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,6 +33,9 @@ EXT_INIT_FUNC;
 typedef Py_UNICODE rchar;
 #else
 typedef unsigned char rchar;
+#endif
+#ifdef U
+#undef U
 #endif
 #define U(c) ((rchar)(c))
 
@@ -245,7 +248,7 @@ rjsmin(const rchar *source, rchar *target, Py_ssize_t length,
                     continue;
                 }
             }
-            continue;
+            continue;  /* LCOV_EXCL_LINE */
 
         /* Whitespace */
         default:
@@ -404,15 +407,14 @@ rjsmin_jsmin(PyObject *self, PyObject *args, PyObject *kwds)
     int keep_bang_comments;
 #ifdef EXT2
     int uni;
-#define UOBJ "O"
 #endif
 #ifdef EXT3
-#define UOBJ "U"
+    int bytes;
 #endif
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, UOBJ "|O", kwlist,
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "O|O", kwlist,
                                      &script, &keep_bang_comments_))
-        return NULL;
+        LCOV_EXCL_LINE_RETURN(NULL);
 
     if (!keep_bang_comments_)
         keep_bang_comments = 0;
@@ -425,18 +427,35 @@ rjsmin_jsmin(PyObject *self, PyObject *args, PyObject *kwds)
 #ifdef EXT2
     if (PyUnicode_Check(script)) {
         if (!(script = PyUnicode_AsUTF8String(script)))
-            return NULL;
+            LCOV_EXCL_LINE_RETURN(NULL);
         uni = 1;
+    }
+    else if (!PyString_Check(script)) {
+        PyErr_SetString(PyExc_TypeError, "Unexpected type");
+        return NULL;
     }
     else {
         if (!(script = PyObject_Str(script)))
-            return NULL;
+            LCOV_EXCL_LINE_RETURN(NULL);
         uni = 0;
     }
 #endif
 
 #ifdef EXT3
-    Py_INCREF(script);
+    if (PyBytes_Check(script) || PyByteArray_Check(script)) {
+        bytes = 1;
+        if (!(script = PyUnicode_FromEncodedObject(script,
+                                                   "latin-1", "strict")))
+            LCOV_EXCL_LINE_RETURN(NULL);
+    }
+    else if (PyUnicode_Check(script)) {
+        bytes = 0;
+        Py_INCREF(script);
+    }
+    else {
+        PyErr_SetString(PyExc_TypeError, "Unexpected type");
+        return NULL;
+    }
 #define PyString_GET_SIZE PyUnicode_GET_SIZE
 #define PyString_AS_STRING PyUnicode_AS_UNICODE
 #define _PyString_Resize PyUnicode_Resize
@@ -445,8 +464,12 @@ rjsmin_jsmin(PyObject *self, PyObject *args, PyObject *kwds)
 
     slength = PyString_GET_SIZE(script);
     if (!(result = PyString_FromStringAndSize(NULL, slength))) {
+        LCOV_EXCL_START
+
         Py_DECREF(script);
         return NULL;
+
+        LCOV_EXCL_STOP
     }
     Py_BEGIN_ALLOW_THREADS
     length = rjsmin((rchar *)PyString_AS_STRING(script),
@@ -456,22 +479,33 @@ rjsmin_jsmin(PyObject *self, PyObject *args, PyObject *kwds)
 
     Py_DECREF(script);
     if (length < 0) {
+        LCOV_EXCL_START
+
         Py_DECREF(result);
         return NULL;
+
+        LCOV_EXCL_STOP
     }
     if (length != slength && _PyString_Resize(&result, length) == -1)
-        return NULL;
+        LCOV_EXCL_LINE_RETURN(NULL);
 
 #ifdef EXT2
     if (uni) {
         script = PyUnicode_DecodeUTF8(PyString_AS_STRING(result),
                                       PyString_GET_SIZE(result), "strict");
         Py_DECREF(result);
-        if (!script)
-            return NULL;
-        result = script;
+        return script;
     }
 #endif
+
+#ifdef EXT3
+    if (bytes) {
+        script = PyUnicode_AsEncodedString(result, "latin-1", "strict");
+        Py_DECREF(result);
+        return script;
+    }
+#endif
+
     return result;
 }
 
@@ -479,7 +513,7 @@ rjsmin_jsmin(PyObject *self, PyObject *args, PyObject *kwds)
 
 EXT_METHODS = {
     {"jsmin",
-        (PyCFunction)rjsmin_jsmin, METH_VARARGS | METH_KEYWORDS,
+        EXT_CFUNC(rjsmin_jsmin), METH_VARARGS | METH_KEYWORDS,
         rjsmin_jsmin__doc__},
 
     {NULL}  /* Sentinel */
@@ -499,7 +533,7 @@ EXT_INIT_FUNC {
 
     /* Create the module and populate stuff */
     if (!(m = EXT_CREATE(&EXT_DEFINE_VAR)))
-        EXT_INIT_ERROR(NULL);
+        EXT_INIT_ERROR(LCOV_EXCL_LINE(NULL));
 
     EXT_ADD_UNICODE(m, "__author__", "Andr\xe9 Malo", "latin-1");
     EXT_ADD_STRING(m, "__docformat__", "restructuredtext en");

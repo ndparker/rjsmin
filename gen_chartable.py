@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-r"""
+u"""
 ========================================
  Character table generator for rjsmin.c
 ========================================
@@ -8,7 +8,7 @@ Character table generator for rjsmin.c
 
 :Copyright:
 
- Copyright 2011 - 2015
+ Copyright 2011 - 2019
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -25,10 +25,8 @@ Character table generator for rjsmin.c
  See the License for the specific language governing permissions and
  limitations under the License.
 """
-if __doc__:
-    # pylint: disable = W0622
-    __doc__ = __doc__.encode('ascii').decode('unicode_escape')
-__author__ = r"Andr\xe9 Malo".encode('ascii').decode('unicode_escape')
+from __future__ import print_function
+__author__ = u"Andr\xe9 Malo"
 __docformat__ = "restructuredtext en"
 __license__ = "Apache License, Version 2.0"
 
@@ -63,7 +61,7 @@ def _make_charmask():
     for x in range(8):  # pylint: disable = invalid-name
         maskline = []
         for y in range(16):  # pylint: disable = invalid-name
-            c, mask = chr(x*16 + y), 0
+            c, mask = chr(x * 16 + y), 0
             if _re.match(dull, c):
                 mask |= 1
             if _re.match(pre_regex, c):
@@ -96,4 +94,4 @@ def _make_charmask():
         charmask.append(', '.join(maskline))
     return TPL.replace('@@mask@@', ',\n    '.join(charmask))
 
-print _make_charmask()
+print(_make_charmask())

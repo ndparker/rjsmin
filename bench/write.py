@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: ascii -*-
-r"""
+u"""
 =========================
  Write benchmark results
 =========================
@@ -9,7 +9,7 @@ Write benchmark results.
 
 :Copyright:
 
- Copyright 2014 - 2015
+ Copyright 2014 - 2019
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -34,9 +34,7 @@ Usage::
     -t table  Table file to write to (like docs/_userdoc/benchmark.txt).
 
 """
-if __doc__:
-    __doc__ = __doc__.encode('ascii').decode('unicode_escape')
-__author__ = r"Andr\xe9 Malo".encode('ascii').decode('unicode_escape')
+__author__ = u"Andr\xe9 Malo"
 __docformat__ = "restructuredtext en"
 __license__ = "Apache License, Version 2.0"
 __version__ = "1.0.0"

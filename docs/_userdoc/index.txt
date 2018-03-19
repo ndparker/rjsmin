@@ -1,5 +1,5 @@
 .. copyright:
-    Copyright 2011 - 2015
+    Copyright 2011 - 2019
     André Malo or his licensors, as applicable
 
 .. license:
@@ -21,6 +21,10 @@
 ==============================
 
 |**rJSmin**| is a javascript minifier written in python.
+
+.. contents::
+    :local:
+
 
 The minifier is based on the semantics of `jsmin.c by Douglas Crockford`_\.
 
@@ -54,16 +58,21 @@ dramatic but still between 3 and 50 (for huge inputs).
 |rjsmin| comes with an optional C-reimplementation of the python/regex
 implementation, which speeds up the minifying process even more.
 
-|rjsmin| works with both python 2 (starting with python 2.4) and python 3.
+Supported python versions are 2.7 and 3.4+.
 
 .. _jsmin.c by Douglas Crockford: http://www.crockford.com/javascript/jsmin.c
+
+
+Development Status
+~~~~~~~~~~~~~~~~~~
+
+|rjsmin| is stable.
 
 
 Documentation
 ~~~~~~~~~~~~~
 
-A :rjsmin:`generated API documentation </>` is available. But you can
-just look into the module. It provides a simple function, called
+The module provides a simple function (generated apidoc below), called
 ``jsmin`` which takes the script as a string and returns the minified
 script as a string.
 
@@ -74,16 +83,16 @@ one jsmin.c provides:
 
     $ python -mrjsmin <script >minified
 
-It takes two options:
+This command line interface takes two options:
 
   -b  Keep bang-comments (Comments starting with an exclamation mark)
   -p  Force using the python implementation (not the C implementation)
 
 
-Development Status
-~~~~~~~~~~~~~~~~~~
+API Docs
+--------
 
-|rjsmin| is stable.
+.. autofunction:: rjsmin.jsmin
 
 
 License

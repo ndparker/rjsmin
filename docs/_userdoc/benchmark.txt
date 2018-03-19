@@ -1,5 +1,5 @@
 .. copyright:
-    Copyright 2011 - 2015
+    Copyright 2011 - 2019
     André Malo or his licensors, as applicable
 
 .. license:
@@ -21,6 +21,10 @@
 ====================
  rJSmin - Benchmark
 ====================
+
+.. contents::
+    :local:
+
 
 The following numbers have been measured with the bench package provided
 in the source distribution. Since the numbers don't vary much between

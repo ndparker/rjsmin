@@ -1,0 +1,28 @@
+# allow crash debugging
+-ggdb
+
+# produce coverage reports
+-ftest-coverage
+-fprofile-arcs
+
+# don't compile on weird code
+-std=c89 -pedantic -fno-strict-aliasing -Werror
+-Wall
+-Wbad-function-cast
+-Wcast-align
+-Wcast-qual
+-Wconversion
+-Wdeclaration-after-statement
+-Wextra
+-Winit-self
+-Wmissing-declarations
+-Wmissing-include-dirs
+-Wmissing-prototypes
+-Wnested-externs
+-Wno-long-long
+-Wno-missing-field-initializers
+-Wno-overlength-strings
+-Wno-unused-parameter
+-Wshadow
+-Wstrict-overflow=4
+-Wundef

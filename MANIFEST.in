@@ -1,0 +1,12 @@
+include cext.h
+include rjsmin.c rjsmin.py
+
+include README.md LICENSE
+include bench.sh
+recursive-include bench *
+
+recursive-include docs *
+prune docs/_userdoc
+prune docs/coverage
+prune docs/gcov
+exclude docs/DEVELOPMENT.md docs/userdoc/.buildinfo

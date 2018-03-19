@@ -1,4 +1,6 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-  # flake8: noqa  pylint: skip-file
+#
+# rJSmin documentation build configuration file
 #
 # This file is execfile()d with the current directory set to its containing dir.
 #
@@ -13,13 +15,20 @@ import sys, os
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.append(os.path.abspath('.'))
+# sys.path.append(os.path.abspath('../../'))
 
 # -- General configuration -----------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['epydoc_sphinx']
+extensions = [
+    'sphinx.ext.autodoc',
+]
+
+
+def setup(app):
+    app.add_stylesheet('ci.css')
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -35,7 +44,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'rJSmin'
-copyright = u'2015 Andr\xe9 Malo'
+copyright = u'2015 - 2019 Andr\xe9 Malo'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -96,41 +105,35 @@ rst_prolog = """
 .. |**rjsmin**| replace:: :productb:`rJSmin`
 """
 
-# -- Options for epydoc extension-----------------------------------------------
-
-epydoc = dict(
-    rjsmin=os.path.join(os.path.abspath(os.path.pardir), 'apidoc'),
-)
-
 # -- Options for HTML output ---------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  Major themes that come with
 # Sphinx are currently 'default' and 'sphinxdoc'.
-html_theme = 'default'
+html_theme = "sphinx_rtd_theme"
+html_theme_options = dict(
+    collapse_navigation=False,
+    includehidden=True,
+)
 
-# Theme options are theme-specific and customize the look and feel of a theme
-# further.  For a list of options available for each theme, see the
-# documentation.
-if html_theme == 'nature':
-    html_theme_options = {}
-elif html_theme == 'agogo':
-    html_theme_options = dict(
-        pagewidth='100%',
-        documentwidth='80%',
-        sidebarwidth='20%',
-    )
-elif html_theme == 'scrolls':
-    html_theme_options = {}
-elif html_theme == 'haiku':
-    html_theme_options = {}
-else:
-    html_theme_options = dict(
-        rightsidebar=True,
-    )
-
-html_sidebars = {
-    '**': ['localtoc.html', 'relations.html'],
-}
+# # Theme options are theme-specific and customize the look and feel of a theme
+# # further.  For a list of options available for each theme, see the
+# # documentation.
+# if html_theme == 'nature':
+#     html_theme_options = {}
+# elif html_theme == 'agogo':
+#     html_theme_options = dict(
+#         pagewidth='100%',
+#         documentwidth='80%',
+#         sidebarwidth='20%',
+#     )
+# elif html_theme == 'scrolls':
+#     html_theme_options = {}
+# elif html_theme == 'haiku':
+#     html_theme_options = {}
+# else:
+#     html_theme_options = dict(
+#         rightsidebar=True,
+#     )
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []

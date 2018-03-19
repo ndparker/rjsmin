@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: ascii -*-
-r"""
+u"""
 =================================
  Benchmark jsmin implementations
 =================================
@@ -9,7 +9,7 @@ Benchmark jsmin implementations.
 
 :Copyright:
 
- Copyright 2011 - 2015
+ Copyright 2011 - 2019
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -34,9 +34,7 @@ Usage::
     -p file   File to write the benchmark results in (pickled)
 
 """
-if __doc__:
-    __doc__ = __doc__.encode('ascii').decode('unicode_escape')
-__author__ = r"Andr\xe9 Malo".encode('ascii').decode('unicode_escape')
+__author__ = u"Andr\xe9 Malo"
 __docformat__ = "restructuredtext en"
 __license__ = "Apache License, Version 2.0"
 __version__ = "1.0.0"

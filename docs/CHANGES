@@ -1,3 +1,21 @@
+Changes with version
+
+ *) Both python 2 and 3 now accept bytes and text as input. All other types now
+    raise a TypeError. Before they possibly have been converted to a string,
+    depending on the python version and the implementation.
+
+ *) Support for PyPy and Jython is no longer tested, patches are, however,
+    accepted.
+
+ *) Minor adaptions for GCC 8
+
+ *) Fix an inconsistency in the jsmin_for_posers function. It was not working
+    properly with bang-comments enabled.
+
+ *) Rework the setup and project management system. Add some real tests. Get rid
+    of epydoc in favor of sphinx. Adapt to latest sphinx version.
+
+
 Changes with version 1.0.12
 
  *) Benchmark updates, dropped slimit benchmarks, because of installation

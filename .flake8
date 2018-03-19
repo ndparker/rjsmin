@@ -1,0 +1,22 @@
+[flake8]
+
+ignore =
+    # module level import not at top of file
+    E402,
+    # line break before binary operator
+    W503,
+    # line break after binary operator
+    W504,
+    # expected 2 blank lines after class or function definition
+    E305,
+    # do not assign a lambda expression, use a def
+    E731,
+    # line too long
+    E501,
+
+exclude =
+    setup.py
+    .git, __pycache__, docs/
+    build, dist
+
+max-complexity = 40

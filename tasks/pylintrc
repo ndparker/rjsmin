@@ -6,8 +6,6 @@
 # be loaded. Extensions are loading into the active Python interpreter and may
 # run arbitrary code.
 extension-pkg-whitelist=
-    _rjsmin,
-
 
 # Add files or directories to the blacklist. They should be base names, not
 # paths.
@@ -69,14 +67,13 @@ confidence=
 # --disable=W".
 disable=
     locally-disabled,
+    file-ignored,
+    useless-object-inheritance,
 
-    wrong-import-position,
-    using-constant-test,
-    redefined-variable-type,
-    duplicate-code,
-    no-else-return,
-    possibly-unused-variable,
-    too-many-statements,
+    invalid-name,
+    redefined-argument-from-local,
+    attribute-defined-outside-init,
+    too-many-locals,
 
 
 # Enable the message, report, category or checker with the given id(s). You can
@@ -140,12 +137,7 @@ logging-modules=logging
 expected-line-ending-format=
 
 # Regexp for a line that is allowed to be longer than the limit.
-ignore-long-lines=(?x)(?:
-    ^\s*([#][ ])?<?https?://\S+>?$
-    | [#][ ].*type:[ ].*$
-    | [#][ ].*pragma:[ ]no.*$
-    )
-
+ignore-long-lines=^\s*(# )?<?https?://\S+>?$
 
 # Number of spaces of indent required inside a hanging or continued line.
 indent-after-paren=4
@@ -216,6 +208,7 @@ class-naming-style=PascalCase
 class-rgx=(?x)
     (?:_?[A-Z][a-zA-Z0-9]+|_[a-z][a-z0-9]+)$
 
+
 # Naming style matching correct constant names.
 const-naming-style=UPPER_CASE
 
@@ -274,7 +267,9 @@ module-naming-style=snake_case
 
 # Regular expression matching correct module names. Overrides module-naming-
 # style.
-module-rgx=(([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+))$
+module-rgx=(?x)
+    [a-z_][a-z0-9_]*$
+
 
 # Colon-delimited sets of names that determine each other's naming style when
 # the name regexes allow several styles.
@@ -296,8 +291,7 @@ variable-naming-style=snake_case
 
 # Regular expression matching correct variable names. Overrides variable-
 # naming-style.
-variable-rgx=(?x)
-    (?:[A-Z_][A-Z0-9_]{1,30}|[a-z_][a-z0-9_]{2,30})$
+variable-rgx=[a-z_][a-z0-9_]{2,30}$
 
 
 [TYPECHECK]
@@ -368,7 +362,7 @@ callbacks=cb_, _cb
 # A regular expression matching the name of dummy variables (i.e. expected to
 # not be used).
 dummy-variables-rgx=(?x)
-    (_|dummy)$
+    (_|dummy|(?:kw)?args)$
 
 
 # Argument names that match this expression will be ignored. Default to name

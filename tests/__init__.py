@@ -1,14 +1,8 @@
 # -*- coding: ascii -*-
 u"""
-=================================
- Benchmark jsmin implementations
-=================================
-
-Benchmark jsmin implementations.
-
 :Copyright:
 
- Copyright 2011 - 2019
+ Copyright 2018 - 2019
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -25,4 +19,12 @@ Benchmark jsmin implementations.
  See the License for the specific language governing permissions and
  limitations under the License.
 
+==============
+ rJSMin Tests
+==============
+
+rJSMin Tests.
 """
+__author__ = u"Andr\xe9 Malo"
+__docformat__ = "restructuredtext en"
+__license__ = "Apache License, Version 2.0"
