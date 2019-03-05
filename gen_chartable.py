@@ -44,7 +44,7 @@ def _make_charmask():
     # pylint: disable = too-many-branches
 
     dull = r'[^\047"/\000-\040]'
-    pre_regex = r'[(,=:\[!&|?{};\r\n]'
+    pre_regex = r'[(,=:\[!&|?{};\r\n+*-]'
     regex_dull = r'[^/\\\[\r\n]'
     regex_cc_dull = r'[^\\\]\r\n]'
 

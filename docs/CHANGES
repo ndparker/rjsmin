@@ -1,5 +1,7 @@
 Changes with version
 
+ *) Allow +, - and * in front of regexes. Fixes 13.
+
  *) The python version will only accept the C implementation if the versions
     match exactly. This should prevent using older installed C versions.
     Fixes 11. This issue is now more related to 7.

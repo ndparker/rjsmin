@@ -1,0 +1,1 @@
+$export($export.P+$export.F*/Version\/10\.\d+(\.\d+)? Safari\//.test(userAgent),'String',{padEnd:function padEnd(maxLength){return $pad(this,maxLength,arguments.length>1?arguments[1]:undefined,false);}});

@@ -30,6 +30,7 @@ same results as the original ``jsmin.c``. It differs in the following ways:
 - Newline characters are not allowed inside string and regex literals, except
   for line continuations in string literals (ECMA-5).
 - "return /regex/" is recognized correctly.
+- More characters are allowed before regexes.
 - Line terminators after regex literals are handled more sensibly
 - "+ +" and "- -" sequences are not collapsed to '++' or '--'
 - Newlines before ! operators are removed more sensibly
