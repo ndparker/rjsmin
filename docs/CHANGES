@@ -1,11 +1,19 @@
 Changes with version
 
+ *) The python version will only accept the C implementation if the versions
+    match exactly. This should prevent using older installed C versions.
+    Fixes 11. This issue is now more related to 7.
+
+ *) The C extension is now optional in the build process. You can make it
+    required by setting the SETUP_CEXT_REQUIRED environment variable to 1.
+    Fixes 7.
+
  *) Both python 2 and 3 now accept bytes and text as input. All other types now
     raise a TypeError. Before they possibly have been converted to a string,
     depending on the python version and the implementation.
 
- *) Support for PyPy and Jython is no longer tested, patches are, however,
-    accepted.
+ *) Support for PyPy and Jython is no longer tested. Patches are accepted,
+    though.
 
  *) Minor adaptions for GCC 8
 

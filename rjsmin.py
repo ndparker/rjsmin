@@ -95,7 +95,10 @@ def _make_jsmin(python_only=False):
         except ImportError:
             pass
         else:
-            return _rjsmin.jsmin
+            # Ensure that the C version is in sync
+            # https://github.com/ndparker/rjsmin/issues/11
+            if getattr(_rjsmin, '__version__', None) == __version__:
+                return _rjsmin.jsmin
     try:
         xrange
     except NameError:

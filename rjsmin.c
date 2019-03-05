@@ -537,6 +537,7 @@ EXT_INIT_FUNC {
 
     EXT_ADD_UNICODE(m, "__author__", "Andr\xe9 Malo", "latin-1");
     EXT_ADD_STRING(m, "__docformat__", "restructuredtext en");
+    EXT_ADD_STRING(m, "__version__", STRINGIFY(EXT_VERSION));
 
     EXT_INIT_RETURN(m);
 }

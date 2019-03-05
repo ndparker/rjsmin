@@ -26,6 +26,7 @@ u"""
 
 rJSmin - A Javascript Minifier For Python.
 """
+from __future__ import print_function
 __author__ = u"Andr\xe9 Malo"
 __docformat__ = "restructuredtext en"
 
@@ -34,10 +35,7 @@ import posixpath as _posixpath
 import sys as _sys
 
 # pylint: disable = no-name-in-module, import-error
-from distutils import ccompiler as _ccompiler
 from distutils import core as _core
-from distutils import log as _log
-from distutils.command import build_ext as _build_ext
 import setuptools as _setuptools
 
 # pylint: disable = invalid-name
@@ -74,13 +72,29 @@ package = dict(
     url='http://opensource.perlig.de/rjsmin/',
     classifiers=_lines(_doc('CLASSIFIERS') or ''),
 
-    install_requires=_lines("""
-    """),
+    packages=False,
+    py_modules=['rjsmin'],
+    version_file='rjsmin.py',
+    install_requires=[],
 )
 
 
+class BuildFailed(Exception):
+    """ The build has failed """
+
+
+from distutils.command import build_ext as _build_ext  # pylint: disable = wrong-import-order
+from distutils import errors as _errors  # pylint: disable = wrong-import-order
 class build_ext(_build_ext.build_ext):  # pylint: disable = no-init
     """ Improved extension building code """
+
+    def run(self):
+        """ Unify exception """
+        try:
+            _build_ext.build_ext.run(self)
+        except _errors.DistutilsPlatformError:
+            raise BuildFailed()
+
 
     def build_extension(self, ext):
         """
@@ -117,7 +131,11 @@ class build_ext(_build_ext.build_ext):  # pylint: disable = no-init
             if 'EXT_PACKAGE' not in macros:
                 ext.undef_macros.append('EXT_PACKAGE')
 
-        return _build_ext.build_ext.build_extension(self, ext)
+        try:
+            return _build_ext.build_ext.build_extension(self, ext)
+        except (_errors.CCompilerError, _errors.DistutilsExecError,
+                _errors.DistutilsPlatformError, IOError, ValueError):
+            raise BuildFailed()
 
 
 class Extension(_core.Extension):
@@ -125,10 +143,12 @@ class Extension(_core.Extension):
 
     def __init__(self, *args, **kwargs):
         """ Initialization """
+        version = kwargs.pop('version')
         self.depends = []
         if 'depends' in kwargs:
             self.depends = kwargs['depends']
         _core.Extension.__init__(self, *args, **kwargs)
+        self.define_macros.append(('EXT_VERSION', version))
 
         # add include path
         included = '.'
@@ -144,14 +164,16 @@ class Extension(_core.Extension):
             self.depends.append(cext_h)
 
 
-EXTENSIONS = [Extension('_rjsmin', ["rjsmin.c"])]
+EXTENSIONS = lambda v: [Extension('_rjsmin', ["rjsmin.c"], version=v)]
 
 
-def setup():
+def do_setup(cext):
     """ Main """
     # pylint: disable = too-many-branches
 
-    with open('rjsmin.py') as fp:
+    version_file = '%s/%s' % (package['pathname'],
+                              package.get('version_file', '__init__.py'))
+    with open(version_file) as fp:
         for line in fp:  # pylint: disable = redefined-outer-name
             if line.startswith('__version__'):
                 version = line.split('=', 1)[1].strip()
@@ -161,12 +183,23 @@ def setup():
         else:
             raise RuntimeError("Version not found")
 
-    if 'java' in _sys.platform.lower():
-        EXTENSIONS[:] = []
+    kwargs = {}
 
-    if EXTENSIONS:
+    if not cext or 'java' in _sys.platform.lower():
+        extensions = []
+    else:
+        extensions = EXTENSIONS(version)
+
+    if extensions:
+        if 'build_ext' in globals():
+            kwargs.setdefault('cmdclass', {})['build_ext'] = build_ext
+        kwargs['ext_modules'] = extensions
+
         gcov = False
         if _os.environ.get('CFLAGS') is None:
+            from distutils import ccompiler as _ccompiler
+            from distutils import log as _log
+
             compiler = _ccompiler.get_default_compiler()
             try:
                 with open("debug.%s.cflags" % compiler) as fp:
@@ -185,17 +218,19 @@ def setup():
                     _os.environ['CFLAGS'] = cflags
 
         if gcov:
-            for ext in EXTENSIONS:
+            for ext in extensions:
                 ext.libraries.append('gcov')
 
-    packages = [package['top']] + [
-        '%s.%s' % (package['top'], item)
-        for item in
-        _setuptools.find_packages(package['pathname'])
-    ]
+    if package.get('packages', True):
+        kwargs['packages'] = [package['top']] + [
+            '%s.%s' % (package['top'], item)
+            for item in
+            _setuptools.find_packages(package['pathname'])
+        ]
+    if package.get('py_modules'):
+        kwargs['py_modules'] = package['py_modules']
 
     _core.setup(
-        cmdclass={'build_ext': build_ext},
         name=package['name'],
         author=package['author'],
         author_email=package['email'],
@@ -204,13 +239,24 @@ def setup():
         description=package['desc'],
         long_description=package['longdesc'],
         url=package['url'],
-        ext_modules=EXTENSIONS,
         install_requires=package['install_requires'],
-        # packages=packages,
-        py_modules=['rjsmin'],
         version=version,
         zip_safe=False,
+        **kwargs
     )
+
+
+def setup():
+    """ Run setup """
+    try:
+        do_setup(True)
+    except BuildFailed:
+        if _os.environ.get('SETUP_CEXT_REQUIRED', '') not in ('', '0'):
+            raise
+        print("C extension build failed - building python only version now. "
+              "Set 'RJSMIN_CEXT_REQUIRED' environment variable to '1' to "
+              "make it fail.", file=_sys.stderr)
+        do_setup(False)
 
 
 if __name__ == '__main__':
