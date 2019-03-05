@@ -43,17 +43,17 @@ def _make_charmask():
     """ Generate character mask table """
     # pylint: disable = too-many-branches
 
-    dull = r'[^\047"/\000-\040]'
+    dull = r'[^\047"\140/\000-\040]'
     pre_regex = r'[(,=:\[!&|?{};\r\n+*-]'
     regex_dull = r'[^/\\\[\r\n]'
     regex_cc_dull = r'[^\\\]\r\n]'
 
-    id_literal = r'[^\000-#%-,./:-@\[-^`{-~-]'
-    id_literal_open = r'[^\000-\040"#%-\047)*,./:-@\\-^`|-~]'
-    id_literal_close = r'[^\000-!#%&(*,./:-@\[\\^`{|~]'
+    id_literal = r'[^\000-#%-,./:-@\[-^\140{-~-]'
+    id_literal_open = r'[^\000-\040"#%-\047)*,./:-@\\-^\140|-~]'
+    id_literal_close = r'[^\000-!#%&(*,./:-@\[\\^{|~]'
     post_regex_off = r'[^\000-\040&)+,.:;=?\]|}-]'
 
-    string_dull = r'[^\047"\\\r\n]'
+    string_dull = r'[^\047"\140\\\r\n]'
 
     space = r'[\000-\011\013\014\016-\040]'
 

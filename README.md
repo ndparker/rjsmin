@@ -34,6 +34,7 @@ same results as the original ``jsmin.c``. It differs in the following ways:
 - Line terminators after regex literals are handled more sensibly
 - "+ +" and "- -" sequences are not collapsed to '++' or '--'
 - Newlines before ! operators are removed more sensibly
+- (Unnested) template literals are supported (ECMA-6)
 - Comments starting with an exclamation mark (``!``) can be kept optionally
 - rJSmin does not handle streams, but only complete strings. (However, the
   module provides a "streamy" interface).

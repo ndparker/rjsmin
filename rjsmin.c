@@ -83,7 +83,7 @@ static const unsigned short rjsmin_charmask[128] = {
     765, 765, 765, 765, 765, 765, 765, 765,
     765, 765, 765, 765, 765, 765, 765, 765,
     765, 765, 765, 683, 513, 197, 653, 765,
-    653, 765, 765, 765, 765, 765, 765, 765,
+    588, 765, 765, 765, 765, 765, 765, 765,
     765, 765, 765, 765, 765, 765, 765, 765,
     765, 765, 765, 765, 765, 765, 765, 765,
     765, 765, 765, 687, 143, 207, 653, 765
@@ -113,7 +113,7 @@ rjsmin(const rchar *source, rchar *target, Py_ssize_t length,
         switch (c) {
 
         /* String */
-        case U('\''): case U('"'):
+        case U('\''): case U('"'): case U('`'):
             if (post_regex) post_regex = 0;
             if (pctoken) pctoken = NULL;
             if (spaced == U('\n')) spaced = U(' ');
@@ -126,7 +126,7 @@ rjsmin(const rchar *source, rchar *target, Py_ssize_t length,
                 if (RJSMIN_IS_STRING_DULL(c))
                     continue;
                 switch (c) {
-                case U('\''): case U('"'):
+                case U('\''): case U('"'): case U('`'):
                     if (c == quote)
                         goto cont;
                     continue;
@@ -138,6 +138,10 @@ rjsmin(const rchar *source, rchar *target, Py_ssize_t length,
                             && *source == U('\n'))
                             *target++ = *source++;
                     }
+                    continue;
+                case U('\r'): case U('\n'):
+                    if (quote != U('`'))
+                        break;
                     continue;
                 }
                 break;
