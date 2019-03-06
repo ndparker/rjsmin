@@ -2,11 +2,14 @@ include cext.h
 include rjsmin.c rjsmin.py
 
 include README.md LICENSE
-include bench.sh
 recursive-include bench *
 
+prune tasks
+
 recursive-include docs *
-prune docs/_userdoc
+prune docs/userdoc
 prune docs/coverage
 prune docs/gcov
-exclude docs/DEVELOPMENT.md docs/userdoc/.buildinfo
+prune docs/_userdoc/_build/
+exclude docs/_userdoc/website_download*
+exclude docs/DEVELOPMENT.md

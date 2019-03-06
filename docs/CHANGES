@@ -24,6 +24,8 @@ Changes with version
  *) Fix an inconsistency in the jsmin_for_posers function. It was not working
     properly with bang-comments enabled.
 
+ *) Docs are no longer installed locally.
+
  *) Rework the setup and project management system. Add some real tests. Get rid
     of epydoc in favor of sphinx. Adapt to latest sphinx version.
 
