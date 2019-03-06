@@ -22,3 +22,18 @@ def source(ctx):
             --username %s
             %s
         ''', ctx.pypi.repository, ctx.pypi.username, files[0]), echo=True)
+
+
+@_invoke.task()
+def wheels(ctx):
+    """ Upload wheels """
+    with ctx.shell.root_dir():
+        files = list(ctx.shell.files('wheel/dist', '*manylinux*.whl'))
+        if not files:
+            ctx.fail("No tarball found ")
+
+        ctx.run(ctx.c(
+            ''' twine upload --repository-url %s --username %s '''
+            + ' %s ' * len(files),
+            ctx.pypi.repository, ctx.pypi.username, *files
+        ), echo=True)
