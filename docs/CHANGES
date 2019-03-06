@@ -1,16 +1,16 @@
-Changes with version
+Changes with version 1.1.0
 
- *) Add support for unnested template literals (ECMA-6). Fixes 8. Kind of.
+ *) Add support for unnested template literals (ECMA-6). Fixes #8. Kind of.
 
- *) Allow +, - and * in front of regexes. Fixes 13.
+ *) Allow +, - and * in front of regexes. Fixes #13.
 
  *) The python version will only accept the C implementation if the versions
     match exactly. This should prevent using older installed C versions.
-    Fixes 11. This issue is now more related to 7.
+    Fixes #11. This issue is now more relevant since #7 is fixed.
 
  *) The C extension is now optional in the build process. You can make it
     required by setting the SETUP_CEXT_REQUIRED environment variable to 1.
-    Fixes 7.
+    Fixes #7.
 
  *) Both python 2 and 3 now accept bytes and text as input. All other types now
     raise a TypeError. Before they possibly have been converted to a string,
