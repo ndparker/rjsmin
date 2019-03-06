@@ -57,6 +57,11 @@ else:
             return v.encode('utf-8')
         return str(v)
 
+try:
+    cmp
+except NameError:
+    cmp = lambda a, b: (a > b) - (a < b)
+
 
 def write_table(filename, results):
     """
@@ -73,10 +78,6 @@ def write_table(filename, results):
         next
     except NameError:
         next = lambda i: (getattr(i, 'next', None) or i.__next__)()
-    try:
-        cmp
-    except NameError:
-        cmp = lambda a, b: (a > b) - (a < b)
 
     names = [
         ('simple_port', 'Simple Port'),

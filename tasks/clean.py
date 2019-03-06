@@ -28,7 +28,8 @@ def clean(ctx, so=False, cache=False):
     """ Wipe *.py[co] files and test leftovers """
     for name in ctx.shell.files('.', '.coverage*', recursive=False):
         ctx.shell.rm(name)
-    ctx.shell.rm('gcov.out')
+    for name in ctx.shell.files('bench', '.out.*', recursive=False):
+        ctx.shell.rm(name)
     ctx.shell.rm_rf(
         'docs/coverage',
         'docs/gcov',
@@ -49,6 +50,7 @@ def cacheclean(ctx):
     """ Wipe Cache files """
     ctx.shell.rm_rf(
         '.tox',
+        'bench/.tox',
         '.cache',
         'tests/.cache',
         'tests/.pytest_cache',

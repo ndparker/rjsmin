@@ -22,4 +22,5 @@ MANIFEST
 .pytest_cache
 .cache
 .coverage*
-gcov.out
+
+bench/.out.*

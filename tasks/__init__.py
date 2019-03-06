@@ -75,6 +75,7 @@ def namespace():
     class Vars(object):
         """ Submodules container """
         from . import (  # noqa
+            benchmark,
             build,
             check,
             clean,
