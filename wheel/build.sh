@@ -13,12 +13,17 @@ owner="$( stat -c%u:%g /io )"
 mkdir -p -- "${target}"
 chown -R "${owner}" "${target}"
 
+# Extract name-only from package spec
 name="$(
     basename "${pkg}" \
     | sed -e 's,^\([a-zA-Z][a-zA-Z0-9]*\([._-][a-zA-Z][a-zA-Z0-9]*\)*\).*,\1,' \
     | grep -x '\([a-zA-Z][a-zA-Z0-9]*\([._-][a-zA-Z][a-zA-Z0-9]*\)*\)'
 )"
 
+# fail if it doesn't build
+export SETUP_CEXT_REQUIRED=1
+
+# pip args
 args=( wheel --no-binary "${name}" --no-deps "${pkg}" -w "${target}" )
 
 found=
