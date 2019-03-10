@@ -1,3 +1,9 @@
+Changes with version
+
+ *) Emit the correct env var name in the warning message if the compilation of
+    the C implementation fails.
+
+
 Changes with version 1.1.0
 
  *) Add support for unnested template literals (ECMA-6). Fixes #8. Kind of.

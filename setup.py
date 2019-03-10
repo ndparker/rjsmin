@@ -251,11 +251,12 @@ def setup():
     try:
         do_setup(True)
     except BuildFailed:
-        if _os.environ.get('SETUP_CEXT_REQUIRED', '') not in ('', '0'):
+        env = 'SETUP_CEXT_REQUIRED'
+        if _os.environ.get(env, '') not in ('', '0'):
             raise
         print("C extension build failed - building python only version now. "
-              "Set 'RJSMIN_CEXT_REQUIRED' environment variable to '1' to "
-              "make it fail.", file=_sys.stderr)
+              "Set '%s' environment variable to '1' to make it fail."
+              % (env,), file=_sys.stderr)
         do_setup(False)
 
 
