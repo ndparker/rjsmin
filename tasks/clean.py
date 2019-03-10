@@ -36,6 +36,7 @@ def clean(ctx, so=False, cache=False):
         'build',
         'dist',
         ctx.doc.userdoc,
+        'docs/_userdoc/_build',
         ctx.doc.website.source,
         ctx.doc.website.target,
     )
