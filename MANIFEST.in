@@ -3,6 +3,7 @@ include rjsmin.c rjsmin.py
 
 include README.md LICENSE
 recursive-include bench *
+recursive-include tests *
 
 prune tasks
 

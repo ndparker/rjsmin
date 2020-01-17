@@ -1,5 +1,7 @@
 Changes with version
 
+ *) Add tests to source distribution (issue #20, contributed by dvzrv)
+
  *) bytearray input now produces bytearray output
 
  *) Update python support: 2.7, 3.6+
