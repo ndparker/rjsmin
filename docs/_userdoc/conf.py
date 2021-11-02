@@ -27,7 +27,7 @@ extensions = [
 
 
 def setup(app):
-    app.add_stylesheet('ci.css')
+    app.add_css_file('ci.css')
 
 
 # Add any paths that contain templates here, relative to this directory.
@@ -44,7 +44,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'rJSmin'
-copyright = u'2015 - 2019 Andr\xe9 Malo'
+copyright = u'2015 - 2021 Andr\xe9 Malo'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

@@ -1,5 +1,5 @@
 .. copyright:
-    Copyright 2011 - 2019
+    Copyright 2011 - 2021
     André Malo or his licensors, as applicable
 
 .. license:
@@ -60,7 +60,7 @@ dramatic but still between 3 and 50 (for huge inputs).
 |rjsmin| comes with an optional C-reimplementation of the python/regex
 implementation, which speeds up the minifying process even more.
 
-Supported python versions are 2.7 and 3.4+.
+Supported python versions are 2.7 and 3.6+.
 
 .. _jsmin.c by Douglas Crockford: http://www.crockford.com/javascript/jsmin.c
 

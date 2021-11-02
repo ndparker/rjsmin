@@ -6,7 +6,7 @@
 -fprofile-arcs
 
 # don't compile on weird code
--std=c89 -pedantic -fno-strict-aliasing -Werror
+-std=c99 -pedantic -fno-strict-aliasing -Werror
 -Wall
 -Wbad-function-cast
 -Wcast-align
@@ -16,7 +16,7 @@
 -Wextra
 -Winit-self
 -Wmissing-declarations
--Wmissing-include-dirs
+# -Wmissing-include-dirs
 -Wmissing-prototypes
 -Wnested-externs
 -Wno-long-long

@@ -36,7 +36,7 @@ docs/BENCHMARKS file for details.
 
 rjsmin.c is a reimplementation of rjsmin.py in C and speeds it up even more.
 
-Supported python versions are 2.7 and 3.4+.
+Supported python versions are 2.7 and 3.6+.
 
 .. _jsmin.c by Douglas Crockford: http://www.crockford.com/javascript/jsmin.c
 
@@ -44,7 +44,7 @@ Supported python versions are 2.7 and 3.4+.
 Copyright and License
 ~~~~~~~~~~~~~~~~~~~~~
 
-Copyright 2011 - 2019
+Copyright 2011 - 2021
 André Malo or his licensors, as applicable.
 
 The whole package (except for the files in the bench/ directory) is

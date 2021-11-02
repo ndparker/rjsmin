@@ -9,7 +9,7 @@ Write benchmark results.
 
 :Copyright:
 
- Copyright 2014 - 2019
+ Copyright 2014 - 2021
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -87,7 +87,9 @@ def write_table(filename, results):
     ]
     benched_per_table = 2
 
-    results = sorted(results, reverse=True)
+    results = sorted(results,
+                     key=(lambda x: [int(a) for a in x[0].split('.')]),
+                     reverse=True)
 
     # First we transform our data into a table (list of lists)
     pythons, widths = [], [0] * (benched_per_table + 1)
@@ -236,7 +238,9 @@ def write_plain(filename, results):
         Results
     """
     lines = []
-    results = sorted(results, reverse=True)
+    results = sorted(results,
+                     key=(lambda x: [int(a) for a in x[0].split('.')]),
+                     reverse=True)
     for idx, (version, import_notes, result) in enumerate(results):
         if idx:
             lines.append('')

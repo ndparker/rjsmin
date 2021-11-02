@@ -2,7 +2,7 @@
 u"""
 :Copyright:
 
- Copyright 2019
+ Copyright 2019 - 2021
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -54,12 +54,26 @@ def save(name, value):
 
 def test_basic():
     """ Test basic.js """
+    # pylint: disable = unidiomatic-typecheck
+
     inp = load('js/basic.js')
     exp = load('js/basic.min.js')
     # save('js/basic.min.js', py_jsmin(inp))
+    assert type(py_jsmin(inp)) == bytes
+    assert type(py_jsmin2(inp)) == bytes
+    assert type(c_jsmin(inp)) == bytes
+
     assert py_jsmin(inp) == exp
     assert py_jsmin2(inp) == exp
     assert c_jsmin(inp) == exp
+
+    if str is not bytes:
+        assert type(py_jsmin(bytearray(inp))) == bytearray
+        assert type(py_jsmin2(bytearray(inp))) == bytearray
+        assert type(c_jsmin(bytearray(inp))) == bytearray
+        assert py_jsmin(bytearray(inp)) == exp
+        assert py_jsmin2(bytearray(inp)) == exp
+        assert c_jsmin(bytearray(inp)) == exp
 
     inp = inp.decode('latin-1')
     exp = exp.decode('latin-1')

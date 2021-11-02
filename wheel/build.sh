@@ -52,7 +52,7 @@ done
 
 # Only keep manylinux wheels
 for whl in "${target}"/*.whl; do
-    if [ "${whl/-manylinux}" = "${whl}" ]; then
+    if [ "${whl/-manylinux}" = "${whl}" -o "${whl/pypy}" != "${whl}" ]; then
         rm -vf -- "${whl}"
     fi
 done

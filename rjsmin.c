@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 - 2019
+ * Copyright 2011 - 2021
  * Andr\xe9 Malo or his licensors, as applicable
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,11 +29,7 @@ EXT_INIT_FUNC;
 #define RJSMIN_SPACE_BIT          (1 << 8)
 #define RJSMIN_POST_REGEX_OFF_BIT (1 << 9)
 
-#ifdef EXT3
-typedef Py_UNICODE rchar;
-#else
 typedef unsigned char rchar;
-#endif
 #ifdef U
 #undef U
 #endif
@@ -415,6 +411,7 @@ rjsmin_jsmin(PyObject *self, PyObject *args, PyObject *kwds)
 #endif
 #ifdef EXT3
     int bytes;
+    rchar *bytescript;
 #endif
 
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "O|O", kwlist,
@@ -444,30 +441,8 @@ rjsmin_jsmin(PyObject *self, PyObject *args, PyObject *kwds)
             LCOV_EXCL_LINE_RETURN(NULL);
         uni = 0;
     }
-#endif
-
-#ifdef EXT3
-    if (PyBytes_Check(script) || PyByteArray_Check(script)) {
-        bytes = 1;
-        if (!(script = PyUnicode_FromEncodedObject(script,
-                                                   "latin-1", "strict")))
-            LCOV_EXCL_LINE_RETURN(NULL);
-    }
-    else if (PyUnicode_Check(script)) {
-        bytes = 0;
-        Py_INCREF(script);
-    }
-    else {
-        PyErr_SetString(PyExc_TypeError, "Unexpected type");
-        return NULL;
-    }
-#define PyString_GET_SIZE PyUnicode_GET_SIZE
-#define PyString_AS_STRING PyUnicode_AS_UNICODE
-#define _PyString_Resize PyUnicode_Resize
-#define PyString_FromStringAndSize PyUnicode_FromUnicode
-#endif
-
     slength = PyString_GET_SIZE(script);
+
     if (!(result = PyString_FromStringAndSize(NULL, slength))) {
         LCOV_EXCL_START
 
@@ -494,24 +469,80 @@ rjsmin_jsmin(PyObject *self, PyObject *args, PyObject *kwds)
     if (length != slength && _PyString_Resize(&result, length) == -1)
         LCOV_EXCL_LINE_RETURN(NULL);
 
-#ifdef EXT2
     if (uni) {
         script = PyUnicode_DecodeUTF8(PyString_AS_STRING(result),
                                       PyString_GET_SIZE(result), "strict");
         Py_DECREF(result);
         return script;
     }
-#endif
 
-#ifdef EXT3
-    if (bytes) {
-        script = PyUnicode_AsEncodedString(result, "latin-1", "strict");
+    return result;
+
+#else  /* EXT3 */
+
+    if (PyUnicode_Check(script)) {
+        bytes = 0;
+        script = PyUnicode_AsUTF8String(script);
+        bytescript = (rchar *)PyBytes_AS_STRING(script);
+        slength = PyBytes_GET_SIZE(script);
+    }
+    else if (PyBytes_Check(script)) {
+        bytes = 1;
+        Py_INCREF(script);
+        bytescript = (rchar *)PyBytes_AS_STRING(script);
+        slength = PyBytes_GET_SIZE(script);
+    }
+    else if (PyByteArray_Check(script)) {
+        bytes = 2;
+        Py_INCREF(script);
+        bytescript = (rchar *)PyByteArray_AS_STRING(script);
+        slength = PyByteArray_GET_SIZE(script);
+    }
+    else {
+        PyErr_SetString(PyExc_TypeError, "Unexpected type");
+        return NULL;
+    }
+
+    if (!(result = PyBytes_FromStringAndSize(NULL, slength))) {
+        LCOV_EXCL_START
+
+        Py_DECREF(script);
+        return NULL;
+
+        LCOV_EXCL_STOP
+    }
+    Py_BEGIN_ALLOW_THREADS
+    length = rjsmin(bytescript, (rchar *)PyBytes_AS_STRING(result),
+                    slength, keep_bang_comments);
+    Py_END_ALLOW_THREADS
+
+    Py_DECREF(script);
+    if (length < 0) {
+        LCOV_EXCL_START
+
+        Py_DECREF(result);
+        return NULL;
+
+        LCOV_EXCL_STOP
+    }
+
+    if (!bytes) {
+        script = PyUnicode_DecodeUTF8(PyBytes_AS_STRING(result), length,
+                                      "strict");
         Py_DECREF(result);
         return script;
     }
+    if (bytes == 1) {
+        if (length != slength) {
+            _PyBytes_Resize(&result, length);
+        }
+        return result;
+    }
+    /* bytes == 2: bytearray */
+    script = PyByteArray_FromStringAndSize(PyBytes_AS_STRING(result), length);
+    Py_DECREF(result);
+    return script;
 #endif
-
-    return result;
 }
 
 /* ------------------------ BEGIN MODULE DEFINITION ------------------------ */

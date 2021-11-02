@@ -13,6 +13,8 @@ ignore =
     E731,
     # line too long
     E501,
+    # continuation line unaligned for hanging indent
+    E131,
 
 exclude =
     setup.py

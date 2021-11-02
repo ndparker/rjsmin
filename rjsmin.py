@@ -11,7 +11,7 @@ The minifier is based on the semantics of `jsmin.c by Douglas Crockford`_\\.
 
 :Copyright:
 
- Copyright 2011 - 2019
+ Copyright 2011 - 2021
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -58,7 +58,7 @@ file for details.
 
 rjsmin.c is a reimplementation of rjsmin.py in C and speeds it up even more.
 
-Supported python versions are 2.7 and 3.4+.
+Supported python versions are 2.7 and 3.6+.
 
 .. _jsmin.c by Douglas Crockford:
    http://www.crockford.com/javascript/jsmin.c
@@ -195,7 +195,7 @@ def _make_jsmin(python_only=False):
     dull = r'[^\047"\140/\000-\040]'
 
     space_sub_simple = _re.compile((
-        # noqa pylint: disable = bad-continuation
+        # noqa pylint: disable = bad-option-value, bad-continuation
 
         r'(%(dull)s+)'                                         # 0
         r'|(%(strings)s%(dull)s*)'                             # 1
@@ -248,7 +248,7 @@ def _make_jsmin(python_only=False):
             return ''
 
     space_sub_banged = _re.compile((
-        # noqa pylint: disable = bad-continuation
+        # noqa pylint: disable = bad-option-value, bad-continuation
 
         r'(%(dull)s+)'                                         # 0
         r'|(%(strings)s%(dull)s*)'                             # 1
@@ -344,7 +344,9 @@ def _make_jsmin(python_only=False):
             '\n%s\n' % script
         ).strip()
         if is_bytes:
-            return script.encode('latin-1')
+            script = script.encode('latin-1')
+            if is_bytes == 2:
+                script = bytearray(script)
         return script
 
     return jsmin
@@ -358,8 +360,11 @@ def _as_str(script):
     if str is bytes:
         if not isinstance(script, basestring):  # noqa pylint: disable = undefined-variable
             raise TypeError("Unexpected type")
-    elif isinstance(script, (bytes, bytearray)):
+    elif isinstance(script, bytes):
         is_bytes = True
+        script = script.decode('latin-1')
+    elif isinstance(script, bytearray):
+        is_bytes = 2
         script = script.decode('latin-1')
     elif not isinstance(script, str):
         raise TypeError("Unexpected type")
@@ -520,7 +525,9 @@ def jsmin_for_posers(script, keep_bang_comments=False):
     is_bytes, script = _as_str(script)
     script = _re.sub(rex, subber, '\n%s\n' % script).strip()
     if is_bytes:
-        return script.encode('latin-1')
+        script = script.encode('latin-1')
+        if is_bytes == 2:
+            script = bytearray(script)
     return script
 
 

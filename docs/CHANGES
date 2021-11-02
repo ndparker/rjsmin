@@ -1,5 +1,9 @@
 Changes with version
 
+ *) bytearray input now produces bytearray output
+
+ *) Update python support: 2.7, 3.6+
+
  *) Emit the correct env var name in the warning message if the compilation of
     the C implementation fails.
 

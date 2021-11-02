@@ -34,7 +34,7 @@ def flake8(ctx):
 
     with ctx.shell.root_dir():
         ctx.run(ctx.c(
-            r''' %(flake8)s %(package)s ''',
+            r''' %(flake8)s %(package)s.py ''',
             flake8=flake8,
             package=ctx.package
         ), echo=True)

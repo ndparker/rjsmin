@@ -3,7 +3,7 @@
 u"""
 :Copyright:
 
- Copyright 2011 - 2019
+ Copyright 2011 - 2021
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -34,8 +34,7 @@ import os as _os
 import posixpath as _posixpath
 import sys as _sys
 
-# pylint: disable = no-name-in-module, import-error
-from distutils import core as _core
+# pylint: disable = no-name-in-module, import-error, raise-missing-from
 import setuptools as _setuptools
 
 # pylint: disable = invalid-name
@@ -43,6 +42,7 @@ import setuptools as _setuptools
 
 def _doc(filename):
     """ Read docs file """
+    # pylint: disable = unspecified-encoding
     args = {} if str is bytes else dict(encoding='utf-8')
     try:
         with open(_os.path.join('docs', filename), **args) as fp:
@@ -131,6 +131,7 @@ class build_ext(_build_ext.build_ext):  # pylint: disable = no-init
             if 'EXT_PACKAGE' not in macros:
                 ext.undef_macros.append('EXT_PACKAGE')
 
+        import pprint; pprint.pprint(ext.__dict__)
         try:
             return _build_ext.build_ext.build_extension(self, ext)
         except (_errors.CCompilerError, _errors.DistutilsExecError,
@@ -138,7 +139,7 @@ class build_ext(_build_ext.build_ext):  # pylint: disable = no-init
             raise BuildFailed()
 
 
-class Extension(_core.Extension):
+class Extension(_setuptools.Extension):
     """ improved functionality """
 
     def __init__(self, *args, **kwargs):
@@ -147,7 +148,7 @@ class Extension(_core.Extension):
         self.depends = []
         if 'depends' in kwargs:
             self.depends = kwargs['depends']
-        _core.Extension.__init__(self, *args, **kwargs)
+        _setuptools.Extension.__init__(self, *args, **kwargs)
         self.define_macros.append(('EXT_VERSION', version))
 
         # add include path
@@ -170,10 +171,12 @@ EXTENSIONS = lambda v: [Extension('_rjsmin', ["rjsmin.c"], version=v)]
 def do_setup(cext):
     """ Main """
     # pylint: disable = too-many-branches
+    # pylint: disable = unspecified-encoding
 
+    args = {} if str is bytes else dict(encoding='utf-8')
     version_file = '%s/%s' % (package['pathname'],
                               package.get('version_file', '__init__.py'))
-    with open(version_file) as fp:
+    with open(version_file, **args) as fp:
         for line in fp:  # pylint: disable = redefined-outer-name
             if line.startswith('__version__'):
                 version = line.split('=', 1)[1].strip()
@@ -195,10 +198,9 @@ def do_setup(cext):
             kwargs.setdefault('cmdclass', {})['build_ext'] = build_ext
         kwargs['ext_modules'] = extensions
 
-        gcov = False
+        cflags = None
         if _os.environ.get('CFLAGS') is None:
             from distutils import ccompiler as _ccompiler
-            from distutils import log as _log
 
             compiler = _ccompiler.get_default_compiler()
             try:
@@ -206,20 +208,19 @@ def do_setup(cext):
                     cflags = ' '.join([
                         line for line in (line.strip() for line in fp)
                         if line and not line.startswith('#')
-                    ]) or None
+                    ]).split() or None
             except IOError:
                 pass
-            else:
-                if cflags is not None:
-                    # pylint: disable = unsupported-membership-test
-                    if 'coverage' in cflags:
-                        gcov = True
-                    _log.info("Setting CFLAGS to %r", cflags)
-                    _os.environ['CFLAGS'] = cflags
 
-        if gcov:
+        if cflags:
+            gcov = 'coverage' in ' '.join(cflags)
             for ext in extensions:
-                ext.libraries.append('gcov')
+                # pylint: disable = attribute-defined-outside-init
+                ext.extra_compile_args = \
+                    getattr(ext, 'extra_compile_args', []) + cflags
+                if gcov:
+                    ext.libraries.append('gcov')
+
 
     if package.get('packages', True):
         kwargs['packages'] = [package['top']] + [
@@ -230,7 +231,7 @@ def do_setup(cext):
     if package.get('py_modules'):
         kwargs['py_modules'] = package['py_modules']
 
-    _core.setup(
+    _setuptools.setup(
         name=package['name'],
         author=package['author'],
         author_email=package['email'],
