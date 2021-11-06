@@ -1,5 +1,7 @@
 Changes with version
 
+ *) Add aarch64 wheels (issue #24, #25, contributed by odidev)
+
  *) Add tests to source distribution (issue #20, contributed by dvzrv)
 
  *) bytearray input now produces bytearray output

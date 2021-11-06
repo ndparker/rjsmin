@@ -7,6 +7,7 @@ Build Tasks
 from __future__ import print_function
 
 import os as _os
+import platform as _platform
 import re as _re
 
 import invoke as _invoke
@@ -26,11 +27,39 @@ def source(ctx):
 
 @_invoke.task()
 def wheels(ctx, arches=None):
-    """ Build wheels """
+    """
+    Build wheels
+
+    Parameters:
+      arches (str):
+        Space separated list of architectures. If not supplied it defaults to
+        the current machine type. Except if the current machine type is
+        "x86_64", then if defaults to "x86_64 i686 aarch64" (using
+        binfmt_misc in combination with multiarch/qemu-user-static for the
+        latter).
+    """
+    # pylint: disable = too-many-branches
+
     path = 'wheel/dist'
+
+    machine = _platform.machine()
     if arches is None:
-        arches = "x86_64 i686"
+        if machine == 'x86_64':
+            arches = "x86_64 i686 aarch64"
+        else:
+            arches = machine
     arches = arches.split()
+    for arch in arches:
+        if machine == arch:
+            continue
+        if machine == 'x86_64' and arch == 'i686':
+            continue
+        ctx.run(ctx.c('''
+            docker run --rm --privileged multiarch/qemu-user-static
+            --reset -p yes
+        '''), echo=True, pty=True)
+        break
+
     with ctx.shell.root_dir():
         ctx.shell.rm_rf(path)
         pythons = "36 37 38 39 310"
