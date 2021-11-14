@@ -43,16 +43,14 @@ md5sum (or sha1sum, sha256sum accordingly), e.g.:
 
 In order to check the integrity of the digest file itself, you can check
 the PGP signature of that file. The file is signed by André Malo, Key-ID
-0x8103A37E:
+0x029C942244325167:
 
 .. sourcecode:: console
 
     $ gpg --verify rjsmin-1.1.0.digests
-    gpg: Signature made Wed Mar  6 18:07:52 2019 CET
-    gpg:                using DSA key ID 92CCEF0AA7DD46AC3A0F498BCA6939748103A37E
-    gpg: Good signature from "Andre Malo <nd@apache.org>"
-    gpg:                 aka "Andr\xe9\x20Malo <nd@perlig.de>"
-    gpg:                 aka "Andre Malo <ndparker@gmx.net>"
+    gpg: Signature made Sun Nov 14 21:20:48 2021 CET
+    gpg:                using RSA key 21B65583FF640D34E8662B6B3DED446369F2EE1A
+    gpg: Good signature from "André Malo <nd@perlig.de>"
 
 
 .. vim: ft=rest tw=72

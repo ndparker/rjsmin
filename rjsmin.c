@@ -527,15 +527,15 @@ substitution regex.\n\
 :Note: This is a hand crafted C implementation built on the regex\n\
        semantics.\n\
 \n\
-:Parameters:\n\
-  `script` : ``str``\n\
+Parameters:\n\
+  script (str):\n\
     Script to minify\n\
 \n\
-  `keep_bang_comments` : ``bool``\n\
+  keep_bang_comments (bool):\n\
     Keep comments starting with an exclamation mark? (``/*!...*/``)\n\
 \n\
-:Return: Minified script\n\
-:Rtype: ``str``");
+Returns:\n\
+  str: Minified script");
 
 static PyObject *
 rjsmin_jsmin(PyObject *self, PyObject *args, PyObject *kwds)
@@ -710,7 +710,6 @@ EXT_INIT_FUNC {
         EXT_INIT_ERROR(LCOV_EXCL_LINE(NULL));
 
     EXT_ADD_UNICODE(m, "__author__", "Andr\xe9 Malo", "latin-1");
-    EXT_ADD_STRING(m, "__docformat__", "restructuredtext en");
     EXT_ADD_STRING(m, "__version__", STRINGIFY(EXT_VERSION));
 
     EXT_INIT_RETURN(m);

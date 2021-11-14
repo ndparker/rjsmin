@@ -131,7 +131,7 @@ or send a mail to <rjsmin-bugs@perlig.de>.
 
 ## AUTHOR INFORMATION
 
-André "nd" Malo <nd@perlig.de>, GPG: 0x8103A37E
+André "nd" Malo <nd@perlig.de>, GPG: 0x029C942244325167
 
 
 >  If God intended people to be naked, they would be born that way.

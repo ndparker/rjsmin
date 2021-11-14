@@ -64,7 +64,6 @@ Supported python versions are 2.7 and 3.6+.
    http://www.crockford.com/javascript/jsmin.c
 """
 __author__ = u"Andr\xe9 Malo"
-__docformat__ = "restructuredtext en"
 __license__ = "Apache License, Version 2.0"
 __version__ = '1.1.0'
 __all__ = ['jsmin']
@@ -80,13 +79,13 @@ def _make_jsmin(python_only=False):
     .. _jsmin.c by Douglas Crockford:
        http://www.crockford.com/javascript/jsmin.c
 
-    :Parameters:
-      `python_only` : ``bool``
+    Parameters:
+      python_only (bool):
         Use only the python variant. If true, the c extension is not even
         tried to be loaded.
 
-    :Return: Minifier
-    :Rtype: ``callable``
+    Returns:
+      callable: Minifier
     """
     # pylint: disable = unused-variable
     # pylint: disable = too-many-locals
@@ -346,15 +345,15 @@ def _make_jsmin(python_only=False):
         .. _jsmin.c by Douglas Crockford:
            http://www.crockford.com/javascript/jsmin.c
 
-        :Parameters:
-          `script` : ``str``
+        Parameters:
+          script (str):
             Script to minify
 
-          `keep_bang_comments` : ``bool``
+          keep_bang_comments (bool):
             Keep comments starting with an exclamation mark? (``/*!...*/``)
 
-        :Return: Minified script
-        :Rtype: ``str``
+        Returns:
+          str: Minified script
         """
         # pylint: disable = redefined-outer-name
 
@@ -406,15 +405,15 @@ def jsmin_for_posers(script, keep_bang_comments=False):
               utilizes the resulting regexes. It's here for fun and may
               vanish any time. Use the `jsmin` function instead.
 
-    :Parameters:
-      `script` : ``str``
+    Parameters:
+      script (str):
         Script to minify
 
-      `keep_bang_comments` : ``bool``
+      keep_bang_comments (bool):
         Keep comments starting with an exclamation mark? (``/*!...*/``)
 
-    :Return: Minified script
-    :Rtype: ``str``
+    Returns:
+      str: Minified script
     """
     if not keep_bang_comments:
         rex = (
