@@ -1,4 +1,4 @@
-Changes with version
+Changes with version 1.2.0
 
  *) Improve regex detection. Fixes #17, #23
 
