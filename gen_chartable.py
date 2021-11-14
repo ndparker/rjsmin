@@ -52,6 +52,7 @@ def _make_charmask():
     id_literal_open = r'[^\000-\040"#%-\047)*,./:-@\\-^\140|-~]'
     id_literal_close = r'[^\000-!#%&(*,./:-@\[\\^{|~]'
     post_regex_off = r'[^\000-\040&)+,.:;=?\]|}-]'
+    a_z = r'[a-z]'
 
     string_dull = r'[^\047"\140\\\r\n]'
 
@@ -82,10 +83,14 @@ def _make_charmask():
                 mask |= 256
             if _re.match(post_regex_off, c):
                 mask |= 512
+            if _re.match(a_z, c):
+                mask |= 1024
 
             if mask < 10:
-                mask = '  ' + str(mask)
+                mask = '   ' + str(mask)
             elif mask < 100:
+                mask = '  ' + str(mask)
+            elif mask < 1000:
                 mask = ' ' + str(mask)
             maskline.append(str(mask))
             if y == 7:
