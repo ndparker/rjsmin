@@ -131,7 +131,6 @@ class build_ext(_build_ext.build_ext):  # pylint: disable = no-init
             if 'EXT_PACKAGE' not in macros:
                 ext.undef_macros.append('EXT_PACKAGE')
 
-        import pprint; pprint.pprint(ext.__dict__)
         try:
             return _build_ext.build_ext.build_extension(self, ext)
         except (_errors.CCompilerError, _errors.DistutilsExecError,
