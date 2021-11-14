@@ -28,6 +28,10 @@ args=( wheel --no-binary "${name}" --no-deps "${pkg}" -w "${target}" )
 
 found=
 for dir in /opt/python/*; do
+    if [ "${dir/pypy}" != "${dir}" ]; then
+        continue
+    fi
+
     pyv="$(
         "${dir}/bin/python" -c 'import sys; sys.stdout.write("".join(map(str, sys.version_info[:2])))'
     )"
