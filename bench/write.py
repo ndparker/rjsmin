@@ -91,12 +91,13 @@ def write_table(filename, results):
 
     # First we transform our data into a table (list of lists)
     pythons, widths = [], [0] * (benched_per_table + 1)
-    last_version = None
+    versions = []
     for version, _, result in results:
         version = uni(version)
-        if not(last_version is None or version.startswith('2.')):
+        if versions and versions[-1].startswith('3.10.') \
+                and not version.startswith('2.'):
             continue
-        last_version = version
+        versions.append(version)
 
         namesub = _re.compile(r'(?:-\d+(?:\.\d+)*)?\.js$').sub
         result = iter(result)
@@ -146,7 +147,7 @@ def write_table(filename, results):
             tables.append(zip(*rows))
         pythons.append((version, tables))
 
-        if last_version.startswith('2.'):
+        if versions[-1].startswith('2.'):
             break
 
     # Second we create a rest table from it
