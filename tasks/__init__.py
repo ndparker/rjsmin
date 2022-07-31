@@ -55,10 +55,41 @@ def namespace():
                 source='docs/_userdoc',
             ),
         ),
+        wheels=dict(
+            build="binary",
+            specs={
+                "aarch64": {
+                    "36": "2014",
+                    "37": "2014",
+                    "38": "2014",
+                    "39": "2014",
+                    "310": "2014",
+                    "311": "2014",
+                },
+                "x86_64": {
+                    "27": "1",
+                    "36": "1",
+                    "37": "1",
+                    "38": "1",
+                    "39": "1",
+                    "310": "2010",
+                    "311": "2014",
+                },
+                "i686": {
+                    "27": "1",
+                    "36": "1",
+                    "37": "1",
+                    "38": "1",
+                    "39": "1",
+                    "310": "2010",
+                    "311": "2014",
+                },
+            },
+        ),
         pypi=adict(
             # repository='https://test.pypi.org/legacy/',
             repository='https://upload.pypi.org/legacy/',
-            username='ndparker',
+            username='__token__',
         ),
 
         shell=adict((key, value) for key, value in vars(_shell).items()
@@ -80,6 +111,7 @@ def namespace():
             check,
             clean,
             compile,
+            deps,
             doc,
             test,
             upload,

@@ -1,5 +1,5 @@
 .. copyright:
-    Copyright 2011 - 2021
+    Copyright 2011 - 2022
     André Malo or his licensors, as applicable
 
 .. license:

@@ -11,7 +11,7 @@ The minifier is based on the semantics of `jsmin.c by Douglas Crockford`_\\.
 
 :Copyright:
 
- Copyright 2011 - 2021
+ Copyright 2011 - 2022
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -87,12 +87,12 @@ def _make_jsmin(python_only=False):
     Returns:
       callable: Minifier
     """
-    # pylint: disable = unused-variable
-    # pylint: disable = too-many-locals
+    # pylint: disable = unused-variable, possibly-unused-variable
+    # pylint: disable = too-many-locals, too-many-statements
 
     if not python_only:
         try:
-            import _rjsmin
+            import _rjsmin  # pylint: disable = import-outside-toplevel
         except ImportError:
             pass
         else:
@@ -101,7 +101,7 @@ def _make_jsmin(python_only=False):
             if getattr(_rjsmin, '__version__', None) == __version__:
                 return _rjsmin.jsmin
     try:
-        xrange
+        xrange  # pylint: disable = used-before-assignment
     except NameError:
         xrange = range  # pylint: disable = redefined-builtin
 
@@ -578,7 +578,7 @@ def jsmin_for_posers(script, keep_bang_comments=False):
 if __name__ == '__main__':
     def main():
         """ Main """
-        import sys as _sys
+        import sys as _sys  # pylint: disable = import-outside-toplevel
 
         argv = _sys.argv[1:]
         keep_bang_comments = '-b' in argv or '-bp' in argv or '-pb' in argv

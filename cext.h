@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 - 2021
+ * Copyright 2006 - 2022
  * Andr\xe9 Malo or his licensors, as applicable
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -69,7 +69,7 @@
 /*
  * Link helpers
  */
-#if __GNUC__ >= 4 && !defined(__MINGW32__)
+#if defined(__GNUC__) && __GNUC__ >= 4 && !defined(__MINGW32__)
     #define EXT_LOCAL __attribute__((visibility("hidden")))
 #else
     #define EXT_LOCAL

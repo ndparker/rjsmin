@@ -3,7 +3,7 @@
 u"""
 :Copyright:
 
- Copyright 2011 - 2021
+ Copyright 2011 - 2022
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -28,7 +28,6 @@ rJSmin - A Javascript Minifier For Python.
 """
 from __future__ import print_function
 __author__ = u"Andr\xe9 Malo"
-__docformat__ = "restructuredtext en"
 
 import os as _os
 import posixpath as _posixpath

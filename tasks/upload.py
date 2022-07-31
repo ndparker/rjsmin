@@ -28,7 +28,7 @@ def source(ctx):
 def wheels(ctx):
     """ Upload wheels """
     with ctx.shell.root_dir():
-        files = list(ctx.shell.files('wheel/dist', '*manylinux*.whl'))
+        files = list(ctx.shell.files('wheel/dist', '*.whl'))
         if not files:
             ctx.fail("No tarball found ")
 

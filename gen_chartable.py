@@ -8,7 +8,7 @@ Character table generator for rjsmin.c
 
 :Copyright:
 
- Copyright 2011 - 2021
+ Copyright 2011 - 2022
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -27,8 +27,6 @@ Character table generator for rjsmin.c
 """
 from __future__ import print_function
 __author__ = u"Andr\xe9 Malo"
-__docformat__ = "restructuredtext en"
-__license__ = "Apache License, Version 2.0"
 
 import re as _re
 

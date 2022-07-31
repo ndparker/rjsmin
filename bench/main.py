@@ -9,7 +9,7 @@ Benchmark jsmin implementations.
 
 :Copyright:
 
- Copyright 2011 - 2021
+ Copyright 2011 - 2022
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -35,8 +35,6 @@ Usage::
 
 """
 __author__ = u"Andr\xe9 Malo"
-__docformat__ = "restructuredtext en"
-__license__ = "Apache License, Version 2.0"
 __version__ = "1.0.0"
 
 import sys as _sys

@@ -1,6 +1,6 @@
 # -*- coding: ascii -*-
 #
-# Copyright 2007 - 2021
+# Copyright 2007 - 2022
 # Andr\xe9 Malo or his licensors, as applicable
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +24,6 @@ Shell utilities.
 from __future__ import absolute_import
 
 __author__ = "Andr\xe9 Malo"
-__docformat__ = "restructuredtext en"
 
 import contextlib as _contextlib
 import errno as _errno

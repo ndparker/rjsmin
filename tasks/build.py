@@ -6,6 +6,7 @@ Build Tasks
 """
 from __future__ import print_function
 
+import itertools as _it
 import os as _os
 import platform as _platform
 import re as _re
@@ -38,6 +39,40 @@ def wheels(ctx, arches=None):
         binfmt_misc in combination with multiarch/qemu-user-static for the
         latter).
     """
+    # pylint: disable = unused-argument
+
+    if ctx.wheels.build == 'binary':
+        return _build_binary(ctx, arches=arches)
+
+    assert not arches
+    return _build_universal(ctx)
+
+
+def _build_universal(ctx):
+    """ Build universal wheel """
+    with ctx.shell.root_dir():
+        ctx.shell.rm_rf('wheel/dist')
+
+        for package in ctx.shell.files('dist/',
+                                       "%s-*.tar.gz" % (ctx.package,)):
+            ctx.run(ctx.c('''
+                pip wheel --no-binary :all: --no-cache -w wheel/dist %s
+                --build-option --universal
+            ''', package), pty=True)
+
+
+def _build_binary(ctx, arches=None):
+    """
+    Build binary wheels
+
+    Parameters:
+      arches (str):
+        Space separated list of architectures. If not supplied it defaults to
+        the current machine type. Except if the current machine type is
+        "x86_64", then if defaults to "x86_64 i686 aarch64" (using
+        binfmt_misc in combination with multiarch/qemu-user-static for the
+        latter).
+    """
     # pylint: disable = too-many-branches
 
     path = 'wheel/dist'
@@ -52,38 +87,44 @@ def wheels(ctx, arches=None):
     for arch in arches:
         if machine == arch:
             continue
-        if machine == 'x86_64' and arch == 'i686':
-            continue
-        ctx.run(ctx.c('''
-            docker run --rm --privileged multiarch/qemu-user-static
-            --reset -p yes
-        '''), echo=True, pty=True)
-        break
+        if machine == 'x86_64':
+            if arch == 'i686':
+                continue
+
+            ctx.run(ctx.c('''
+                docker run --rm --privileged multiarch/qemu-user-static
+                --reset -p yes
+            '''), echo=True, pty=True)
+            break
 
     with ctx.shell.root_dir():
         ctx.shell.rm_rf(path)
-        pythons = "36 37 38 39 310"
+        for package in ctx.shell.files('dist/',
+                                       "%s-*.tar.gz" % (ctx.package,)):
+            ppath = '/io/%s' % (_os.path.basename(package))
 
-        for arch in arches:
-            if arch in ("x86_64", "i686"):
-                ctx.run(
-                    ctx.c('''
-                        docker run --rm -it -v%s/wheel:/io
-                        quay.io/pypa/manylinux1_%s:latest
-                    ''' + (arch == "i686" and "linux32" or "") + '''
-                        /io/build.sh %s %s
-                    ''', _os.getcwd(), arch, ctx.package, "27"),
-                    echo=True, pty=True,
-                )
-            ctx.run(
-                ctx.c('''
-                    docker run --rm -it -v%s/wheel:/io
-                    quay.io/pypa/manylinux_2_24_%s:latest
-                    ''' + (arch == "i686" and "linux32" or "") + '''
-                    /io/build.sh %s %s
-                ''', _os.getcwd(), arch, ctx.package, pythons),
-                echo=True, pty=True,
-            )
+            ctx.shell.cp(package, ctx.shell.native('wheel/'))
+            try:
+                for arch in arches:
+                    spec = ctx.wheels.specs[arch]
+                    prefix = "linux32" if arch == "i686" else ""
+                    groups = sorted(spec.items(), key=lambda x: (x[1], x[0]))
+                    for v, group in _it.groupby(groups, key=lambda x: x[1]):
+                        pythons = " ".join(sorted(item[0] for item in group))
+                        if "_" in v:
+                            v = "_" + v
+                        ctx.run(
+                            ctx.c('''
+                                docker run --rm -it -v%s/wheel:/io
+                                quay.io/pypa/manylinux%s_%s:latest
+                            ''' + prefix + '''
+                                /io/build.sh %s %s
+                            ''', _os.getcwd(), v, arch, ppath, pythons),
+                            echo=True, pty=True,
+                        )
+            finally:
+                _os.unlink(ctx.shell.native('wheel/%s'
+                                            % (_os.path.basename(package),)))
 
         # strip file names
         multi_sub = _re.compile(r'(?:[.-]manylinux[^.]+)+').sub

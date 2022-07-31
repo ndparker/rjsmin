@@ -2,7 +2,7 @@
 u"""
 :Copyright:
 
- Copyright 2018 - 2021
+ Copyright 2018 - 2022
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -26,5 +26,3 @@ u"""
 rJSMin Tests.
 """
 __author__ = u"Andr\xe9 Malo"
-__docformat__ = "restructuredtext en"
-__license__ = "Apache License, Version 2.0"

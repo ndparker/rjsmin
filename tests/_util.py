@@ -2,7 +2,7 @@
 u"""
 :Copyright:
 
- Copyright 2014 - 2021
+ Copyright 2014 - 2022
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -26,14 +26,12 @@ u"""
 Test utilities.
 """
 __author__ = u"Andr\xe9 Malo"
-__docformat__ = "restructuredtext en"
 
 import contextlib as _contextlib
-import functools as _ft
 import sys as _sys
 import types as _types
 
-from pytest import skip
+from pytest import skip  # noqa pylint: disable = unused-import
 
 try:
     from unittest import mock  # pylint: disable = unused-import
@@ -47,7 +45,7 @@ except NameError:
     try:
         from importlib import reload
     except ImportError:
-        from imp import reload
+        from imp import reload  # noqa pylint: disable = deprecated-module
 
 unset = object()
 
@@ -73,8 +71,13 @@ def patched_import(what, how=unset):
         How should it be replaced? If omitted or `unset`, a new MagicMock
         instance is created. The result is yielded as context.
     """
+    class_types = (type,)
+    if str is bytes:
+        # pylint: disable = no-member
+        class_types += (_types.ClassType,)
+
     _is_exc = lambda obj: isinstance(obj, BaseException) or (
-        isinstance(obj, (type, _types.ClassType))
+        isinstance(obj, (type, class_types))
         and issubclass(obj, BaseException)
     )
 
@@ -85,7 +88,7 @@ def patched_import(what, how=unset):
             self.module = module
             self.name = fullname
             extra = '%s.' % fullname
-            for key in list(_sys.modules.keys()):
+            for key in list(_sys.modules):
                 if key.startswith(extra):
                     del _sys.modules[key]
             if fullname in _sys.modules:
@@ -105,13 +108,12 @@ def patched_import(what, how=unset):
             _sys.modules[fullname] = self.module
             return self.module
 
-    realmodules = _sys.modules
+    realmodules = _sys.modules.copy()
     try:
-        _sys.modules = dict(realmodules)
         obj = FinderLoader(what, mock.MagicMock() if how is unset else how)
-        realpath = _sys.meta_path
+        realpath = _sys.meta_path[:]
         try:
-            _sys.meta_path = [obj] + _sys.meta_path
+            _sys.meta_path[:] = [obj] + realpath
             old, parts = unset, what.rsplit('.', 1)
             if len(parts) == 2:
                 parent, base = parts[0], parts[1]
@@ -126,9 +128,10 @@ def patched_import(what, how=unset):
                 if old is not unset:
                     setattr(parent, base, old)
         finally:
-            _sys.meta_path = realpath
+            _sys.meta_path[:] = realpath
     finally:
-        _sys.modules = realmodules
+        _sys.modules.clear()
+        _sys.modules.update(realmodules)
 
 
 def uni(value):

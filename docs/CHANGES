@@ -1,6 +1,10 @@
 Changes with version
 
+ *) Add support for Python 3.11
+
  *) Removed debug print from setup.py
+
+ *) Update project boilerplate
 
 
 Changes with version 1.2.0
