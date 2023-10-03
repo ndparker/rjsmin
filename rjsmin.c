@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 - 2022
+ * Copyright 2011 - 2023
  * Andr\xe9 Malo or his licensors, as applicable
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

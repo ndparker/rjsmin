@@ -8,7 +8,7 @@ Character table generator for rjsmin.c
 
 :Copyright:
 
- Copyright 2011 - 2022
+ Copyright 2011 - 2023
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:

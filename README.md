@@ -55,7 +55,7 @@ rjsmin.c is a reimplementation of rjsmin.py in C and speeds it up even more.
 
 ## COPYRIGHT AND LICENSE
 
-Copyright 2011 - 2022
+Copyright 2011 - 2023
 André Malo or his licensors, as applicable.
 
 The whole package (except for the files in the bench/ directory)
@@ -66,7 +66,7 @@ root directory of the distribution or online at:
 
 ## SYSTEM REQUIREMENTS
 
-Supported python versions are 2.7 and 3.4+.
+Supported python versions are 2.7 and 3.6+.
 
 You also need a build environment for python C extensions (i.e. a compiler
 and the python development files).
