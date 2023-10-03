@@ -28,16 +28,18 @@ https://github.com/ndparker/rjsmin/issues/17
 __author__ = u"Andr\xe9 Malo"
 
 import rjsmin as _rjsmin
+
 # pylint: disable = protected-access
 py_jsmin = _rjsmin._make_jsmin(python_only=True)
 py_jsmin2 = _rjsmin.jsmin_for_posers
 
 import _rjsmin
+
 c_jsmin = _rjsmin.jsmin
 
 
 def test_non_issue():
-    """ Test issue """
+    """Test issue"""
     inp = b'console.write((f++)/ 4 + 3 / 2)'
     exp = b'console.write((f++)/4+3/2)'
 
@@ -53,7 +55,7 @@ def test_non_issue():
 
 
 def test_non_issue_bang():
-    """ Test issue with bang comments """
+    """Test issue with bang comments"""
     inp = b'console.write((f++)/ 4 + 3 / 2)'
     exp = b'console.write((f++)/4+3/2)'
 
@@ -69,11 +71,15 @@ def test_non_issue_bang():
 
 
 def test_non_issue2():
-    """ Test issue """
-    inp = (b'if (Y) { ba=Math.max(ba, Math.round(W.minHeight/Y))}; '
-           b'bo.setKnobFactor((bp.width===0)? 0: br.width /bp.width);')
-    exp = (b'if(Y){ba=Math.max(ba,Math.round(W.minHeight/Y))};'
-           b'bo.setKnobFactor((bp.width===0)?0:br.width/bp.width);')
+    """Test issue"""
+    inp = (
+        b'if (Y) { ba=Math.max(ba, Math.round(W.minHeight/Y))}; '
+        b'bo.setKnobFactor((bp.width===0)? 0: br.width /bp.width);'
+    )
+    exp = (
+        b'if(Y){ba=Math.max(ba,Math.round(W.minHeight/Y))};'
+        b'bo.setKnobFactor((bp.width===0)?0:br.width/bp.width);'
+    )
 
     assert py_jsmin(inp) == exp
     assert py_jsmin2(inp) == exp
@@ -87,11 +93,15 @@ def test_non_issue2():
 
 
 def test_non_issue2_bang():
-    """ Test issue """
-    inp = (b'if (Y) { ba=Math.max(ba, Math.round(W.minHeight/Y))}; '
-           b'bo.setKnobFactor((bp.width===0)? 0: br.width /bp.width);')
-    exp = (b'if(Y){ba=Math.max(ba,Math.round(W.minHeight/Y))};'
-           b'bo.setKnobFactor((bp.width===0)?0:br.width/bp.width);')
+    """Test issue"""
+    inp = (
+        b'if (Y) { ba=Math.max(ba, Math.round(W.minHeight/Y))}; '
+        b'bo.setKnobFactor((bp.width===0)? 0: br.width /bp.width);'
+    )
+    exp = (
+        b'if(Y){ba=Math.max(ba,Math.round(W.minHeight/Y))};'
+        b'bo.setKnobFactor((bp.width===0)?0:br.width/bp.width);'
+    )
 
     assert py_jsmin(inp, keep_bang_comments=True) == exp
     assert py_jsmin2(inp, keep_bang_comments=True) == exp
@@ -105,9 +115,11 @@ def test_non_issue2_bang():
 
 
 def test_non_issue_complex():
-    """ Test issue """
-    inp = (b'console.write((f++)/*!dude*// 4 + 3 /a /* lalala */ '
-           b'/*!lololo*// 2)')
+    """Test issue"""
+    inp = (
+        b'console.write((f++)/*!dude*// 4 + 3 /a /* lalala */ '
+        b'/*!lololo*// 2)'
+    )
     exp = b'console.write((f++)/4+3/a/2)'
 
     assert py_jsmin(inp) == exp
@@ -122,9 +134,11 @@ def test_non_issue_complex():
 
 
 def test_non_issue_complex_bang():
-    """ Test issue with bang comments """
-    inp = (b'console.write((f++)/*!dude*// 4 + 3 /a /* lalala */ '
-           b'/*!lololo*// 2)')
+    """Test issue with bang comments"""
+    inp = (
+        b'console.write((f++)/*!dude*// 4 + 3 /a /* lalala */ '
+        b'/*!lololo*// 2)'
+    )
     exp = b'console.write((f++)/*!dude*//4+3/a/*!lololo*//2)'
 
     assert py_jsmin(inp, keep_bang_comments=True) == exp
@@ -139,7 +153,7 @@ def test_non_issue_complex_bang():
 
 
 def test_issue():
-    """ Test issue """
+    """Test issue"""
     inp = b'for(f=0;f<z;f++)/^ *-+: *$/.test(x)'
     exp = b'for(f=0;f<z;f++)/^ *-+: *$/.test(x)'
 
@@ -155,7 +169,7 @@ def test_issue():
 
 
 def test_issue_bang():
-    """ Test issue with bang comments """
+    """Test issue with bang comments"""
     inp = b'for(f=0;f<z;f++)/^ *-+: *$/.test(x)'
     exp = b'for(f=0;f<z;f++)/^ *-+: *$/.test(x)'
 
@@ -171,9 +185,11 @@ def test_issue_bang():
 
 
 def test_issue_complex():
-    """ Test issue """
-    inp = (b'for(f=0;f<z;f++)/*!dude*//^ *-+: *$/i/*haha*//*!hoho*/\n'
-           b'./*!hihi*/\n/*huhu*/test(x)')
+    """Test issue"""
+    inp = (
+        b'for(f=0;f<z;f++)/*!dude*//^ *-+: *$/i/*haha*//*!hoho*/\n'
+        b'./*!hihi*/\n/*huhu*/test(x)'
+    )
     exp = b'for(f=0;f<z;f++)/^ *-+: *$/i.test(x)'
 
     assert py_jsmin(inp) == exp
@@ -188,9 +204,11 @@ def test_issue_complex():
 
 
 def test_issue_complex_bang():
-    """ Test issue with bang comments """
-    inp = (b'for(f=0;f<z;f++)/*!dude*//^ *-+: *$/i/*haha*//*!hoho*/\n'
-           b'./*!hihi*/\n/*huhu*/test(x)')
+    """Test issue with bang comments"""
+    inp = (
+        b'for(f=0;f<z;f++)/*!dude*//^ *-+: *$/i/*haha*//*!hoho*/\n'
+        b'./*!hihi*/\n/*huhu*/test(x)'
+    )
     exp = b'for(f=0;f<z;f++)/*!dude*//^ *-+: *$/i/*!hoho*/./*!hihi*/test(x)'
 
     assert py_jsmin(inp, keep_bang_comments=True) == exp
@@ -205,7 +223,7 @@ def test_issue_complex_bang():
 
 
 def test_issue_error1():
-    """ Test issue """
+    """Test issue"""
     inp = b'for(f=0;f<z;f++)/^ *-+: *$//*'
     exp = b'for(f=0;f<z;f++)/^*-+:*$'
 
@@ -221,7 +239,7 @@ def test_issue_error1():
 
 
 def test_issue_error2():
-    """ Test issue """
+    """Test issue"""
     inp = b'for(f=0;f<z;f++)/'
     exp = b'for(f=0;f<z;f++)/'
 
@@ -237,7 +255,7 @@ def test_issue_error2():
 
 
 def test_issue_error3():
-    """ Test issue """
+    """Test issue"""
     inp = b'for(f=0;f<z;f++)/^ *-+: *$/./'
     exp = b'for(f=0;f<z;f++)/^*-+:*$/./'
 
@@ -253,7 +271,7 @@ def test_issue_error3():
 
 
 def test_issue_error4():
-    """ Test issue """
+    """Test issue"""
     inp = b'for(f=0;f<z;f++)/^ *-+: *$/."lalala"'
     exp = b'for(f=0;f<z;f++)/^*-+:*$/."lalala"'
 

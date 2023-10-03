@@ -30,28 +30,30 @@ __author__ = u"Andr\xe9 Malo"
 import os as _os
 
 import rjsmin as _rjsmin
+
 # pylint: disable = protected-access
 py_jsmin = _rjsmin._make_jsmin(python_only=True)
 py_jsmin2 = _rjsmin.jsmin_for_posers
 
 import _rjsmin
+
 c_jsmin = _rjsmin.jsmin
 
 
 def load(name):
-    """ Load a file """
+    """Load a file"""
     with open(_os.path.join(_os.path.dirname(__file__), name), 'rb') as fp:
         return fp.read()
 
 
 def save(name, value):
-    """ Load a file """
+    """Load a file"""
     with open(_os.path.join(_os.path.dirname(__file__), name), 'wb') as fp:
         fp.write(value)
 
 
 def test_string():
-    """ Test incomplete string """
+    """Test incomplete string"""
     inp = load('js/incomplete_string.js')
     exp = load('js/incomplete_string.min.js')
     # save('js/incomplete_string.min.js', py_jsmin(inp))
@@ -67,7 +69,7 @@ def test_string():
 
 
 def test_regex():
-    """ Test incomplete regex """
+    """Test incomplete regex"""
     inp = load('js/incomplete_regex.js')
     exp = load('js/incomplete_regex.min.js')
     # save('js/incomplete_regex.min.js', py_jsmin(inp))
@@ -83,7 +85,7 @@ def test_regex():
 
 
 def test_regex2():
-    """ Test incomplete regex """
+    """Test incomplete regex"""
     inp = load('js/incomplete_regex2.js')
     exp = load('js/incomplete_regex2.min.js')
     # save('js/incomplete_regex2.min.js', py_jsmin(inp))
@@ -99,7 +101,7 @@ def test_regex2():
 
 
 def test_comment():
-    """ Test incomplete comment """
+    """Test incomplete comment"""
     inp = load('js/incomplete_comment.js')
     exp = load('js/incomplete_comment.min.js')
     # save('js/incomplete_comment.min.js', py_jsmin(inp))
@@ -115,7 +117,7 @@ def test_comment():
 
 
 def test_comment2():
-    """ Test incomplete comment """
+    """Test incomplete comment"""
     inp = load('js/incomplete_comment2.js')
     exp = load('js/incomplete_comment2.min.js')
     # save('js/incomplete_comment2.min.js', py_jsmin(inp))
@@ -131,7 +133,7 @@ def test_comment2():
 
 
 def test_comment_bang():
-    """ Test incomplete bang comment """
+    """Test incomplete bang comment"""
     inp = load('js/incomplete_bang_comment.js')
     exp = load('js/incomplete_bang_comment.min.js')
     # save('js/incomplete_bang_comment.min.js',
@@ -148,7 +150,7 @@ def test_comment_bang():
 
 
 def test_comment_bang2():
-    """ Test incomplete bang comment """
+    """Test incomplete bang comment"""
     inp = load('js/incomplete_bang_comment2.js')
     exp = load('js/incomplete_bang_comment2.min.js')
     # save('js/incomplete_bang_comment2.min.js',
@@ -165,7 +167,7 @@ def test_comment_bang2():
 
 
 def test_slash():
-    """ Test lone slash """
+    """Test lone slash"""
     inp = load('js/lone_slash.js')
     exp = load('js/lone_slash.min.js')
     # save('js/lone_slash.min.js', py_jsmin(inp))

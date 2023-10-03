@@ -30,25 +30,27 @@ __author__ = u"Andr\xe9 Malo"
 from pytest import raises
 
 import rjsmin as _rjsmin
+
 # pylint: disable = protected-access
 py_jsmin = _rjsmin._make_jsmin(python_only=True)
 py_jsmin2 = _rjsmin.jsmin_for_posers
 
 import _rjsmin
+
 c_jsmin = _rjsmin.jsmin
 
 from . import _util as _test
 
 
 def test_keep_bang_comments():
-    """ keep_bang_comments argument error """
+    """keep_bang_comments argument error"""
     with raises(RuntimeError) as e:
         c_jsmin('', keep_bang_comments=_test.badbool)
     assert e.value.args == ('yoyo',)
 
 
 def test_input_type():
-    """ input type must be a string or bytes """
+    """input type must be a string or bytes"""
     with raises(TypeError):
         c_jsmin(None)
 

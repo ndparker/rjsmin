@@ -30,28 +30,30 @@ __author__ = u"Andr\xe9 Malo"
 import os as _os
 
 import rjsmin as _rjsmin
+
 # pylint: disable = protected-access
 py_jsmin = _rjsmin._make_jsmin(python_only=True)
 py_jsmin2 = _rjsmin.jsmin_for_posers
 
 import _rjsmin
+
 c_jsmin = _rjsmin.jsmin
 
 
 def load(name):
-    """ Load a file """
+    """Load a file"""
     with open(_os.path.join(_os.path.dirname(__file__), name), 'rb') as fp:
         return fp.read()
 
 
 def save(name, value):
-    """ Load a file """
+    """Load a file"""
     with open(_os.path.join(_os.path.dirname(__file__), name), 'wb') as fp:
         fp.write(value)
 
 
 def test_issue():
-    """ Test issue """
+    """Test issue"""
     inp = load('js/issue13.js')
     exp = load('js/issue13.min.js')
     # save('js/issue13.min.js', py_jsmin(inp))
@@ -67,7 +69,7 @@ def test_issue():
 
 
 def test_issue_bang():
-    """ Test issue with bang comments """
+    """Test issue with bang comments"""
     inp = load('js/issue13.js')
     exp = load('js/issue13.bang.js')
     # save('js/issue13.bang.js', py_jsmin(inp, keep_bang_comments=True))
