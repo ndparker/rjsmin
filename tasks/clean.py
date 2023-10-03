@@ -30,6 +30,7 @@ def clean(ctx, so=False, cache=False):
         ctx.shell.rm(name)
     for name in ctx.shell.files('bench', '.out.*', recursive=False):
         ctx.shell.rm(name)
+    ctx.shell.rm('gcov.out')
     ctx.shell.rm_rf(
         'docs/coverage',
         'docs/gcov',
@@ -37,7 +38,7 @@ def clean(ctx, so=False, cache=False):
         'dist',
         'wheel/dist',
         ctx.doc.userdoc,
-        'docs/_userdoc/_build',
+        ctx.doc.sphinx.build,
         ctx.doc.website.source,
         ctx.doc.website.target,
     )

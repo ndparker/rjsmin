@@ -98,6 +98,7 @@ def _build_binary(ctx, arches=None):
             break
 
     with ctx.shell.root_dir():
+        # pylint: disable = too-many-nested-blocks
         ctx.shell.rm_rf(path)
         for package in ctx.shell.files('dist/',
                                        "%s-*.tar.gz" % (ctx.package,)):
@@ -108,20 +109,33 @@ def _build_binary(ctx, arches=None):
                 for arch in arches:
                     spec = ctx.wheels.specs[arch]
                     prefix = "linux32" if arch == "i686" else ""
-                    groups = sorted(spec.items(), key=lambda x: (x[1], x[0]))
-                    for v, group in _it.groupby(groups, key=lambda x: x[1]):
-                        pythons = " ".join(sorted(item[0] for item in group))
-                        if "_" in v:
-                            v = "_" + v
-                        ctx.run(
-                            ctx.c('''
-                                docker run --rm -it -v%s/wheel:/io
-                                quay.io/pypa/manylinux%s_%s:latest
-                            ''' + prefix + '''
-                                /io/build.sh %s %s
-                            ''', _os.getcwd(), v, arch, ppath, pythons),
-                            echo=True, pty=True,
+                    for libc in ("manylinux", "musllinux"):
+                        groups = sorted(
+                            ((tup[0], tup[1][libc])
+                             for tup in spec.items()
+                             if libc in tup[1]),
+                            key=lambda x, libc=libc: (x[1], x[0])
                         )
+                        for v, group in _it.groupby(
+                                groups, key=lambda x: x[1]
+                        ):
+                            pythons = " ".join(sorted(
+                                item[0] for item in group
+                            ))
+                            if "_" in v:
+                                v = "_" + v
+                            ctx.run(ctx.c(
+                                (
+                                    '''
+                                        docker run --rm -it -v%s/wheel:/io
+                                        quay.io/pypa/%s%s_%s:latest
+                                    ''' + prefix + '''
+                                        /io/build.sh %s %s %s
+                                    '''
+                                ),
+                                _os.getcwd(), libc, v, arch,
+                                libc, ppath, pythons,
+                            ), echo=True, pty=True)
             finally:
                 _os.unlink(ctx.shell.native('wheel/%s'
                                             % (_os.path.basename(package),)))
@@ -132,6 +146,9 @@ def _build_binary(ctx, arches=None):
         for name in _os.listdir(path):
             if not name.endswith('.whl'):
                 continue
+            if 'manylinux' not in name:
+                continue
+
             pick = _best_manylinux(name)
             if pick:
                 tomove.append((

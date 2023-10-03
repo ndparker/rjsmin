@@ -2,7 +2,7 @@
 u"""
 :Copyright:
 
- Copyright 2014 - 2022
+ Copyright 2014 - 2023
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -51,10 +51,10 @@ unset = object()
 
 
 class Bunch(object):
-    """ Bunch object - represent all init kwargs as attributes """
+    """Bunch object - represent all init kwargs as attributes"""
 
     def __init__(self, **kw):
-        """ Initialization """
+        """Initialization"""
         self.__dict__.update(kw)
 
 
@@ -82,7 +82,7 @@ def patched_import(what, how=unset):
     )
 
     class FinderLoader(object):
-        """ Finder / Loader for meta path """
+        """Finder / Loader for meta path"""
 
         def __init__(self, fullname, module):
             self.module = module
@@ -95,14 +95,14 @@ def patched_import(what, how=unset):
                 del _sys.modules[fullname]
 
         def find_module(self, fullname, path=None):
-            """ Find the module """
+            """Find the module"""
             # pylint: disable = unused-argument
             if fullname == self.name:
                 return self
             return None
 
         def load_module(self, fullname):
-            """ Load the module """
+            """Load the module"""
             if _is_exc(self.module):
                 raise self.module
             _sys.modules[fullname] = self.module
@@ -149,32 +149,44 @@ def uni(value):
 
 
 class badstr(object):  # pylint: disable = invalid-name
-    """ bad string """
+    """bad string"""
+
     def __str__(self):
         raise RuntimeError("yo")
+
+
 badstr = badstr()
 
 
 class badbytes(object):  # pylint: disable = invalid-name
-    """ bad bytes """
+    """bad bytes"""
+
     def __bytes__(self):
         raise RuntimeError("yoyo")
+
     if str is bytes:
         __str__ = __bytes__
+
+
 badbytes = badbytes()
 
 
 class badbool(object):  # pylint: disable = invalid-name
-    """ bad bool """
+    """bad bool"""
+
     def __bool__(self):
         raise RuntimeError("yoyo")
+
     if str is bytes:
         __nonzero__ = __bool__
+
+
 badbool = badbool()
 
 
 class baditer(object):  # pylint: disable = invalid-name
-    """ bad iter """
+    """bad iter"""
+
     def __init__(self, *what):
         self._what = iter(what)
 
@@ -186,4 +198,5 @@ class baditer(object):  # pylint: disable = invalid-name
             if isinstance(item, Exception):
                 raise item
             return item
+
     next = __next__

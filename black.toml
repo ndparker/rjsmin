@@ -1,0 +1,12 @@
+[tool.black]
+skip-string-normalization = true
+line-length = 78
+# target-version = ['py39']
+include='''
+(
+    tests/.*\.py
+|   scripts/.*\.py
+)$
+'''
+# extend-exclude='''
+# '''

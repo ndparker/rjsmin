@@ -40,6 +40,24 @@ def flake8(ctx):
         ), echo=True)
 
 
-@_invoke.task(lint, flake8, default=True)
+@_invoke.task(_clean.py)
+def black(ctx):
+    """Run black"""
+    exe = ctx.shell.frompath('black')
+    if exe is None:
+        raise RuntimeError("black not found")
+
+    with ctx.shell.root_dir():
+        ctx.run(
+            ctx.c(
+                '%s --check --config black.toml .',
+                exe,
+                ctx.package.replace('.', '/'),
+            ),
+            echo=True,
+        )
+
+
+@_invoke.task(lint, flake8, black, default=True)
 def all(ctx):  # pylint: disable = redefined-builtin, unused-argument
     """ Run all """

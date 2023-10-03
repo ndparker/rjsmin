@@ -1,14 +1,21 @@
 #!/bin/bash
 set -ex
 
+libc="${1}"
+shift
+
 pkg="${1}"
 shift
 
 versions=" ${1} "
 shift
 
-target="/io/dist"
+final="/io/dist"
+target="/io/dist/${libc}"
 owner="$( stat -c%u:%g /io )"
+
+mkdir -p -- "${final}"
+chown -R "${owner}" "${final}"
 
 mkdir -p -- "${target}"
 chown -R "${owner}" "${target}"
@@ -40,7 +47,7 @@ for dir in /opt/python/*; do
     fi
 
     "${dir}/bin/pip" "${args[@]}"
-    chown -R "${owner}" "${target}"
+    chown -R -- "${owner}" "${target}"
     found=1
 done
 
@@ -48,15 +55,21 @@ done
 
 # Bundle external shared libraries into the wheels
 for whl in "${target}"/*.whl; do
-    if [ "${whl/manylinux}" = "${whl}" ]; then
+    base="$(basename -- "${whl}")"
+    if [ "${base/${libc}}" = "${base}" ]; then
         auditwheel repair "${whl}" -w "${target}"
-        chown -R "${owner}" "${target}"
+        chown -R -- "${owner}" "${target}"
     fi
 done
 
-# Only keep manylinux wheels
+# Only keep properly tagged wheels
 for whl in "${target}"/*.whl; do
-    if [ "${whl/-manylinux}" = "${whl}" -o "${whl/pypy}" != "${whl}" ]; then
-        rm -vf -- "${whl}"
+    base="$(basename -- "${whl}")"
+    if [ "${base/-${libc}}" != "${base}" -a "${base/pypy}" = "${base}" ]; then
+        mv -v -- "${whl}" "${final}"
     fi
 done
+rm -rf -- "${target}"
+chown -R -- "${owner}" "${final}"
+
+# The end.
