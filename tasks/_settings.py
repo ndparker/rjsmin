@@ -22,6 +22,7 @@ settings = dict(
                 "310": dict(manylinux="2014", musllinux="1_1"),
                 "311": dict(manylinux="2014", musllinux="1_1"),
                 "312": dict(manylinux="2014", musllinux="1_1"),
+                "313": dict(manylinux="2014", musllinux="1_1"),
             },
             "x86_64": {
                 "27": dict(manylinux="1"),
@@ -32,6 +33,7 @@ settings = dict(
                 "310": dict(manylinux="2010", musllinux="1_1"),
                 "311": dict(manylinux="2014", musllinux="1_1"),
                 "312": dict(manylinux="2014", musllinux="1_1"),
+                "313": dict(manylinux="2014", musllinux="1_1"),
             },
             "i686": {
                 "27": dict(manylinux="1"),
@@ -42,6 +44,7 @@ settings = dict(
                 "310": dict(manylinux="2010", musllinux="1_1"),
                 "311": dict(manylinux="2014", musllinux="1_1"),
                 "312": dict(manylinux="2014", musllinux="1_1"),
+                "313": dict(manylinux="2014", musllinux="1_1"),
             },
         },
     ),

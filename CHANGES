@@ -1,5 +1,7 @@
 Changes with version
 
+ *) Add support for Python 3.13
+
  *) Update project boilerplate
 
 
