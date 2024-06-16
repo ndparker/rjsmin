@@ -10,7 +10,7 @@ import os as _os
 
 
 def update(ctx):
-    """ Update version in relevant places """
+    """Update version in relevant places"""
     version = ctx.run('python setup.py --version', hide=True).stdout.strip()
 
     _userdoc(ctx, version)
@@ -19,7 +19,7 @@ def update(ctx):
 
 
 def _userdoc(ctx, version):
-    """ Update version in userdoc """
+    """Update version in userdoc"""
     short = '.'.join(version.split('.')[:2])
     conf = _os.path.join(ctx.doc.sphinx.source, 'conf.py')
 
@@ -41,7 +41,7 @@ def _userdoc(ctx, version):
 
 
 def _download(ctx, version):  # noqa
-    """ Update version in download files """
+    """Update version in download files"""
     # pylint: disable = too-many-branches, too-many-statements
 
     filename = _os.path.join(ctx.doc.sphinx.source, 'website_download.txt')
@@ -78,8 +78,9 @@ def _download(ctx, version):  # noqa
             elif line.startswith('.. begin dev'):
                 newdev.append(line)
         else:
-            ctx.fail("Incomplete/missing dev marker in %s"
-                     % (filename + '.in',))
+            ctx.fail(
+                "Incomplete/missing dev marker in %s" % (filename + '.in',)
+            )
 
     instable, indev = [], []
     with open(filename, 'wb') as fp:
@@ -117,15 +118,16 @@ def _download(ctx, version):  # noqa
             elif isdev and hasstable:
                 fp.write(line.encode('latin-1'))
             else:
-                fp.write(line
-                         .replace('@@VERSION@@', version)
-                         .replace('@@PATH@@', dlpath)
-                         .encode('latin-1'))
+                fp.write(
+                    line.replace('@@VERSION@@', version)
+                    .replace('@@PATH@@', dlpath)
+                    .encode('latin-1')
+                )
 
 
 def _changes(ctx, version):
-    """ Update version in CHANGES """
-    fname = ctx.shell.native('docs/CHANGES')
+    """Update version in CHANGES"""
+    fname = ctx.shell.native('CHANGES')
     with open(fname, 'rb') as fp:
         lines = fp.read().decode('latin-1').splitlines(True)
 

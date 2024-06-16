@@ -1,2 +1,4 @@
 *.py text=auto
 *.txt text=auto
+*.tf text=auto
+*.tfvars text=auto

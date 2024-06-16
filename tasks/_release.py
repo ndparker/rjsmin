@@ -9,10 +9,11 @@ import re as _re
 
 
 def check_committed(ctx):
-    """ Check if everything is committed """
+    """Check if everything is committed"""
     git = ctx.shell.frompath("git")
-    lines = ctx.run(ctx.c('%s branch --color=never', git),
-                    env=dict(LC_ALL='C'), hide=True).stdout.splitlines()
+    lines = ctx.run(
+        ctx.c('%s branch --color=never', git), env=dict(LC_ALL='C'), hide=True
+    ).stdout.splitlines()
     for line in lines:
         if line.startswith('*'):
             branch = line.split(None, 1)[1]
@@ -26,17 +27,26 @@ def check_committed(ctx):
         if not match:
             ctx.fail("Not in master or release branch.")
 
-    lines = ctx.run(ctx.c('%s status --porcelain', git),
-                    env=dict(LC_ALL='C'), hide=True).stdout
+    lines = ctx.run(
+        ctx.c('%s status --porcelain', git), env=dict(LC_ALL='C'), hide=True
+    ).stdout
     if lines:
         ctx.fail("Uncommitted changes!")
 
 
 def add_tag(ctx):
-    """ Add release tag """
+    """Add release tag"""
     version = ctx.run('python setup.py --version', hide=True).stdout.strip()
     git = ctx.shell.frompath('git')
 
-    ctx.run(ctx.c('''
+    ctx.run(
+        ctx.c(
+            '''
         %s tag -a -m "Release version %s" -- %s
-    ''', git, version, version), echo=True)
+    ''',
+            git,
+            version,
+            version,
+        ),
+        echo=True,
+    )

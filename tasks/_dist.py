@@ -9,19 +9,21 @@ import os as _os
 
 
 def compress(ctx, filename, cmd, ext):
-    """ Compress tar file """
+    """Compress tar file"""
     prog = ctx.shell.frompath(cmd)
     if prog is None:
         return None
 
-    ctx.run('%s -c9 <%s >%s'
-            % (ctx.q(prog), ctx.q(filename), ctx.q(filename + ext)),
-            echo=True)
+    ctx.run(
+        '%s -c9 <%s >%s'
+        % (ctx.q(prog), ctx.q(filename), ctx.q(filename + ext)),
+        echo=True,
+    )
     return filename + ext
 
 
 def digest(ctx, files, digestname):
-    """ Make digest file """
+    """Make digest file"""
     import hashlib as _hashlib
 
     result = {}
@@ -48,17 +50,25 @@ def digest(ctx, files, digestname):
 
 
 def _sign_inline(ctx, filename):
-    """ Sign file (inline) """
+    """Sign file (inline)"""
     gpg = ctx.shell.frompath('gpg')
-    ctx.run(ctx.c('''
+    ctx.run(
+        ctx.c(
+            '''
         %s --output %s --clearsign -- %s
-    ''', gpg, filename + '.signed', filename), echo=True)
+    ''',
+            gpg,
+            filename + '.signed',
+            filename,
+        ),
+        echo=True,
+    )
     _os.rename(filename + '.signed', filename)
 
 
 def copy_changes(ctx):
-    """ Copy changelog """
+    """Copy changelog"""
     version = ctx.run('python setup.py --version', hide=True).stdout.strip()
-    from_ = 'docs/CHANGES'
+    from_ = 'CHANGES'
     to_ = 'dist/CHANGES-%s' % (version,)
     ctx.shell.cp(from_, to_)

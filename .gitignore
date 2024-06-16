@@ -2,7 +2,6 @@
 *.so
 *.egg-info/
 __pycache__
-/core
 /dist
 /build
 /wheel/dist
@@ -20,10 +19,15 @@ __pycache__
 .*.sw?
 MANIFEST
 
-.tox
+/.venv
+/.tox
 .pytest_cache
 .cache
 .coverage*
+/core
 gcov.out
 
-/bench/.out.*
+.terraform
+.state
+*.auto.tfvars.json
+*.tf.json
