@@ -5,16 +5,23 @@ ignore =
     E402,
     # line break before binary operator
     W503,
-    # line break after binary operator
-    W504,
     # expected 2 blank lines after class or function definition
     E305,
     # do not assign a lambda expression, use a def
     E731,
     # line too long
     E501,
+    # do not use bare 'except'
+    E722,
+    # whitespace before ':'
+    E203,
+    # do not compare types
+    E721,
     # continuation line unaligned for hanging indent
     E131,
+    # line break after binary operator
+    W504,
+
 
 exclude =
     setup.py

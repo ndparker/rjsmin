@@ -1,42 +1,30 @@
 # Requirements file for local development
+-r compat-requirements.txt
 
-pip ~= 23.2.1; python_version >= '3.7'
-pip ~= 21.3.1; python_version == '3.6'
-pip ~= 20.2.4; python_version <= '3.5'
+# Packaging
+pip ~= 24.2.0; python_version >= "3.8"
+setuptools == 75.1.0; python_version >= "3.8"
+twine == 5.1.1; python_version >= "3.8"
 
-setuptools >50.0.0, <= 68.2.2; python_version >= '3.7'
-setuptools == 59.6.0; python_version == '3.6'
-setuptools == 44.0.0; python_version == '2.7'
-
-twine == 4.0.2; python_version >= '3.7'
-twine == 3.8.0; python_version == '3.6'
-twine == 1.15.0; python_version == '2.7'
-
-tox == 4.5.1; python_version >= '3.7'
-tox == 3.25.1; python_version < '3.7'
+# Testing
+tox >= 4.5.1.1, <= 4.21.2; python_version >= "3.8"
 -r tests/requirements.txt
 
-pylint == 2.17.6; python_version >= "3.7"
-pylint == 2.13.9; python_version == "3.6"
-astroid == 2.15.8; python_version >= "3.7"
-astroid == 2.11.7; python_version == "3.6"
-pylint == 1.9.5; python_version < "3.6"
-astroid == 1.6.6; python_version < "3.6"
+# Checking
+pylint == 3.3.1; python_version >= "3.8"
+astroid == 3.3.5; python_version >= "3.8"
+flake8 == 7.1.1; python_version >= "3.8"
+black ~= 24.10.0; python_version >= "3.9"
 
-flake8 == 6.1.0; python_version >= "3.8"
-flake8 == 5.0.4; python_version >= "3.6" and python_version < "3.8"
-flake8 == 3.9.2; python_version < "3.6"
-
-black >=21.12b0, <= 23.9.1; python_version >= "3.8"
-black >=21.12b0, <= 23.3.0; python_version == "3.7"
-black >=21.12b0, <= 22.8.0; python_version ~= "3.6.2"
-
+# Management
 invoke ~= 2.2.0; python_version >= "3.6"
-invoke == 1.6.0; python_version < "3.6"
 
-Sphinx ~= 7.2.6
+# IPython
+ipython >= 7.20; python_version >= "3.7"
+
+Sphinx ~= 8.1.1; python_version >= "3.10"
 cloud_sptheme ~= 1.10.1
 
-# python <= 3.7 support
-virtualenv <= 20.16.2; python_version < "3.8"
-virtualenv < 20.22; python_version >= "3.8"
+-e .
+
+# vim: ft=requirements

@@ -1,4 +1,4 @@
-# pylint-version: 2.17
+# pylint-version: 3.3
 
 [MAIN]
 
@@ -64,10 +64,11 @@ ignore-paths=
 # Emacs file locks
 ignore-patterns=
 
-# List of module names for which member attributes should not be checked
-# (useful for modules/projects where namespaces are manipulated during runtime
-# and thus existing member attributes cannot be deduced by static analysis). It
-# supports qualified module names, as well as Unix pattern matching.
+# List of module names for which member attributes should not be checked and
+# will not be imported (useful for modules/projects where namespaces are
+# manipulated during runtime and thus existing member attributes cannot be
+# deduced by static analysis). It supports qualified module names, as well as
+# Unix pattern matching.
 ignored-modules=
 
 # Python code to execute, usually for sys.path manipulation such as
@@ -91,9 +92,13 @@ load-plugins=
 # Pickle collected data for later comparisons.
 persistent=no
 
+# Resolve imports to .pyi stubs if available. May reduce no-member messages and
+# increase not-an-iterable messages.
+prefer-stubs=no
+
 # Minimum Python version to use for version dependent checks. Will default to
 # the version used to run pylint.
-# py-version=3.11
+# py-version=3.13
 
 # Discover python modules and packages in the file system subtree.
 recursive=no
@@ -136,15 +141,9 @@ confidence=
 disable=
     locally-disabled,
     file-ignored,
-
-    useless-object-inheritance,
+    bad-file-encoding,
     invalid-name,
     consider-using-f-string,
-    import-outside-toplevel,
-    bad-file-encoding,
-    redundant-u-string-prefix,
-    unnecessary-lambda-assignment,
-    raise-missing-from,
     use-dict-literal,
 
 
@@ -171,9 +170,7 @@ attr-naming-style=snake_case
 # Regular expression matching correct attribute names. Overrides attr-naming-
 # style. If left empty, attribute names will be checked with the set naming
 # style.
-attr-rgx=(?x)
-    (?:[A-Z][A-Z0-9_]{2,30}|[a-z_][a-z0-9_]{2,30})$
-
+attr-rgx=[a-z_][a-z0-9_]{2,30}$
 
 # Bad variable names which should always be refused, separated by a comma.
 bad-names=foo,
@@ -208,9 +205,7 @@ class-naming-style=PascalCase
 
 # Regular expression matching correct class names. Overrides class-naming-
 # style. If left empty, class names will be checked with the set naming style.
-class-rgx=(?x)
-    (?:_?[A-Z][a-zA-Z0-9]+|_[a-z][a-z0-9]+)$
-
+class-rgx=[A-Z_][a-zA-Z0-9]+$
 
 # Naming style matching correct constant names.
 const-naming-style=UPPER_CASE
@@ -218,18 +213,16 @@ const-naming-style=UPPER_CASE
 # Regular expression matching correct constant names. Overrides const-naming-
 # style. If left empty, constant names will be checked with the set naming
 # style.
-const-rgx=(?x)
-    (?:
-    _?[A-Z][A-Z0-9_]{1,30}|
-    _?[A-Z][a-zA-Z0-9]{2,30}|
-    _?[a-z_][a-z0-9_]{2,30}|
-    __.*__
+const-rgx=(?x)(
+    ([A-Z_][A-Z0-9_]*)
+    |(__.*__)
+    |(.+_)?logger
     )$
 
 
 # Minimum line length for functions/classes that require docstrings, shorter
 # ones are exempt.
-docstring-min-length=0
+docstring-min-length=-1
 
 # Naming style matching correct function names.
 function-naming-style=snake_case
@@ -237,13 +230,11 @@ function-naming-style=snake_case
 # Regular expression matching correct function names. Overrides function-
 # naming-style. If left empty, function names will be checked with the set
 # naming style.
-function-rgx=(?x)
-    (?:__[a-z]+__|_?[a-z_][a-z0-9_]*)$
-
+function-rgx=[a-z_][a-z0-9_]{2,30}$
 
 # Good variable names which should always be accepted, separated by a comma.
 good-names=
-    _, j, e, c, fp,
+    _, j, db, e, fd, fp,
 
 
 # Good variable names regexes, separated by a comma. If names match any regex,
@@ -259,27 +250,21 @@ inlinevar-naming-style=any
 # Regular expression matching correct inline iteration names. Overrides
 # inlinevar-naming-style. If left empty, inline iteration names will be checked
 # with the set naming style.
-inlinevar-rgx=(?x)
-    [A-Za-z_][A-Za-z0-9_]{,10}$
-
+inlinevar-rgx=[A-Za-z_][A-Za-z0-9_]*$
 
 # Naming style matching correct method names.
 method-naming-style=snake_case
 
 # Regular expression matching correct method names. Overrides method-naming-
 # style. If left empty, method names will be checked with the set naming style.
-method-rgx=(?x)
-    (?:__[a-z]+__|_?[a-z_][a-z0-9_]*)$
-
+method-rgx=[a-z_][a-z0-9_]{2,30}$
 
 # Naming style matching correct module names.
 module-naming-style=snake_case
 
 # Regular expression matching correct module names. Overrides module-naming-
 # style. If left empty, module names will be checked with the set naming style.
-module-rgx=(?x)
-    [a-z_][a-z0-9_]*$
-
+module-rgx=(([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+))$
 
 # Colon-delimited sets of names that determine each other's naming style when
 # the name regexes allow several styles.
@@ -287,8 +272,9 @@ name-group=
 
 # Regular expression which should only match function or class names that do
 # not require a docstring.
-no-docstring-rgx=(?x)
-    (?:__.*__|_[a-z0-9]|test_.*)
+no-docstring-rgx=(?x)(
+    __.*__
+    )$
 
 
 # List of decorators that produce properties, such as abc.abstractproperty. Add
@@ -319,8 +305,11 @@ variable-rgx=[a-z_][a-z0-9_]{2,30}$
 check-protected-access-in-special-methods=no
 
 # List of method names used to declare (i.e. assign) instance attributes.
-defining-attr-methods=__init__,
-                      __new__
+defining-attr-methods=
+    __init__,
+    __new__,
+    setUp,
+
 
 # List of member names, which should be excluded from the protected access
 # warning.
@@ -351,7 +340,7 @@ ignored-parents=
 max-args=10
 
 # Maximum number of attributes for a class (see R0902).
-max-attributes=20
+max-attributes=8
 
 # Maximum number of boolean expressions in an if statement (see R0916).
 max-bool-expr=5
@@ -360,13 +349,16 @@ max-bool-expr=5
 max-branches=12
 
 # Maximum number of locals for function / method body.
-max-locals=20
+max-locals=15
 
 # Maximum number of parents for a class (see R0901).
 max-parents=7
 
+# Maximum number of positional arguments for function / method.
+max-positional-arguments=5
+
 # Maximum number of public methods for a class (see R0904).
-max-public-methods=50
+max-public-methods=20
 
 # Maximum number of return / yield for function / method body.
 max-returns=6
@@ -381,7 +373,7 @@ min-public-methods=0
 [EXCEPTIONS]
 
 # Exceptions that will emit a warning when caught.
-overgeneral-exceptions=Exception
+overgeneral-exceptions=builtins.BaseException,builtins.Exception
 
 
 [FORMAT]
@@ -390,7 +382,12 @@ overgeneral-exceptions=Exception
 expected-line-ending-format=
 
 # Regexp for a line that is allowed to be longer than the limit.
-ignore-long-lines=^\s*(# )?<?https?://\S+>?$
+ignore-long-lines=(?x)(?:
+    ^\s*([#][ ])?<?https?://\S+>?$
+    | [#][ ].*pragma:[ ].*$
+    | [#][ ].*type:[ ].*$
+    )
+
 
 # Number of spaces of indent required inside a hanging or continued line.
 indent-after-paren=4
@@ -403,8 +400,7 @@ indent-string='    '
 max-line-length=78
 
 # Maximum number of lines in a module.
-max-module-lines=
-    1500
+max-module-lines=1500
 
 
 # Allow the body of a class to be on the same line as the declaration if body
@@ -498,6 +494,11 @@ max-nested-blocks=5
 # printed.
 never-returning-functions=sys.exit
 
+# Let 'consider-using-join' be raised when the separator to join on would be
+# non-empty (resulting in expected fixes of the type: ``"- " + " -
+# ".join(items)``)
+suggest-join-with-non-empty-separator=yes
+
 
 [REPORTS]
 
@@ -512,8 +513,9 @@ evaluation=10.0 - ((float(5 * error + warning + refactor + convention) / stateme
 # used to format the message information. See doc for all details.
 msg-template={path}:{line}: [{msg_id}({symbol}), {obj}] {msg}
 
-# Set the output format. Available formats are text, parseable, colorized, json
-# and msvs (visual studio). You can also give a reporter class, e.g.
+# Set the output format. Available formats are: text, parseable, colorized,
+# json2 (improved json format), json (old json format) and msvs (visual
+# studio). You can also give a reporter class, e.g.
 # mypackage.mymodule.MyReporterClass.
 output-format=text
 
@@ -528,19 +530,19 @@ score=no
 [SIMILARITIES]
 
 # Comments are removed from the similarity computation
-ignore-comments=no
+ignore-comments=yes
 
 # Docstrings are removed from the similarity computation
 ignore-docstrings=yes
 
 # Imports are removed from the similarity computation
-ignore-imports=yes
+ignore-imports=no
 
 # Signatures are removed from the similarity computation
 ignore-signatures=no
 
 # Minimum lines number of a similarity.
-min-similarity-lines=10
+min-similarity-lines=4
 
 
 [SPELLING]
@@ -549,7 +551,7 @@ min-similarity-lines=10
 max-spelling-suggestions=4
 
 # Spelling dictionary name. No available dictionaries : You need to install
-# both the python package and the system dependency for enchant to work..
+# both the python package and the system dependency for enchant to work.
 spelling-dict=
 
 # List of comma separated words that should be considered directives if they
@@ -657,7 +659,7 @@ dummy-variables-rgx=(?x)
 
 # Argument names that match this expression will be ignored.
 ignored-argument-names=(?x)
-    (?:_.*|(?:kw)?args)$
+    _|(?:dummy|(?:kw)?args|ctx)$
 
 
 # Tells whether we should check for unused import in __init__ files.

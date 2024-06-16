@@ -1,10 +1,14 @@
 # Requirements file for coverage report
 
-coverage == 7.3.1; python_version >= '3.8'
-coverage == 7.2.7; python_version == '3.7'
-coverage == 6.2.0; python_version == '3.6'
-coverage == 5.5; python_version < '3.6'
+coverage == 7.6.2; python_version >= "3.9"
+coverage == 7.6.1; python_version == "3.8"
+coverage == 7.2.7; python_version == "3.7"
+coverage == 6.2.0; python_version == "3.6"
+coverage == 5.5; python_version == "2.7"
 
-gcovr ~= 6.0.0; python_version >= '3.7'
-gcovr ~= 5.0.0; python_version == '3.6'
-gcovr ~= 4.2.0; python_version < '3.6'
+gcovr ~= 8.0.0; python_version >= "3.8"
+gcovr ~= 6.0.0; python_version == "3.7"
+gcovr ~= 5.0.0; python_version == "3.6"
+gcovr ~= 4.2.0; python_version == "2.7"
+
+# vim: ft=requirements

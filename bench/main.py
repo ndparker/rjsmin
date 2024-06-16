@@ -203,7 +203,7 @@ def main(argv=None):
     for key, value in opts:
         if key in ("-h", "--help"):
             print >> _sys.stderr, (
-                "%s -mbench.main [-c count] [-p file] cssfile ..." % (
+                "%s -mbench.main [-c count] [-p file] jsfile ..." % (
                     _os.path.basename(_sys.executable),
                 )
             )

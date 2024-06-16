@@ -49,7 +49,7 @@ file for details.
 
 rjsmin.c is a reimplementation of rjsmin.py in C and speeds it up even more.
 
-* [Change Log](docs/CHANGES)
+* [Change Log](CHANGES)
 * [Development](docs/DEVELOPMENT.md)
 
 
