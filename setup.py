@@ -3,7 +3,7 @@
 u"""
 :Copyright:
 
- Copyright 2011 - 2023
+ Copyright 2011 - 2024
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
