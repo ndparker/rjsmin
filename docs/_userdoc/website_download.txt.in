@@ -48,7 +48,7 @@ the PGP signature of that file. The file is signed by André Malo, Key-ID
 .. sourcecode:: console
 
     $ gpg --verify rjsmin-@@VERSION@@.digests
-    gpg: Signature made Thu Oct  5 09:03:55 2023 CEST
+    gpg: Signature made Sat Oct 12 18:24:49 2024 CEST
     gpg:                using RSA key 21B65583FF640D34E8662B6B3DED446369F2EE1A
     gpg: Good signature from "André Malo <nd@perlig.de>"
 
