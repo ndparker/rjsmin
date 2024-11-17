@@ -5,8 +5,6 @@ Test suite tasks
 
 """
 
-import os as _os
-
 import invoke as _invoke
 
 
@@ -15,7 +13,7 @@ def local(ctx):
     """Run the unit test suite using py.test"""
     with ctx.shell.root_dir():
         command = r"""
-            %s -c test.ini -vv -s
+            %s -vv -s
             --doctest-modules
             --color=yes
             --exitfirst
@@ -35,7 +33,7 @@ def local(ctx):
 @_invoke.task(default=True)
 def tox(ctx, rebuild=False, env=None):
     """Run the test suite using tox"""
-    command = r""" %s -c test.ini """
+    command = r""" %s """
     args = [ctx.which("tox")]
     if rebuild:
         command += " -r"

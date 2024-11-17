@@ -22,7 +22,7 @@
 
 |**rJSmin**| is a javascript minifier written in python.
 
-.. contents::
+.. xxcontents::
     :local:
 
 

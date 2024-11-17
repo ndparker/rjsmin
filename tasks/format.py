@@ -15,7 +15,7 @@ def black(ctx, diff=False):
         ctx.run(
             ctx.c(
                 (
-                    "%%(black)s %(diff)s --config black.toml ."
+                    "%%(black)s %(diff)s --config pyproject.toml ."
                     % dict(
                         diff="--diff --color" if diff else "",
                     )

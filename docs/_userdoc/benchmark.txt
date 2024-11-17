@@ -22,7 +22,7 @@
  rJSmin - Benchmark
 ====================
 
-.. contents::
+.. xxcontents::
     :local:
 
 

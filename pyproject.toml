@@ -1,0 +1,131 @@
+[build-system]
+requires = [
+    "build~=1.2.2; python_version >='3.8'",
+    "build~=1.1.1; python_version =='3.7'",
+    "build~=0.9.0; python_version =='3.6'",
+    "build~=0.5.1; python_version =='2.7'",
+
+    "setuptools == 75.6.0; python_version >= '3.9'",
+    "setuptools == 75.3.0; python_version == '3.8'",
+    "setuptools == 68.0.0; python_version == '3.7'",
+    "setuptools == 59.6.0; python_version == '3.6'",
+    "setuptools == 44.0.0; python_version == '2.7'",
+]
+build-backend = "setuptools.build_meta"
+
+
+# =======================================
+# tox
+# =======================================
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+skip_missing_interpreters = True
+skipsdist = True
+envlist =
+    {py27,py36,py37,py38,py39,py310,py311,py312,py313}
+    cov-report
+
+[testenv]
+deps =
+    -rtests/requirements.txt
+    -e .
+
+setenv =
+    COVERAGE_FILE = .coverage.{envname}
+    SETUP_CEXT_REQUIRED = 1
+passenv =
+    CFLAGS
+    CPPFLAGS
+    LDFLAGS
+    PKG_CONFIG_PATH
+commands =
+    py.test -vv -s \
+        --cov=rjsmin \
+        --cov-report= \
+        --no-cov-on-fail \
+        --doctest-modules --color=yes \
+        tests
+
+[testenv:cov-report]
+deps = -rtests/coverage.txt
+
+setenv =
+    COVERAGE_FILE = .coverage
+commands =
+    coverage erase
+    coverage combine
+    coverage report
+    coverage html
+    - python -c 'import sys, os; os.mkdir(sys.argv[1])' "docs/gcov"
+    - gcovr --print-summary --html-details --output docs/gcov/index.html
+"""
+
+
+# =======================================
+# Pytest
+# =======================================
+[tool.pytest.ini_options]
+doctest_optionflags = "IGNORE_EXCEPTION_DETAIL ALLOW_UNICODE ALLOW_BYTES ELLIPSIS"
+filterwarnings = [
+    "error",
+]
+
+
+# =======================================
+# Coverage
+# =======================================
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.report]
+# Regexes for lines to exclude from consideration
+exclude_lines = [
+    # Have to re-enable the standard pragma
+    "pragma: no cover",
+
+    # Don't complain about missing debug-only code:
+    "if self\\.debug",
+
+    # Don't complain if tests don't hit defensive assertion code:
+    "raise NotImplementedError",
+
+    # Don't complain if non-runnable code isn't run:
+    "if 0:",
+    "if __name__ == .__main__.:",
+]
+
+# Special part-branch exclusion
+partial_branches = [
+    # Re-enable standard pragma
+    "pragma: no branch",
+]
+
+# Source files to exclude
+omit = []
+
+ignore_errors = true
+
+[tool.coverage.html]
+directory = "docs/coverage"
+
+
+# =======================================
+# Black
+# =======================================
+[tool.black]
+skip-string-normalization = true
+# skip-magic-trailing-comma = true
+line-length = 78
+# target-version = ['py312']
+include='''
+(
+    tests/.*\.py
+|   tasks/.*\.py
+)$
+'''
+extend-exclude='''
+    tasks/_shell.py
+'''
+
+# vim: nowrap

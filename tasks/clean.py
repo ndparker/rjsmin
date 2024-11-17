@@ -31,6 +31,7 @@ def clean(ctx, so=False, cache=False):
     for name in ctx.shell.files("bench", ".out.*", recursive=False):
         ctx.shell.rm(name)
     ctx.shell.rm("gcov.out")
+    ctx.shell.rm("setup.cfg")
 
     ctx.shell.rm_rf(
         "docs/coverage",

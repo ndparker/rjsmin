@@ -18,12 +18,24 @@ from . import _dist
 from . import _release
 from . import _version
 
+# pylint: disable = import-outside-toplevel
+
 
 @_invoke.task(_doc.doc, default=True)
 def source(ctx):
     """Build source package"""
     with ctx.shell.root_dir():
-        ctx.run('python setup.py sdist')
+        if ctx.wheels.build == 'universal':
+            with open("setup.cfg", "wb") as fp:
+                fp.write(b"[bdist_wheel]\n")
+                fp.write(b"universal = 1\n")
+
+        try:
+            import build  # noqa pylint: disable = unused-import
+        except ImportError:
+            ctx.run('python setup.py sdist')
+        else:
+            ctx.run('python -m build --sdist')
 
 
 @_invoke.task()
@@ -45,6 +57,7 @@ def wheels(ctx, arches=None):
         return _build_binary(ctx, arches=arches)
 
     assert not arches
+    assert ctx.wheels.build == 'universal'
     return _build_universal(ctx)
 
 
@@ -60,7 +73,6 @@ def _build_universal(ctx):
                 ctx.c(
                     '''
                 pip wheel --no-binary :all: --no-cache -w wheel/dist %s
-                --build-option --universal
             ''',
                     package,
                 ),
@@ -80,7 +92,7 @@ def _build_binary(ctx, arches=None):
         binfmt_misc in combination with multiarch/qemu-user-static for the
         latter).
     """
-    # pylint: disable = too-many-branches
+    # pylint: disable = too-many-branches, too-many-locals
 
     path = 'wheel/dist'
 

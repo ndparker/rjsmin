@@ -111,7 +111,7 @@ rst_prolog = """
 
 # The theme to use for HTML and HTML Help pages.  Major themes that come with
 # Sphinx are currently 'default' and 'sphinxdoc'.
-html_theme = "cloud"
+html_theme = "furo"
 # html_theme_options = dict(
 #     collapse_navigation=False,
 #     includehidden=True,
