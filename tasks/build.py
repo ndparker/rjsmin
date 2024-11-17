@@ -18,12 +18,19 @@ from . import _dist
 from . import _release
 from . import _version
 
+# pylint: disable = import-outside-toplevel
+
 
 @_invoke.task(_doc.doc, default=True)
 def source(ctx):
     """Build source package"""
     with ctx.shell.root_dir():
-        ctx.run('python setup.py sdist')
+        try:
+            import build  # noqa pylint: disable = unused-import
+        except ImportError:
+            ctx.run('python setup.py sdist')
+        else:
+            ctx.run('python -m build --sdist')
 
 
 @_invoke.task()
@@ -80,7 +87,7 @@ def _build_binary(ctx, arches=None):
         binfmt_misc in combination with multiarch/qemu-user-static for the
         latter).
     """
-    # pylint: disable = too-many-branches
+    # pylint: disable = too-many-branches, too-many-locals
 
     path = 'wheel/dist'
 

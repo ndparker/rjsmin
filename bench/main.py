@@ -37,8 +37,14 @@ Usage::
 __author__ = u"Andr\xe9 Malo"
 __version__ = "1.0.0"
 
+import os as _os
 import sys as _sys
 import time as _time
+
+cwd = _os.getcwd()
+if cwd not in _sys.path:
+    _sys.path.append(cwd)
+
 
 import_notes = []
 class jsmins(object):
