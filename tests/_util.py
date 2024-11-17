@@ -34,12 +34,12 @@ import types as _types
 from pytest import skip  # noqa pylint: disable = unused-import
 
 try:
-    from unittest import mock  # pylint: disable = unused-import
+    import mock
 except ImportError:
-    import mock  # noqa
+    from unittest import mock
 
 try:
-    reload
+    reload  # pylint: disable = used-before-assignment
 except NameError:
     # pylint: disable = redefined-builtin
     try:
@@ -47,19 +47,21 @@ except NameError:
     except ImportError:
         from imp import reload  # noqa pylint: disable = deprecated-module
 
-unset = object()
+_unset = type("_unset", (object,), {})()  # pylint: disable=invalid-name
+
+
+# pylint: disable = useless-object-inheritance
 
 
 class Bunch(object):
-    """Bunch object - represent all init kwargs as attributes"""
+    """Bunch object"""
 
-    def __init__(self, **kw):
-        """Initialization"""
-        self.__dict__.update(kw)
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
 
 
 @_contextlib.contextmanager
-def patched_import(what, how=unset):
+def patched_import(what, how=_unset):
     """
     Context manager to mock an import statement temporarily
 
@@ -71,11 +73,14 @@ def patched_import(what, how=unset):
         How should it be replaced? If omitted or `unset`, a new MagicMock
         instance is created. The result is yielded as context.
     """
+    # basically stolen from opensource.perlig.de/tdi/
+
     class_types = (type,)
     if str is bytes:
         # pylint: disable = no-member
         class_types += (_types.ClassType,)
 
+    # pylint: disable = unnecessary-lambda-assignment
     _is_exc = lambda obj: isinstance(obj, BaseException) or (
         isinstance(obj, (type, class_types))
         and issubclass(obj, BaseException)
@@ -87,12 +92,22 @@ def patched_import(what, how=unset):
         def __init__(self, fullname, module):
             self.module = module
             self.name = fullname
-            extra = '%s.' % fullname
+            extra = "%s." % fullname
             for key in list(_sys.modules):
                 if key.startswith(extra):
                     del _sys.modules[key]
             if fullname in _sys.modules:
                 del _sys.modules[fullname]
+
+        def find_spec(self, name, path=None, target=None):
+            """Find spec (Python 3.10+)"""
+            # pylint: disable = unused-argument
+            if name != self.name:
+                return None
+
+            from importlib import util
+
+            return util.spec_from_loader(name, self)
 
         def find_module(self, fullname, path=None):
             """Find the module"""
@@ -108,13 +123,22 @@ def patched_import(what, how=unset):
             _sys.modules[fullname] = self.module
             return self.module
 
+        def create_module(self, spec):
+            """Create module"""
+            if _is_exc(self.module):
+                raise self.module
+            return self.module
+
+        def exec_module(self, module):
+            """Execute module"""
+
     realmodules = _sys.modules.copy()
     try:
-        obj = FinderLoader(what, mock.MagicMock() if how is unset else how)
+        obj = FinderLoader(what, mock.MagicMock() if how is _unset else how)
         realpath = _sys.meta_path[:]
         try:
             _sys.meta_path[:] = [obj] + realpath
-            old, parts = unset, what.rsplit('.', 1)
+            old, parts = _unset, what.rsplit(".", 1)
             if len(parts) == 2:
                 parent, base = parts[0], parts[1]
                 if parent in _sys.modules:
@@ -125,7 +149,7 @@ def patched_import(what, how=unset):
             try:
                 yield obj.module
             finally:
-                if old is not unset:
+                if old is not _unset:
                     setattr(parent, base, old)
         finally:
             _sys.meta_path[:] = realpath

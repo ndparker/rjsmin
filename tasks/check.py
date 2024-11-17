@@ -44,7 +44,7 @@ def black(ctx):
     with ctx.shell.root_dir():
         ctx.run(
             ctx.c(
-                "%(black)s --check --config black.toml .",
+                "%(black)s --check --config pyproject.toml .",
                 black=ctx.which("black"),
             ),
             echo=True,
