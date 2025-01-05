@@ -1,6 +1,6 @@
 #!bash
 #
-# Copyright 2019 - 2024
+# Copyright 2019 - 2025
 # Andr\xe9 Malo or his licensors, as applicable
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,9 +20,10 @@ set -e
 # Parse arguments
 want_python=
 want_upgrade=
-while getopts "pu" opt; do
+# while getopts "pu" opt; do
+while getopts "u" opt; do
     case "${opt}" in
-        p) want_python=1 ;;
+        # p) want_python=1 ;;
         u) want_upgrade=1 ;;
         *) die "Unknown option -${opt}" ;;
     esac
@@ -37,16 +38,16 @@ shift
 
 source "${VIRTUAL_ENV}/bin/activate"
 
-if [ "${want_python}" = "1" ]; then
-    (
-        set -e
-
-        cd "${VIRTUAL_ENV}"
-        mkvirtualenv --clear --python \
-            "$(pyv="$(python -c 'import sys; print("python" + ".".join(map(str, sys.version_info[:2])))')"; \
-            deactivate; which "${pyv}")" .
-    ) || exit $?
-fi
+# if [ "${want_python}" = "1" ]; then
+#     (
+#         set -e
+#
+#         cd "${VIRTUAL_ENV}"
+#         mkvirtualenv --clear --python \
+#             "$(pyv="$(python -c 'import sys; print("python" + ".".join(map(str, sys.version_info[:2])))')"; \
+#             deactivate; which "${pyv}")" .
+#     ) || exit $?
+# fi
 
 cd "${dir}"
 pip freeze | grep -v '^-e ' | while read file; do

@@ -15,20 +15,37 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-Compile tasks
-~~~~~~~~~~~~~
+Setup invoke namespace
+~~~~~~~~~~~~~~~~~~~~~~
 
 """
 
-import os as _os
+import sys as _sys
 
-import invoke as _invoke
+from . import _default_settings
+from . import shell as _shell
+from . import tasks as _tasks
+from . import util as _util
+
+# pylint: disable = import-outside-toplevel
 
 
-@_invoke.task(default=True)
-def compile(ctx):  # pylint: disable = redefined-builtin
-    """Compile the package"""
-    with ctx.shell.root_dir():
-        ctx.run(
-            "pip install -e .", env=dict(_os.environ, SETUP_CEXT_REQUIRED="1")
-        )
+def setup():
+    """
+    Create invoke task namespace
+
+    Returns:
+      invoke.Collection: The main namespace
+    """
+    try:
+        from .. import _settings
+    except ImportError:
+        settings = {}
+    else:
+        settings = _settings.settings
+
+    env = _util.dictmerge(_default_settings.default_settings(), settings)
+
+    _sys.path.insert(0, _shell.root)
+
+    return _tasks.setup_tasks(_util.adict(env))

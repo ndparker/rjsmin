@@ -1,56 +1,72 @@
-# -*- encoding: ascii -*-
+# -*- coding: ascii -*-
+#
+# Copyright 2018 - 2025
+# Andr\xe9 Malo or his licensors, as applicable
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 """
-Checking tasks
-~~~~~~~~~~~~~~
+Run code checkers
+~~~~~~~~~~~~~~~~~
 
 """
+
+import os as _os
 
 import invoke as _invoke
 
-from . import clean as _clean
+from . import _features
+from ._inv import tasks as _tasks
+
+_CHECKERS = []
 
 
-@_invoke.task(_clean.py)
+@_tasks.optional(_CHECKERS, _features.pylint)
+@_invoke.task("clean.py")
 def lint(ctx):
     """Run pylint"""
+    cmd = [ctx.which("pylint")] + ctx.s("--rcfile pylintrc") + [ctx.package]
+
     with ctx.shell.root_dir():
-        ctx.run(
-            ctx.c(
-                "%(pylint)s --rcfile pylintrc %(package)s",
-                pylint=ctx.which("pylint"),
-                package=ctx.package,
-            ),
-            echo=True,
-        )
+        ctx.run(ctx.c(cmd), echo=True)
 
 
-@_invoke.task(_clean.py)
+@_tasks.optional(_CHECKERS, _features.flake8)
+@_invoke.task("clean.py")
 def flake8(ctx):
     """Run flake8"""
+    if _os.path.exists(ctx.shell.native(ctx.package + ".py")):
+        candidate = ctx.package + ".py"
+    else:
+        candidate = ctx.package
+
+    cmd = [ctx.which("flake8"), candidate]
+
     with ctx.shell.root_dir():
-        ctx.run(
-            ctx.c(
-                "%(flake8)s %(package)s.py",
-                flake8=ctx.which("flake8"),
-                package=ctx.package,
-            ),
-            echo=True,
-        )
+        ctx.run(ctx.c(cmd), echo=True)
 
 
-@_invoke.task(_clean.py)
+@_tasks.optional(_CHECKERS, _features.black)
+@_invoke.task("clean.py")
 def black(ctx):
     """Run black"""
+    cmd = [ctx.which("black")] + ctx.s("--check --config pyproject.toml .")
+
     with ctx.shell.root_dir():
-        ctx.run(
-            ctx.c(
-                "%(black)s --check --config pyproject.toml .",
-                black=ctx.which("black"),
-            ),
-            echo=True,
-        )
+        ctx.run(ctx.c(cmd), echo=True)
 
 
-@_invoke.task(lint, flake8, black, default=True)
-def all(ctx):  # pylint: disable = redefined-builtin, unused-argument
-    """Run all"""
+@_tasks.optional(_CHECKERS)
+@_invoke.task(name="all", default=True)
+def all_(ctx):
+    """Run all checkers"""
+    _tasks.execute(ctx, *["check." + checker for checker in _CHECKERS])

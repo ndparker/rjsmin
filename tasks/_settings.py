@@ -9,7 +9,19 @@ Project Settings
 settings = dict(
     package="rjsmin",
     #
-    # Wheels
+    # inv clean
+    #
+    clean=dict(
+        cache=["bench/.tox/"],
+    ),
+    #
+    # inv doc
+    #
+    doc=dict(
+        sphinx=dict(want_apidoc=False),
+    ),
+    #
+    # inv build.wheels
     #
     wheels=dict(
         build="binary",

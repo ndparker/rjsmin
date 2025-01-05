@@ -40,12 +40,7 @@ passenv =
     LDFLAGS
     PKG_CONFIG_PATH
 commands =
-    py.test -vv -s \
-        --cov=rjsmin \
-        --cov-report= \
-        --no-cov-on-fail \
-        --doctest-modules --color=yes \
-        tests
+    inv test.local --coverage --no-coverage-report
 
 [testenv:cov-report]
 deps = -rtests/coverage.txt
@@ -66,6 +61,7 @@ commands =
 # Pytest
 # =======================================
 [tool.pytest.ini_options]
+junit_family = "xunit2"
 doctest_optionflags = "IGNORE_EXCEPTION_DETAIL ALLOW_UNICODE ALLOW_BYTES ELLIPSIS"
 filterwarnings = [
     "error",
@@ -125,7 +121,7 @@ include='''
 )$
 '''
 extend-exclude='''
-    tasks/_shell.py
+    tasks/_inv/shell.py
 '''
 
 # vim: nowrap

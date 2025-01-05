@@ -55,7 +55,7 @@ rjsmin.c is a reimplementation of rjsmin.py in C and speeds it up even more.
 
 ## COPYRIGHT AND LICENSE
 
-Copyright 2011 - 2024
+Copyright 2011 - 2025
 André Malo or his licensors, as applicable.
 
 The whole package (except for the files in the bench/ directory)
