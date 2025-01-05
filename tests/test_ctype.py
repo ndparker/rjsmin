@@ -2,7 +2,7 @@
 u"""
 :Copyright:
 
- Copyright 2019 - 2024
+ Copyright 2019 - 2025
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -45,8 +45,8 @@ from . import _util as _test
 def test_keep_bang_comments():
     """keep_bang_comments argument error"""
     with raises(RuntimeError) as e:
-        c_jsmin('', keep_bang_comments=_test.badbool)
-    assert e.value.args == ('yoyo',)
+        c_jsmin("", keep_bang_comments=_test.badbool)
+    assert e.value.args == ("yoyo",)
 
 
 def test_input_type():

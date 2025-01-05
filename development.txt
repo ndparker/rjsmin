@@ -2,20 +2,20 @@
 -r compat-requirements.txt
 
 # Packaging
-pip ~= 24.3.1; python_version >= "3.8"
-setuptools == 75.6.0; python_version >= "3.9"
+pip ~= 25.0.1; python_version >= "3.8"
+setuptools == 75.8.0; python_version >= "3.9"
 build ~= 1.2.2; python_version >="3.8"
-twine == 6.0.1; python_version >= "3.8"
+twine == 6.1.0; python_version >= "3.8"
 
 # Testing
-tox >= 4.5.1.1, <= 4.23.2; python_version >= "3.8"
+tox >= 4.5.1.1, <= 4.24.1; python_version >= "3.8"
 -r tests/requirements.txt
 
 # Checking
-pylint == 3.3.2; python_version >= "3.8"
-astroid == 3.3.5; python_version >= "3.8"
+pylint == 3.3.4; python_version >= "3.8"
+astroid == 3.3.8; python_version >= "3.8"
 flake8 == 7.1.1; python_version >= "3.8"
-black ~= 24.10.0; python_version >= "3.9"
+black ~= 25.1.0; python_version >= "3.9"
 
 # Management
 invoke ~= 2.2.0; python_version >= "3.6"

@@ -1,6 +1,6 @@
 # -*- coding: ascii -*-
 #
-# Copyright 2007 - 2024
+# Copyright 2007 - 2025
 # Andr\xe9 Malo or his licensors, as applicable
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,6 +27,7 @@ __author__ = "Andr\xe9 Malo"
 
 import contextlib as _contextlib
 import errno as _errno
+import glob as _glob
 import fnmatch as _fnmatch
 import functools as _ft
 import os as _os
@@ -35,9 +36,12 @@ import shutil as _shutil
 import sys as _sys
 import tempfile as _tempfile
 
-# pylint: disable = invalid-name
+from . import util as _util
 
-root = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+
+root = _os.path.dirname(
+    _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+)
 
 
 @_contextlib.contextmanager
@@ -63,8 +67,8 @@ def _make_split_command():
 
     Stolen from <http://opensource.perlig.de/svnmailer/>.
 
-    :Return: Parser for generic commandlines
-    :Rtype: callable
+    Returns:
+      callable: Parser for generic commandlines
     """
     argre = r'[^"\s]\S*|"[^\\"]*(?:\\[\\"][^\\"]*)*"'
     check = _re.compile(
@@ -83,9 +87,17 @@ def _make_split_command():
 
         Stolen from <http://opensource.perlig.de/svnmailer/>.
 
-        :Return: Parser for generic commandlines
-        :Rtype: callable
+        Parameters:
+          command (str or iterable):
+            The command string to split. If it's not a string, it's taken as a
+            generic iterable and returned as a list.
+
+        Returns:
+          list: Command splitted parts
         """
+        if not isinstance(command, _util.basestring_):
+            return list(command)
+
         if not check(command):
             raise ValueError("Invalid command string %r" % (command,))
 
@@ -96,7 +108,7 @@ def _make_split_command():
 
     return split_command
 
-split_command = _make_split_command()
+split_command = _make_split_command()  # noqa
 
 
 def _make_formatter(*args, **kwargs):
@@ -106,12 +118,12 @@ def _make_formatter(*args, **kwargs):
     Either args or kwargs or neither of them can be set. There cannot be set
     both of them.
 
-    :Return: Formatter, using either args or kwargs
-    :Rtype: callable
+    Returns:
+      callable: Formatter, using either args or kwargs
     """
     # pylint: disable = no-else-return
 
-    assert not(args and kwargs)
+    assert not (args and kwargs)
 
     if args:
         # tuples are given for the whole command string but applied per token.
@@ -153,7 +165,7 @@ def _make_win32_command():
     slashsub = _ft.partial(_re.compile(r'(\\+)("|$)').sub, r'\1\1\2')
     metasub = _ft.partial(_re.compile(r'([%s%s])' % (wsp, meta)).sub, r'^\1')
     qsearch = _re.compile(r'[%s"]' % (wsp,)).search
-    needq = lambda x: not x or qsearch(x)
+    needq = lambda x: not x or qsearch(x)  # noqa pylint: disable = unnecessary-lambda-assignment
 
     def win32_command(command, *args, **kwargs):
         """
@@ -165,20 +177,20 @@ def _make_win32_command():
         Either args or kwargs or neither of them can be set. There cannot be
         set both of them.
 
-        :Parameters:
-          `command` : ``str``
+        Parameters:
+          command (str):
             Generic commandline, possibly containing substitutions, filled by
             args or kwargs. See `split_command` for generic commandline
             syntax.
 
-          `args` : ``tuple``
-            Substitution tuple
+          *args:
+            Substitution positional arguments
 
-          `kwargs` : ``dict``
-            Substitution dict
+          **kwargs
+            Substitution keyword arguments
 
-        :Return: Strictly quoted shell commandline for ``cmd.exe``
-        :Rtype: ``str``
+        Returns:
+          str: Strictly quoted shell commandline for ``cmd.exe``
         """
         # pylint: disable = redefined-outer-name
         return ' '.join([metasub(
@@ -189,7 +201,7 @@ def _make_win32_command():
 
     return win32_command
 
-win32_command = _make_win32_command()
+win32_command = _make_win32_command()  # noqa
 
 
 def _make_posix_command():
@@ -205,7 +217,7 @@ def _make_posix_command():
 
     """
     qsearch = _re.compile(r'[^a-zA-Z\d_./-]').search
-    needq = lambda x: not x or qsearch(x)
+    needq = lambda x: not x or qsearch(x)  # noqa pylint: disable = unnecessary-lambda-assignment
 
     def posix_command(command, *args, **kwargs):
         """
@@ -214,20 +226,20 @@ def _make_posix_command():
         Either args or kwargs or neither of them can be set. There cannot be
         set both of them.
 
-        :Parameters:
-          `command` : ``str``
+        Parameters:
+          command (str):
             Generic commandline, possibly containing substitutions, filled by
             args or kwargs. See `split_command` for generic commandline
             syntax.
 
-          `args` : ``tuple``
-            Substitution tuple
+          *args:
+            Substitution positional arguments
 
-          `kwargs` : ``dict``
-            Substitution dict
+          **kwargs
+            Substitution keyword arguments
 
-        :Return: Strictly quoted shell commandline for POSIX shells
-        :Rtype: ``str``
+        Returns:
+          str: Strictly quoted shell commandline for POSIX shells
         """
         # pylint: disable = redefined-outer-name
         return ' '.join([
@@ -237,7 +249,7 @@ def _make_posix_command():
         ])
     return posix_command
 
-posix_command = _make_posix_command()
+posix_command = _make_posix_command()  # noqa
 
 command = win32_command if _sys.platform.lower() == 'win32' else posix_command
 
@@ -246,26 +258,40 @@ def native(path):
     """
     Convert slash path to native
 
-    :Parameters:
-      `path` : ``str``
+    Parameters:
+      path (str):
         Path relative to the checkout root
 
-    :Return: The native path
-    :Rtype: ``str``
+    Returns:
+      str: The native path
     """
     path = _os.path.sep.join(path.split('/'))
     return _os.path.normpath(_os.path.join(root, path))
+
+
+def relative(path):
+    """
+    Convert native path into root-relative
+
+    Parameters:
+      path (str):
+        Path relative to the checkout root
+
+    Returns:
+      str: The relative path - with slashes
+    """
+    return "/".join(pathparts(_os.path.relpath(native(path), native(root))))
 
 
 def cp(src, dest):
     """
     Copy src to dest
 
-    :Parameters:
-      `src` : ``str``
+    Parameters:
+      src (str):
         Source path, relative to the checkout root
 
-      `dest` : ``str``
+      dest (str):
         Dest path, relative to the checkout root
     """
     _shutil.copy2(native(src), native(dest))
@@ -275,14 +301,14 @@ def cp_r(src, dest, ignore=None):
     """
     Copy -r src to dest
 
-    :Parameters:
-      `src` : ``str``
+    Parameters:
+      src (str):
         Source path, relative to the checkout root
 
-      `dest` : ``str``
+      dest (str):
         Dest path, relative to the checkout root
 
-      `ignore` : callable
+      ignore (callable):
         Ignore callback
     """
     _shutil.copytree(native(src), native(dest), ignore=ignore)
@@ -290,12 +316,15 @@ def cp_r(src, dest, ignore=None):
 
 def rm(*dest):
     """
-    Remove a file, ENOENT is not considered an error
+    Remove one or more files, ENOENT is not considered an error
 
-    :Parameters:
-      `dest` : ``str``
-        File to remove
+    Parameters:
+      *dest:
+        Files to remove
     """
+    if len(dest) == 1 and not isinstance(dest[0], _util.basestring_):
+        dest = dest[0]
+
     for name in dest:
         try:
             _os.unlink(native(name))
@@ -306,68 +335,184 @@ def rm(*dest):
 
 def rm_rf(*dest):
     """
-    Remove a tree
+    Remove one or more trees
 
     :Parameters:
-      `dest` : ``str``
-        Path to remove
+      *dest:
+        Paths to remove
     """
+    if len(dest) == 1 and not isinstance(dest[0], _util.basestring_):
+        dest = dest[0]
+
     for name in dest:
         name = native(name)
-        if _os.path.exists(name):
-            if _os.path.islink(name):
-                _os.unlink(name)
-                continue
+        if _os.path.islink(name):
+            _os.unlink(name)
 
+        elif _os.path.isfile(name):
+            rm(name)
+
+        elif _os.path.exists(name):
             for path in files(name, '*'):
                 if not _os.path.islink(native(path)):
                     _os.chmod(native(path), 0o644)
             _shutil.rmtree(name)
 
 
-def mkdir_p(dirname):
+def mkdir_p(*dirnames):
     """
-    Create direcories
+    Create one or more directories
 
-    :Parameters:
-      `dirname` : ``str``
-        Directory name (the leaf directory)
+    Parameters:
+      *dirnames:
+        Directory names (the leaf directory)
     """
-    try:
-        _os.makedirs(dirname)
-    except OSError as e:
-        # makedirs throws OSError if the last dir segment exists
-        if e.errno != _errno.EEXIST:
-            raise
+    if len(dirnames) == 1 and not isinstance(dirnames[0], _util.basestring_):
+        dirnames = dirnames[0]
+
+    for dirname in dirnames:
+        try:
+            _os.makedirs(dirname)
+        except OSError as e:
+            # makedirs throws OSError if the last dir segment exists
+            if e.errno != _errno.EEXIST:
+                raise
 
 
 mkstemp = _tempfile.mkstemp
 walk = _os.walk
 
 
-def files(base, wildcard='[!.]*', recursive=1, prune=('.git', '.svn', 'CVS')):
+def glob(*pattern, **kwargs):
+    """
+    glob(*pattern, prune=None, prune_base=('.git', '.svn', 'CVS')):
+
+    Find files or directories with glob pattern (python 3.6+)
+
+    Parameters:
+      *pattern:
+        Glob to match against
+
+      prune (iterable):
+        List of directory basenames to ignore.
+        Default: None. Can be empty or ``None`` (meaning not to prune anything
+        except prune_base)
+
+      prune_base (iterable):
+        Extra list of directory basenames to ignore.
+        Default: ('.git', '.svn', 'CVS'). Can be empty or ``None`` (meaning
+        not to prune anything except prune)
+
+    Returns:
+      iterable: Iterator over matching pathnames
+    """
+    for single in pattern:
+        # pylint: disable = use-yield-from
+        for item in _glob_single(single, **kwargs):
+            yield item
+
+
+def glob_escape(value):
+    """
+    Escape string for use in glob pattern (python 3.6+)
+
+    Parameters:
+      value (str):
+        value to escape
+
+    Returns:
+      str: The escaped value
+    """
+    return _glob.escape(value)
+
+
+def _glob_single(pattern, prune=None, prune_base=('.git', '.svn', 'CVS')):
+    """
+    Find files or directories with glob pattern (python 3.6+)
+
+    Parameters:
+      pattern (str):
+        Glob to match against
+
+      prune (iterable):
+        List of directory basenames to ignore.
+        Default: None. Can be empty or ``None`` (meaning not to prune anything
+        except prune_base)
+
+      prune_base (iterable):
+        Extra list of directory basenames to ignore.
+        Default: ('.git', '.svn', 'CVS'). Can be empty or ``None`` (meaning
+        not to prune anything except prune)
+
+    Returns:
+      iterable: Iterator over matching pathnames
+    """
+    normroot = native(root + "/")
+    pattern = _os.path.join(_glob.escape(normroot), pattern)
+    toprune = set(prune or ()) | set(prune_base or ())
+
+    for found in _glob.iglob(pattern, recursive=True):
+        assert found.startswith(normroot)
+        parts = pathparts(found[len(normroot):])
+        if set(parts) & toprune:
+            continue
+        yield "/".join(parts)
+
+
+def pathparts(path):
+    """
+    Return path parts
+
+    If the path ends with a slash the last part will be an empty string
+
+    Parameters:
+      path (str):
+        The path to split into parts
+
+    Returns:
+      list: The path parts
+    """
+    aslist = []
+    head, tail = _os.path.split(path)
+    if not tail:
+        aslist.append(tail)
+        head, tail = _os.path.split(head)
+    while tail:
+        aslist.append(tail)
+        head, tail = _os.path.split(head)
+    aslist.reverse()
+    return aslist
+
+
+def files(base, wildcard='[!.]*', recursive=1, prune=None,
+          prune_base=('.git', '.svn', 'CVS')):
     """
     Determine a filelist
 
-    :Parameters:
-      `base` : ``str``
+    Parameters:
+      base (str):
         Base path to start from
 
-      `wildcard` : ``str``
+      wildcard (str):
         Glob to match against
 
-      `recursive` : ``bool``
+      recursive (bool):
         Deep walk into the tree? Default: true
 
-      `prune` : iterable
+      prune (iterable):
         List of directory basenames to ignore.
-        Default: ('.git', '.svn', 'CVS'). Can be empty or ``None`` (meaning
-        the same)
+        Default: None. Can be empty or ``None`` (meaning not to prune anything
+        except prune_base)
 
-    :Return: Iterator over matching pathnames
-    :Rtype: iterable
+      prune_base (iterable):
+        Extra list of directory basenames to ignore.
+        Default: ('.git', '.svn', 'CVS'). Can be empty or ``None`` (meaning
+        not to prune anything except prune)
+
+    Returns:
+      iterable: Iterator over matching pathnames
     """
-    prune = tuple(prune or ())
+    prune = tuple(prune_base or ()) + tuple(prune or ())
     for dirpath, dirnames, filenames in walk(native(base)):
         for item in prune:
             if item in dirnames:
@@ -378,43 +523,42 @@ def files(base, wildcard='[!.]*', recursive=1, prune=('.git', '.svn', 'CVS')):
             dest = _os.path.join(dirpath, name)
             if dest.startswith(root):
                 dest = dest.replace(root, '', 1)
-            aslist = []
-            head, tail = _os.path.split(dest)
-            while tail:
-                aslist.append(tail)
-                head, tail = _os.path.split(head)
-            aslist.reverse()
-            dest = '/'.join(aslist)
-            yield dest
+            yield '/'.join(pathparts(dest))
 
         if not recursive:
             break
         dirnames.sort()
 
 
-def dirs(base, wildcard='[!.]*', recursive=1, prune=('.git', '.svn', 'CVS')):
+def dirs(base, wildcard='[!.]*', recursive=1, prune=None,
+         prune_base=('.git', '.svn', 'CVS')):
     """
     Determine a directory list
 
-    :Parameters:
-      `base` : ``str``
+    Parameters:
+      base (str):
         Base path to start from
 
-      `wildcard` : ``str``
+      wildcard (str):
         Glob to match against
 
-      `recursive` : ``bool``
+      recursive (bool):
         Deep walk into the tree? Default: true
 
-      `prune` : iterable
+      prune (iterable):
         List of directory basenames to ignore.
-        Default: ('.git', '.svn', 'CVS'). Can be empty or ``None`` (meaning
-        the same)
+        Default: None. Can be empty or ``None`` (meaning not to prune anything
+        except prune_base)
 
-    :Return: Iterator over matching pathnames
-    :Rtype: iterable
+      prune_base (iterable):
+        Extra list of directory basenames to ignore.
+        Default: ('.git', '.svn', 'CVS'). Can be empty or ``None`` (meaning
+        not to prune anything except prune)
+
+    Returns:
+      iterable: Iterator over matching pathnames
     """
-    prune = tuple(prune or ())
+    prune = tuple(prune_base or ()) + tuple(prune or ())
     for dirpath, dirnames, _ in walk(native(base)):
         for item in prune:
             if item in dirnames:
@@ -425,14 +569,7 @@ def dirs(base, wildcard='[!.]*', recursive=1, prune=('.git', '.svn', 'CVS')):
             dest = _os.path.join(dirpath, name)
             if dest.startswith(root):
                 dest = dest.replace(root, '', 1)
-            aslist = []
-            head, tail = _os.path.split(dest)
-            while tail:
-                aslist.append(tail)
-                head, tail = _os.path.split(head)
-            aslist.reverse()
-            dest = '/'.join(aslist)
-            yield dest
+            yield '/'.join(pathparts(dest))
 
         if not recursive:
             break
@@ -442,12 +579,12 @@ def frompath(executable):
     """
     Find executable in PATH
 
-    :Parameters:
-      `executable` : ``str``
+    Parameters:
+      executable (str):
         Command to search for
 
-    :Return: Full path or ``None``
-    :Rtype: ``str``
+    Returns:
+      str: Full path or ``None``
     """
     # Based on distutils.spawn.find_executable.
     path = _os.environ.get('PATH', '')

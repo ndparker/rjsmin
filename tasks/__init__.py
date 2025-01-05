@@ -5,6 +5,6 @@ invoke tasks
 
 """
 
-from . import _init
+from ._inv import namespace
 
-namespace = _init.namespace()
+namespace = namespace.setup()

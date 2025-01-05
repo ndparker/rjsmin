@@ -2,7 +2,7 @@
 u"""
 :Copyright:
 
- Copyright 2019 - 2024
+ Copyright 2019 - 2025
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -42,27 +42,27 @@ c_jsmin = _rjsmin.jsmin
 
 def load(name):
     """Load a file"""
-    with open(_os.path.join(_os.path.dirname(__file__), name), 'rb') as fp:
+    with open(_os.path.join(_os.path.dirname(__file__), name), "rb") as fp:
         return fp.read()
 
 
 def save(name, value):
     """Load a file"""
-    with open(_os.path.join(_os.path.dirname(__file__), name), 'wb') as fp:
+    with open(_os.path.join(_os.path.dirname(__file__), name), "wb") as fp:
         fp.write(value)
 
 
 def test_issue():
     """Test issue"""
-    inp = load('js/issue8.js')
-    exp = load('js/issue8.min.js')
+    inp = load("js/issue8.js")
+    exp = load("js/issue8.min.js")
     # save('js/issue8.min.js', py_jsmin(inp))
     assert py_jsmin(inp) == exp
     assert py_jsmin2(inp) == exp
     assert c_jsmin(inp) == exp
 
-    inp = inp.decode('latin-1')
-    exp = exp.decode('latin-1')
+    inp = inp.decode("latin-1")
+    exp = exp.decode("latin-1")
     assert py_jsmin(inp) == exp
     assert py_jsmin2(inp) == exp
     assert c_jsmin(inp) == exp
@@ -70,15 +70,15 @@ def test_issue():
 
 def test_issue_bang():
     """Test issue with bang comments"""
-    inp = load('js/issue8.js')
-    exp = load('js/issue8.bang.js')
+    inp = load("js/issue8.js")
+    exp = load("js/issue8.bang.js")
     # save('js/issue8.bang.js', py_jsmin(inp, keep_bang_comments=True))
     assert py_jsmin(inp, keep_bang_comments=True) == exp
     assert py_jsmin2(inp, keep_bang_comments=True) == exp
     assert c_jsmin(inp, keep_bang_comments=True) == exp
 
-    inp = inp.decode('latin-1')
-    exp = exp.decode('latin-1')
+    inp = inp.decode("latin-1")
+    exp = exp.decode("latin-1")
     assert py_jsmin(inp, keep_bang_comments=True) == exp
     assert py_jsmin2(inp, keep_bang_comments=True) == exp
     assert c_jsmin(inp, keep_bang_comments=True) == exp

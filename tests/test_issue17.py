@@ -2,7 +2,7 @@
 u"""
 :Copyright:
 
- Copyright 2019 - 2024
+ Copyright 2019 - 2025
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -40,15 +40,15 @@ c_jsmin = _rjsmin.jsmin
 
 def test_non_issue():
     """Test issue"""
-    inp = b'console.write((f++)/ 4 + 3 / 2)'
-    exp = b'console.write((f++)/4+3/2)'
+    inp = b"console.write((f++)/ 4 + 3 / 2)"
+    exp = b"console.write((f++)/4+3/2)"
 
     assert py_jsmin(inp) == exp
     assert py_jsmin2(inp) == exp
     assert c_jsmin(inp) == exp
 
-    inp = inp.decode('latin-1')
-    exp = exp.decode('latin-1')
+    inp = inp.decode("latin-1")
+    exp = exp.decode("latin-1")
     assert py_jsmin(inp) == exp
     assert py_jsmin2(inp) == exp
     assert c_jsmin(inp) == exp
@@ -56,15 +56,15 @@ def test_non_issue():
 
 def test_non_issue_bang():
     """Test issue with bang comments"""
-    inp = b'console.write((f++)/ 4 + 3 / 2)'
-    exp = b'console.write((f++)/4+3/2)'
+    inp = b"console.write((f++)/ 4 + 3 / 2)"
+    exp = b"console.write((f++)/4+3/2)"
 
     assert py_jsmin(inp, keep_bang_comments=True) == exp
     assert py_jsmin2(inp, keep_bang_comments=True) == exp
     assert c_jsmin(inp, keep_bang_comments=True) == exp
 
-    inp = inp.decode('latin-1')
-    exp = exp.decode('latin-1')
+    inp = inp.decode("latin-1")
+    exp = exp.decode("latin-1")
     assert py_jsmin(inp, keep_bang_comments=True) == exp
     assert py_jsmin2(inp, keep_bang_comments=True) == exp
     assert c_jsmin(inp, keep_bang_comments=True) == exp
@@ -73,20 +73,20 @@ def test_non_issue_bang():
 def test_non_issue2():
     """Test issue"""
     inp = (
-        b'if (Y) { ba=Math.max(ba, Math.round(W.minHeight/Y))}; '
-        b'bo.setKnobFactor((bp.width===0)? 0: br.width /bp.width);'
+        b"if (Y) { ba=Math.max(ba, Math.round(W.minHeight/Y))}; "
+        b"bo.setKnobFactor((bp.width===0)? 0: br.width /bp.width);"
     )
     exp = (
-        b'if(Y){ba=Math.max(ba,Math.round(W.minHeight/Y))};'
-        b'bo.setKnobFactor((bp.width===0)?0:br.width/bp.width);'
+        b"if(Y){ba=Math.max(ba,Math.round(W.minHeight/Y))};"
+        b"bo.setKnobFactor((bp.width===0)?0:br.width/bp.width);"
     )
 
     assert py_jsmin(inp) == exp
     assert py_jsmin2(inp) == exp
     assert c_jsmin(inp) == exp
 
-    inp = inp.decode('latin-1')
-    exp = exp.decode('latin-1')
+    inp = inp.decode("latin-1")
+    exp = exp.decode("latin-1")
     assert py_jsmin(inp) == exp
     assert py_jsmin2(inp) == exp
     assert c_jsmin(inp) == exp
@@ -95,20 +95,20 @@ def test_non_issue2():
 def test_non_issue2_bang():
     """Test issue"""
     inp = (
-        b'if (Y) { ba=Math.max(ba, Math.round(W.minHeight/Y))}; '
-        b'bo.setKnobFactor((bp.width===0)? 0: br.width /bp.width);'
+        b"if (Y) { ba=Math.max(ba, Math.round(W.minHeight/Y))}; "
+        b"bo.setKnobFactor((bp.width===0)? 0: br.width /bp.width);"
     )
     exp = (
-        b'if(Y){ba=Math.max(ba,Math.round(W.minHeight/Y))};'
-        b'bo.setKnobFactor((bp.width===0)?0:br.width/bp.width);'
+        b"if(Y){ba=Math.max(ba,Math.round(W.minHeight/Y))};"
+        b"bo.setKnobFactor((bp.width===0)?0:br.width/bp.width);"
     )
 
     assert py_jsmin(inp, keep_bang_comments=True) == exp
     assert py_jsmin2(inp, keep_bang_comments=True) == exp
     assert c_jsmin(inp, keep_bang_comments=True) == exp
 
-    inp = inp.decode('latin-1')
-    exp = exp.decode('latin-1')
+    inp = inp.decode("latin-1")
+    exp = exp.decode("latin-1")
     assert py_jsmin(inp, keep_bang_comments=True) == exp
     assert py_jsmin2(inp, keep_bang_comments=True) == exp
     assert c_jsmin(inp, keep_bang_comments=True) == exp
@@ -117,17 +117,17 @@ def test_non_issue2_bang():
 def test_non_issue_complex():
     """Test issue"""
     inp = (
-        b'console.write((f++)/*!dude*// 4 + 3 /a /* lalala */ '
-        b'/*!lololo*// 2)'
+        b"console.write((f++)/*!dude*// 4 + 3 /a /* lalala */ "
+        b"/*!lololo*// 2)"
     )
-    exp = b'console.write((f++)/4+3/a/2)'
+    exp = b"console.write((f++)/4+3/a/2)"
 
     assert py_jsmin(inp) == exp
     assert py_jsmin2(inp) == exp
     assert c_jsmin(inp) == exp
 
-    inp = inp.decode('latin-1')
-    exp = exp.decode('latin-1')
+    inp = inp.decode("latin-1")
+    exp = exp.decode("latin-1")
     assert py_jsmin(inp) == exp
     assert py_jsmin2(inp) == exp
     assert c_jsmin(inp) == exp
@@ -136,17 +136,17 @@ def test_non_issue_complex():
 def test_non_issue_complex_bang():
     """Test issue with bang comments"""
     inp = (
-        b'console.write((f++)/*!dude*// 4 + 3 /a /* lalala */ '
-        b'/*!lololo*// 2)'
+        b"console.write((f++)/*!dude*// 4 + 3 /a /* lalala */ "
+        b"/*!lololo*// 2)"
     )
-    exp = b'console.write((f++)/*!dude*//4+3/a/*!lololo*//2)'
+    exp = b"console.write((f++)/*!dude*//4+3/a/*!lololo*//2)"
 
     assert py_jsmin(inp, keep_bang_comments=True) == exp
     assert py_jsmin2(inp, keep_bang_comments=True) == exp
     assert c_jsmin(inp, keep_bang_comments=True) == exp
 
-    inp = inp.decode('latin-1')
-    exp = exp.decode('latin-1')
+    inp = inp.decode("latin-1")
+    exp = exp.decode("latin-1")
     assert py_jsmin(inp, keep_bang_comments=True) == exp
     assert py_jsmin2(inp, keep_bang_comments=True) == exp
     assert c_jsmin(inp, keep_bang_comments=True) == exp
@@ -154,15 +154,15 @@ def test_non_issue_complex_bang():
 
 def test_issue():
     """Test issue"""
-    inp = b'for(f=0;f<z;f++)/^ *-+: *$/.test(x)'
-    exp = b'for(f=0;f<z;f++)/^ *-+: *$/.test(x)'
+    inp = b"for(f=0;f<z;f++)/^ *-+: *$/.test(x)"
+    exp = b"for(f=0;f<z;f++)/^ *-+: *$/.test(x)"
 
     assert py_jsmin(inp) == exp
     assert py_jsmin2(inp) == exp
     assert c_jsmin(inp) == exp
 
-    inp = inp.decode('latin-1')
-    exp = exp.decode('latin-1')
+    inp = inp.decode("latin-1")
+    exp = exp.decode("latin-1")
     assert py_jsmin(inp) == exp
     assert py_jsmin2(inp) == exp
     assert c_jsmin(inp) == exp
@@ -170,15 +170,15 @@ def test_issue():
 
 def test_issue_bang():
     """Test issue with bang comments"""
-    inp = b'for(f=0;f<z;f++)/^ *-+: *$/.test(x)'
-    exp = b'for(f=0;f<z;f++)/^ *-+: *$/.test(x)'
+    inp = b"for(f=0;f<z;f++)/^ *-+: *$/.test(x)"
+    exp = b"for(f=0;f<z;f++)/^ *-+: *$/.test(x)"
 
     assert py_jsmin(inp, keep_bang_comments=True) == exp
     assert py_jsmin2(inp, keep_bang_comments=True) == exp
     assert c_jsmin(inp, keep_bang_comments=True) == exp
 
-    inp = inp.decode('latin-1')
-    exp = exp.decode('latin-1')
+    inp = inp.decode("latin-1")
+    exp = exp.decode("latin-1")
     assert py_jsmin(inp, keep_bang_comments=True) == exp
     assert py_jsmin2(inp, keep_bang_comments=True) == exp
     assert c_jsmin(inp, keep_bang_comments=True) == exp
@@ -187,17 +187,17 @@ def test_issue_bang():
 def test_issue_complex():
     """Test issue"""
     inp = (
-        b'for(f=0;f<z;f++)/*!dude*//^ *-+: *$/i/*haha*//*!hoho*/\n'
-        b'./*!hihi*/\n/*huhu*/test(x)'
+        b"for(f=0;f<z;f++)/*!dude*//^ *-+: *$/i/*haha*//*!hoho*/\n"
+        b"./*!hihi*/\n/*huhu*/test(x)"
     )
-    exp = b'for(f=0;f<z;f++)/^ *-+: *$/i.test(x)'
+    exp = b"for(f=0;f<z;f++)/^ *-+: *$/i.test(x)"
 
     assert py_jsmin(inp) == exp
     assert py_jsmin2(inp) == exp
     assert c_jsmin(inp) == exp
 
-    inp = inp.decode('latin-1')
-    exp = exp.decode('latin-1')
+    inp = inp.decode("latin-1")
+    exp = exp.decode("latin-1")
     assert py_jsmin(inp) == exp
     assert py_jsmin2(inp) == exp
     assert c_jsmin(inp) == exp
@@ -206,17 +206,17 @@ def test_issue_complex():
 def test_issue_complex_bang():
     """Test issue with bang comments"""
     inp = (
-        b'for(f=0;f<z;f++)/*!dude*//^ *-+: *$/i/*haha*//*!hoho*/\n'
-        b'./*!hihi*/\n/*huhu*/test(x)'
+        b"for(f=0;f<z;f++)/*!dude*//^ *-+: *$/i/*haha*//*!hoho*/\n"
+        b"./*!hihi*/\n/*huhu*/test(x)"
     )
-    exp = b'for(f=0;f<z;f++)/*!dude*//^ *-+: *$/i/*!hoho*/./*!hihi*/test(x)'
+    exp = b"for(f=0;f<z;f++)/*!dude*//^ *-+: *$/i/*!hoho*/./*!hihi*/test(x)"
 
     assert py_jsmin(inp, keep_bang_comments=True) == exp
     assert py_jsmin2(inp, keep_bang_comments=True) == exp
     assert c_jsmin(inp, keep_bang_comments=True) == exp
 
-    inp = inp.decode('latin-1')
-    exp = exp.decode('latin-1')
+    inp = inp.decode("latin-1")
+    exp = exp.decode("latin-1")
     assert py_jsmin(inp, keep_bang_comments=True) == exp
     assert py_jsmin2(inp, keep_bang_comments=True) == exp
     assert c_jsmin(inp, keep_bang_comments=True) == exp
@@ -224,15 +224,15 @@ def test_issue_complex_bang():
 
 def test_issue_error1():
     """Test issue"""
-    inp = b'for(f=0;f<z;f++)/^ *-+: *$//*'
-    exp = b'for(f=0;f<z;f++)/^*-+:*$'
+    inp = b"for(f=0;f<z;f++)/^ *-+: *$//*"
+    exp = b"for(f=0;f<z;f++)/^*-+:*$"
 
     assert py_jsmin(inp) == exp
     assert py_jsmin2(inp) == exp
     assert c_jsmin(inp) == exp
 
-    inp = inp.decode('latin-1')
-    exp = exp.decode('latin-1')
+    inp = inp.decode("latin-1")
+    exp = exp.decode("latin-1")
     assert py_jsmin(inp) == exp
     assert py_jsmin2(inp) == exp
     assert c_jsmin(inp) == exp
@@ -240,15 +240,15 @@ def test_issue_error1():
 
 def test_issue_error2():
     """Test issue"""
-    inp = b'for(f=0;f<z;f++)/'
-    exp = b'for(f=0;f<z;f++)/'
+    inp = b"for(f=0;f<z;f++)/"
+    exp = b"for(f=0;f<z;f++)/"
 
     assert py_jsmin(inp) == exp
     assert py_jsmin2(inp) == exp
     assert c_jsmin(inp) == exp
 
-    inp = inp.decode('latin-1')
-    exp = exp.decode('latin-1')
+    inp = inp.decode("latin-1")
+    exp = exp.decode("latin-1")
     assert py_jsmin(inp) == exp
     assert py_jsmin2(inp) == exp
     assert c_jsmin(inp) == exp
@@ -256,15 +256,15 @@ def test_issue_error2():
 
 def test_issue_error3():
     """Test issue"""
-    inp = b'for(f=0;f<z;f++)/^ *-+: *$/./'
-    exp = b'for(f=0;f<z;f++)/^*-+:*$/./'
+    inp = b"for(f=0;f<z;f++)/^ *-+: *$/./"
+    exp = b"for(f=0;f<z;f++)/^*-+:*$/./"
 
     assert py_jsmin(inp) == exp
     assert py_jsmin2(inp) == exp
     assert c_jsmin(inp) == exp
 
-    inp = inp.decode('latin-1')
-    exp = exp.decode('latin-1')
+    inp = inp.decode("latin-1")
+    exp = exp.decode("latin-1")
     assert py_jsmin(inp) == exp
     assert py_jsmin2(inp) == exp
     assert c_jsmin(inp) == exp
@@ -279,8 +279,8 @@ def test_issue_error4():
     assert py_jsmin2(inp) == exp
     assert c_jsmin(inp) == exp
 
-    inp = inp.decode('latin-1')
-    exp = exp.decode('latin-1')
+    inp = inp.decode("latin-1")
+    exp = exp.decode("latin-1")
     assert py_jsmin(inp) == exp
     assert py_jsmin2(inp) == exp
     assert c_jsmin(inp) == exp

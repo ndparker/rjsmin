@@ -3,7 +3,7 @@
 u"""
 :Copyright:
 
- Copyright 2011 - 2024
+ Copyright 2011 - 2025
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -40,31 +40,31 @@ import setuptools as _setuptools
 
 
 def _doc(filename):
-    """ Read docs file """
+    """Read docs file"""
     # pylint: disable = unspecified-encoding
-    args = {} if str is bytes else dict(encoding='utf-8')
+    args = {} if str is bytes else dict(encoding="utf-8")
     try:
-        with open(_os.path.join('docs', filename), **args) as fp:
+        with open(_os.path.join("docs", filename), **args) as fp:
             return fp.read()
     except IOError:
         return None
 
 
 package = dict(
-    name='rjsmin',
-    top='.',
-    pathname='.',
+    name="rjsmin",
+    top=".",
+    pathname=".",
     desc="Javascript Minifier",
-    longdesc=_doc('DESCRIPTION'),
+    longdesc=_doc("DESCRIPTION"),
     author=__author__,
-    email='nd@perlig.de',
-    url='http://opensource.perlig.de/rjsmin/',
+    email="nd@perlig.de",
+    url="https://opensource.perlig.de/rjsmin/",
     license="Apache License, Version 2.0",
     license_files=["LICENSE"],
 
     packages=False,
-    py_modules=['rjsmin'],
-    version_file='rjsmin.py',
+    py_modules=["rjsmin"],
+    version_file="rjsmin.py",
     install_requires=[],
 
     entry_points={},
@@ -108,10 +108,10 @@ class BuildFailed(Exception):
 from distutils.command import build_ext as _build_ext  # pylint: disable = wrong-import-order
 from distutils import errors as _errors  # pylint: disable = wrong-import-order
 class build_ext(_build_ext.build_ext):  # pylint: disable = no-init
-    """ Improved extension building code """
+    """Improved extension building code"""
 
     def run(self):
-        """ Unify exception """
+        """Unify exception"""
         try:
             _build_ext.build_ext.run(self)
         except _errors.DistutilsPlatformError:
@@ -138,46 +138,51 @@ class build_ext(_build_ext.build_ext):  # pylint: disable = no-init
         """
         # handle name macros
         macros = dict(ext.define_macros or ())
-        tup = ext.name.split('.')
+        tup = ext.name.split(".")
         if len(tup) == 1:
             pkg, mod = None, tup[0]
         else:
-            pkg, mod = '.'.join(tup[:-1]), tup[-1]
-        if pkg is not None and 'EXT_PACKAGE' not in macros:
-            ext.define_macros.append(('EXT_PACKAGE', pkg))
-        if 'EXT_MODULE' not in macros:
-            ext.define_macros.append(('EXT_MODULE', mod))
+            pkg, mod = ".".join(tup[:-1]), tup[-1]
+        if pkg is not None and "EXT_PACKAGE" not in macros:
+            ext.define_macros.append(("EXT_PACKAGE", pkg))
+        if "EXT_MODULE" not in macros:
+            ext.define_macros.append(("EXT_MODULE", mod))
         if pkg is None:
             macros = dict(ext.undef_macros or ())
-            if 'EXT_PACKAGE' not in macros:
-                ext.undef_macros.append('EXT_PACKAGE')
+            if "EXT_PACKAGE" not in macros:
+                ext.undef_macros.append("EXT_PACKAGE")
 
         try:
             return _build_ext.build_ext.build_extension(self, ext)
-        except (_errors.CCompilerError, _errors.DistutilsExecError,
-                _errors.DistutilsPlatformError, IOError, ValueError) as e:
+        except (
+            _errors.CCompilerError,
+            _errors.DistutilsExecError,
+            _errors.DistutilsPlatformError,
+            IOError,
+            ValueError,
+        ) as e:
             raise BuildFailed(str(e))
 
 
 class Extension(_setuptools.Extension):
-    """ improved functionality """
+    """improved functionality"""
 
     def __init__(self, *args, **kwargs):
-        """ Initialization """
-        version = kwargs.pop('version')
+        """Initialization"""
+        version = kwargs.pop("version")
         self.depends = []
-        if 'depends' in kwargs:
-            self.depends = kwargs['depends']
+        if "depends" in kwargs:
+            self.depends = kwargs["depends"]
         _setuptools.Extension.__init__(self, *args, **kwargs)
-        self.define_macros.append(('EXT_VERSION', version))
+        self.define_macros.append(("EXT_VERSION", version))
 
         # add include path
-        included = '.'
+        included = "."
         if included not in self.include_dirs:
             self.include_dirs.append(included)
 
         # add cext.h to the dependencies
-        cext_h = _posixpath.normpath(_posixpath.join(included, 'cext.h'))
+        cext_h = _posixpath.normpath(_posixpath.join(included, "cext.h"))
         for item in self.depends:
             if _posixpath.normpath(item) == cext_h:
                 break
@@ -185,21 +190,23 @@ class Extension(_setuptools.Extension):
             self.depends.append(cext_h)
 
 
-EXTENSIONS = lambda v: [Extension('_rjsmin', ["rjsmin.c"], version=v)]
+EXTENSIONS = lambda v: [Extension("_rjsmin", ["rjsmin.c"], version=v)]
 
 
 def do_setup(cext):
-    """ Main """
+    """Main"""
     # pylint: disable = too-many-branches
     # pylint: disable = unspecified-encoding
 
-    args = {} if str is bytes else dict(encoding='utf-8')
-    version_file = '%s/%s' % (package['pathname'],
-                              package.get('version_file', '__init__.py'))
+    args = {} if str is bytes else dict(encoding="utf-8")
+    version_file = "%s/%s" % (
+        package["pathname"],
+        package.get("version_file", "__init__.py"),
+    )
     with open(version_file, **args) as fp:
         for line in fp:  # pylint: disable = redefined-outer-name
-            if line.startswith('__version__'):
-                version = line.split('=', 1)[1].strip()
+            if line.startswith("__version__"):
+                version = line.split("=", 1)[1].strip()
                 if version.startswith(("'", '"')):
                     version = version[1:-1].strip()
                 break
@@ -208,48 +215,54 @@ def do_setup(cext):
 
     kwargs = {}
 
-    if not cext or 'java' in _sys.platform.lower():
+    if not cext or "java" in _sys.platform.lower():
         extensions = []
     else:
         extensions = EXTENSIONS(version)
 
     if extensions:
-        if 'build_ext' in globals():
-            kwargs.setdefault('cmdclass', {})['build_ext'] = build_ext
-        kwargs['ext_modules'] = extensions
+        if "build_ext" in globals():
+            kwargs.setdefault("cmdclass", {})["build_ext"] = build_ext
+        kwargs["ext_modules"] = extensions
 
         cflags = None
-        if _os.environ.get('CFLAGS') is None:
+        if _os.environ.get("CFLAGS") is None:
             from distutils import ccompiler as _ccompiler
 
             compiler = _ccompiler.get_default_compiler()
             try:
                 with open("debug.%s.cflags" % compiler) as fp:
-                    cflags = ' '.join([
-                        line for line in (line.strip() for line in fp)
-                        if line and not line.startswith('#')
-                    ]).split() or None
+                    cflags = (
+                        " ".join(
+                            [
+                                line
+                                for line in (line.strip() for line in fp)
+                                if line and not line.startswith("#")
+                            ]
+                        ).split()
+                        or None
+                    )
             except IOError:
                 pass
 
         if cflags:
-            gcov = 'coverage' in ' '.join(cflags)
+            gcov = "coverage" in " ".join(cflags)
             for ext in extensions:
                 # pylint: disable = attribute-defined-outside-init
-                ext.extra_compile_args = \
-                    getattr(ext, 'extra_compile_args', []) + cflags
+                ext.extra_compile_args = (
+                    getattr(ext, "extra_compile_args", []) + cflags
+                )
                 if gcov:
-                    ext.libraries.append('gcov')
+                    ext.libraries.append("gcov")
 
-    if package.get('packages', True):
-        kwargs['packages'] = [package['top']] + [
-            '%s.%s' % (package['top'], item)
-            for item in
-            _setuptools.find_packages(package['pathname'])
+    if package.get("packages", True):
+        kwargs["packages"] = [package["top"]] + [
+            "%s.%s" % (package["top"], item)
+            for item in _setuptools.find_packages(package["pathname"])
         ]
 
-    if package.get('py_modules'):
-        kwargs['py_modules'] = package['py_modules']
+    if package.get("py_modules"):
+        kwargs["py_modules"] = package["py_modules"]
     if package.get("license_files"):
         kwargs["license_files"] = package["license_files"]
     if package.get("license"):
@@ -260,13 +273,13 @@ def do_setup(cext):
         kwargs["entry_points"] = package["entry_points"]
 
     _setuptools.setup(
-        name=package['name'],
-        author=package['author'],
-        author_email=package['email'],
-        description=package['desc'],
-        long_description=package['longdesc'],
-        url=package['url'],
-        install_requires=package['install_requires'],
+        name=package["name"],
+        author=package["author"],
+        author_email=package["email"],
+        description=package["desc"],
+        long_description=package["longdesc"],
+        url=package["url"],
+        install_requires=package["install_requires"],
         version=version,
         zip_safe=False,
         **kwargs
@@ -274,18 +287,20 @@ def do_setup(cext):
 
 
 def setup():
-    """ Run setup """
+    """Run setup"""
     try:
         do_setup(True)
     except BuildFailed:
-        env = 'SETUP_CEXT_REQUIRED'
-        if _os.environ.get(env, '') not in ('', '0'):
+        env = "SETUP_CEXT_REQUIRED"
+        if _os.environ.get(env, "") not in ("", "0"):
             raise
-        print("C extension build failed - building python only version now. "
-              "Set '%s' environment variable to '1' to make it fail."
-              % (env,), file=_sys.stderr)
+        print(
+            "C extension build failed - building python only version now. "
+            "Set '%s' environment variable to '1' to make it fail." % (env,),
+            file=_sys.stderr,
+        )
         do_setup(False)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     setup()

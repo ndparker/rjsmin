@@ -13,19 +13,20 @@ import re as _re
 
 import invoke as _invoke
 
-from . import doc as _doc
 from . import _dist
 from . import _release
 from . import _version
 
 # pylint: disable = import-outside-toplevel
 
+NAMESPACE = "build"
 
-@_invoke.task(_doc.doc, default=True)
+
+@_invoke.task("doc.doc", default=True)
 def source(ctx):
     """Build source package"""
     with ctx.shell.root_dir():
-        if ctx.wheels.build == 'universal':
+        if ctx.get("wheels", {}).get("build") == "universal":
             with open("setup.cfg", "wb") as fp:
                 fp.write(b"[bdist_wheel]\n")
                 fp.write(b"universal = 1\n")
@@ -33,9 +34,9 @@ def source(ctx):
         try:
             import build  # noqa pylint: disable = unused-import
         except ImportError:
-            ctx.run('python setup.py sdist')
+            ctx.run("python setup.py sdist")
         else:
-            ctx.run('python -m build --sdist')
+            ctx.run("python -m build --sdist")
 
 
 @_invoke.task()
@@ -53,27 +54,27 @@ def wheels(ctx, arches=None):
     """
     # pylint: disable = unused-argument
 
-    if ctx.wheels.build == 'binary':
+    if ctx.wheels.build == "binary":
         return _build_binary(ctx, arches=arches)
 
     assert not arches
-    assert ctx.wheels.build == 'universal'
+    assert ctx.wheels.build == "universal"
     return _build_universal(ctx)
 
 
 def _build_universal(ctx):
     """Build universal wheel"""
     with ctx.shell.root_dir():
-        ctx.shell.rm_rf('wheel/dist')
+        ctx.shell.rm_rf("wheel/dist")
 
         for package in ctx.shell.files(
-            'dist/', "%s-*.tar.gz" % (ctx.package,)
+            "dist/", "%s-*.tar.gz" % (ctx.package,)
         ):
             ctx.run(
                 ctx.c(
-                    '''
+                    """
                 pip wheel --no-binary :all: --no-cache -w wheel/dist %s
-            ''',
+            """,
                     package,
                 ),
                 pty=True,
@@ -94,11 +95,11 @@ def _build_binary(ctx, arches=None):
     """
     # pylint: disable = too-many-branches, too-many-locals
 
-    path = 'wheel/dist'
+    path = "wheel/dist"
 
     machine = _platform.machine()
     if arches is None:
-        if machine == 'x86_64':
+        if machine == "x86_64":
             arches = "x86_64 i686 aarch64"
         else:
             arches = machine
@@ -106,16 +107,16 @@ def _build_binary(ctx, arches=None):
     for arch in arches:
         if machine == arch:
             continue
-        if machine == 'x86_64':
-            if arch == 'i686':
+        if machine == "x86_64":
+            if arch == "i686":
                 continue
 
             ctx.run(
                 ctx.c(
-                    '''
+                    """
                 docker run --rm --privileged multiarch/qemu-user-static
                 --reset -p yes
-            '''
+            """
                 ),
                 echo=True,
                 pty=True,
@@ -126,11 +127,11 @@ def _build_binary(ctx, arches=None):
         # pylint: disable = too-many-nested-blocks
         ctx.shell.rm_rf(path)
         for package in ctx.shell.files(
-            'dist/', "%s-*.tar.gz" % (ctx.package,)
+            "dist/", "%s-*.tar.gz" % (ctx.package,)
         ):
-            ppath = '/io/%s' % (_os.path.basename(package))
+            ppath = "/io/%s" % (_os.path.basename(package))
 
-            ctx.shell.cp(package, ctx.shell.native('wheel/'))
+            ctx.shell.cp(package, ctx.shell.native("wheel/"))
             try:
                 for arch in arches:
                     spec = ctx.wheels.specs[arch]
@@ -155,14 +156,14 @@ def _build_binary(ctx, arches=None):
                             ctx.run(
                                 ctx.c(
                                     (
-                                        '''
+                                        """
                                         docker run --rm -it -v%s/wheel:/io
                                         quay.io/pypa/%s%s_%s:latest
-                                    '''
+                                    """
                                         + prefix
-                                        + '''
+                                        + """
                                         /io/build.sh %s %s %s
-                                    '''
+                                    """
                                     ),
                                     _os.getcwd(),
                                     libc,
@@ -178,23 +179,23 @@ def _build_binary(ctx, arches=None):
             finally:
                 _os.unlink(
                     ctx.shell.native(
-                        'wheel/%s' % (_os.path.basename(package),)
+                        "wheel/%s" % (_os.path.basename(package),)
                     )
                 )
 
         # strip file names
-        multi_sub = _re.compile(r'(?:[.-]manylinux[^.]+)+').sub
+        multi_sub = _re.compile(r"(?:[.-]manylinux[^.]+)+").sub
         tomove = []
         for name in _os.listdir(path):
-            if not name.endswith('.whl'):
+            if not name.endswith(".whl"):
                 continue
-            if 'manylinux' not in name:
+            if "manylinux" not in name:
                 continue
 
             pick = _best_manylinux(name)
             if pick:
                 tomove.append(
-                    (name, multi_sub((lambda _, p=pick: '-' + p), name))
+                    (name, multi_sub((lambda _, p=pick: "-" + p), name))
                 )
         for old, new in tomove:
             if old == new:
@@ -206,20 +207,20 @@ def _build_binary(ctx, arches=None):
 
 def _best_manylinux(name):
     """Find best manylinux variant produced by auditwheel"""
-    tag_list_search = _re.compile(r'(?:[.-]manylinux[^.]+)+').search
+    tag_list_search = _re.compile(r"(?:[.-]manylinux[^.]+)+").search
 
     tags = tag_list_search(name)
     if not tags:
         return None
     sortable = []
-    for tag in tags.group(0).strip('-.').split('.'):
-        assert tag.startswith('manylinux')
-        ver = tag[len('manylinux') :]
+    for tag in tags.group(0).strip("-.").split("."):
+        assert tag.startswith("manylinux")
+        ver = tag[len("manylinux") :]
         if ver.startswith(("1_", "2010_", "2014_")):
-            sortable.append(((1, int(ver.split('_')[0])), tag))
+            sortable.append(((1, int(ver.split("_")[0])), tag))
             continue
-        assert ver.startswith('_')
-        ver = tuple(map(int, ver[1:].split('_')[:2]))
+        assert ver.startswith("_")
+        ver = tuple(map(int, ver[1:].split("_")[:2]))
         assert ver[0] > 1
         sortable.append((ver, tag))
     if not sortable:
@@ -228,23 +229,23 @@ def _best_manylinux(name):
     return min(sortable)[-1]
 
 
-@_invoke.task(_doc.doc)
+@_invoke.task("doc.doc")
 def dist(ctx):
     """Build distribution"""
-    fakeroot = ctx.shell.frompath('fakeroot')
+    fakeroot = ctx.shell.frompath("fakeroot")
     with ctx.shell.root_dir():
-        ctx.shell.rm_rf('build', 'dist')
+        ctx.shell.rm_rf("build", "dist")
         ctx.run(
-            ctx.c('%s python setup.py sdist --formats tar,zip', fakeroot),
+            ctx.c("%s python setup.py sdist --formats tar,zip", fakeroot),
             echo=True,
         )
 
-        files = list(ctx.shell.files('dist', '*.zip'))
-        digestname = files[0][:-3] + 'digests'
-        for name in ctx.shell.files('dist', '*.tar'):
-            files.append(_dist.compress(ctx, name, 'gzip', '.gz'))
-            files.append(_dist.compress(ctx, name, 'bzip2', '.bz2'))
-            files.append(_dist.compress(ctx, name, 'xz', '.xz'))
+        files = list(ctx.shell.files("dist", "*.zip"))
+        digestname = files[0][:-3] + "digests"
+        for name in ctx.shell.files("dist", "*.tar"):
+            files.append(_dist.compress(ctx, name, "gzip", ".gz"))
+            files.append(_dist.compress(ctx, name, "bzip2", ".bz2"))
+            files.append(_dist.compress(ctx, name, "xz", ".xz"))
             ctx.shell.rm(name)
         files = [name for name in files if name]
 
@@ -259,7 +260,7 @@ def version(ctx):
         _version.update(ctx)
 
 
-@_invoke.task(_doc.doc)
+@_invoke.task("doc.doc")
 def release(ctx):
     """Release"""
     with ctx.shell.root_dir():

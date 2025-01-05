@@ -2,7 +2,7 @@
 u"""
 :Copyright:
 
- Copyright 2014 - 2024
+ Copyright 2014 - 2025
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -65,11 +65,11 @@ def patched_import(what, how=_unset):
     """
     Context manager to mock an import statement temporarily
 
-    :Parameters:
-      `what` : ``str``
+    Parameters:
+      what (str):
         Name of the module to mock
 
-      `how` : any
+      how (any):
         How should it be replaced? If omitted or `unset`, a new MagicMock
         instance is created. The result is yielded as context.
     """
@@ -162,14 +162,14 @@ def uni(value):
     """
     Create unicode from raw string with unicode escapes
 
-    :Parameters:
-      `value` : ``str``
+    Parameters:
+      value (str):
         String, which encodes to ascii and decodes as unicode_escape
 
-    :Return: The decoded string
-    :Rtype: ``unicode``
+    Returns:
+      str: The decoded string
     """
-    return value.encode('ascii').decode('unicode_escape')
+    return value.encode("ascii").decode("unicode_escape")
 
 
 class badstr(object):  # pylint: disable = invalid-name
@@ -224,3 +224,17 @@ class baditer(object):  # pylint: disable = invalid-name
             return item
 
     next = __next__
+
+
+def calls(value):
+    """
+    Map calls to list of tuples
+
+    Parameters:
+      value (Mock):
+        The mock object to inspect
+
+    Returns:
+      list: The List of call tuples
+    """
+    return list(map(tuple, value.mock_calls))

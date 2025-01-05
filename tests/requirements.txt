@@ -1,6 +1,9 @@
 # Requirements file for tests
 -r coverage.txt
 
+invoke ~= 2.2.0; python_version >= "3.6"
+invoke == 1.6.0; python_version == "2.7"
+
 pytest == 8.3.4; python_version >= "3.8"
 pytest == 7.4.4; python_version == "3.7"
 pytest == 7.0.1; python_version == "3.6"

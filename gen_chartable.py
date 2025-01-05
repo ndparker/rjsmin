@@ -8,7 +8,7 @@ Character table generator for rjsmin.c
 
 :Copyright:
 
- Copyright 2011 - 2024
+ Copyright 2011 - 2025
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -30,31 +30,34 @@ __author__ = u"Andr\xe9 Malo"
 
 import re as _re
 
-TPL = r"""
+TPL = (
+    r"""
 static const unsigned short rjsmin_charmask[128] = {
     @@mask@@
 };
-""".strip() + "\n"
+""".strip()
+    + "\n"
+)
 
 
 def _make_charmask():
-    """ Generate character mask table """
+    """Generate character mask table"""
     # pylint: disable = too-many-branches
 
     dull = r'[^\047"\140/\000-\040]'
-    pre_regex = r'[(,=:\[!&|?{};\r\n+*-]'
-    regex_dull = r'[^/\\\[\r\n]'
-    regex_cc_dull = r'[^\\\]\r\n]'
+    pre_regex = r"[(,=:\[!&|?{};\r\n+*-]"
+    regex_dull = r"[^/\\\[\r\n]"
+    regex_cc_dull = r"[^\\\]\r\n]"
 
-    id_literal = r'[^\000-#%-,./:-@\[-^\140{-~-]'
+    id_literal = r"[^\000-#%-,./:-@\[-^\140{-~-]"
     id_literal_open = r'[^\000-\040"#%-\047)*,./:-@\\-^\140|-~]'
-    id_literal_close = r'[^\000-!#%&(*,./:-@\[\\^{|~]'
-    post_regex_off = r'[^\000-\040&)+,.:;=?\]|}-]'
-    a_z = r'[a-z]'
+    id_literal_close = r"[^\000-!#%&(*,./:-@\[\\^{|~]"
+    post_regex_off = r"[^\000-\040&)+,.:;=?\]|}-]"
+    a_z = r"[a-z]"
 
     string_dull = r'[^\047"\140\\\r\n]'
 
-    space = r'[\000-\011\013\014\016-\040]'
+    space = r"[\000-\011\013\014\016-\040]"
 
     charmask = []
     for x in range(8):  # pylint: disable = invalid-name
@@ -85,16 +88,17 @@ def _make_charmask():
                 mask |= 1024
 
             if mask < 10:
-                mask = '   ' + str(mask)
+                mask = "   " + str(mask)
             elif mask < 100:
-                mask = '  ' + str(mask)
+                mask = "  " + str(mask)
             elif mask < 1000:
-                mask = ' ' + str(mask)
+                mask = " " + str(mask)
             maskline.append(str(mask))
             if y == 7:
-                charmask.append(', '.join(maskline))
+                charmask.append(", ".join(maskline))
                 maskline = []
-        charmask.append(', '.join(maskline))
-    return TPL.replace('@@mask@@', ',\n    '.join(charmask))
+        charmask.append(", ".join(maskline))
+    return TPL.replace("@@mask@@", ",\n    ".join(charmask))
+
 
 print(_make_charmask())

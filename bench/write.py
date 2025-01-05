@@ -9,7 +9,7 @@ Write benchmark results.
 
 :Copyright:
 
- Copyright 2014 - 2024
+ Copyright 2014 - 2025
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -45,15 +45,19 @@ import sys as _sys
 try:
     unicode
 except NameError:
+
     def uni(v):
-        if hasattr(v, 'decode'):
-            return v.decode('latin-1')
+        if hasattr(v, "decode"):
+            return v.decode("latin-1")
         return str(v)
+
 else:
+
     def uni(v):
         if isinstance(v, unicode):
-            return v.encode('utf-8')
+            return v.encode("utf-8")
         return str(v)
+
 
 try:
     cmp
@@ -75,68 +79,84 @@ def write_table(filename, results):
     try:
         next
     except NameError:
-        next = lambda i: (getattr(i, 'next', None) or i.__next__)()
+        next = lambda i: (getattr(i, "next", None) or i.__next__)()
 
     names = [
-        ('simple_port', 'Simple Port'),
-        ('jsmin_2_0_9', 'jsmin 2.0.9'),
-        ('rjsmin', '|rjsmin|'),
-        ('_rjsmin', r'_\ |rjsmin|'),
+        ("simple_port", "Simple Port"),
+        ("jsmin_2_0_9", "jsmin 2.0.9"),
+        ("rjsmin", "|rjsmin|"),
+        ("_rjsmin", r"_\ |rjsmin|"),
     ]
     benched_per_table = 2
 
-    results = sorted(results,
-                     key=(lambda x: [int(a) for a in x[0].split('.')]),
-                     reverse=True)
+    results = sorted(
+        results,
+        key=(lambda x: [int(a) for a in x[0].split(".")]),
+        reverse=True,
+    )
 
     # First we transform our data into a table (list of lists)
     pythons, widths = [], [0] * (benched_per_table + 1)
     versions = []
     for version, _, result in results:
         version = uni(version)
-        if versions and versions[-1].startswith('3.10.') \
-                and not version.startswith('2.'):
+        if (
+            versions
+            and versions[-1].startswith("3.10.")
+            and not version.startswith("2.")
+        ):
             continue
         versions.append(version)
 
-        namesub = _re.compile(r'(?:-\d+(?:\.\d+)*)?\.js$').sub
+        namesub = _re.compile(r"(?:-\d+(?:\.\d+)*)?\.js$").sub
         result = iter(result)
         tables = []
 
         # given our data it's easier to create the table transposed...
         for benched in result:
-            rows = [['Name'] + [desc for _, desc in names]]
+            rows = [["Name"] + [desc for _, desc in names]]
             for _ in range(benched_per_table):
                 if _:
                     try:
                         benched = next(result)
                     except StopIteration:
-                        rows.append([''] + ['' for _ in names])
+                        rows.append([""] + ["" for _ in names])
                         continue
 
-                times = dict((
-                    uni(port), (time, benched['sizes'][idx])
-                ) for idx, (port, time) in enumerate(benched['times']))
-                columns = ['%s (%.1f)' % (
-                    namesub('', _os.path.basename(uni(benched['filename']))),
-                    benched['size'] / 1024.0,
-                )]
+                times = dict(
+                    (uni(port), (time, benched["sizes"][idx]))
+                    for idx, (port, time) in enumerate(benched["times"])
+                )
+                columns = [
+                    "%s (%.1f)"
+                    % (
+                        namesub(
+                            "", _os.path.basename(uni(benched["filename"]))
+                        ),
+                        benched["size"] / 1024.0,
+                    )
+                ]
                 for idx, (port, _) in enumerate(names):
                     if port not in times:
-                        columns.append('n/a')
+                        columns.append("n/a")
                         continue
                     time, size = times[port]
                     if time is None:
-                        columns.append('(failed)')
+                        columns.append("(failed)")
                         continue
-                    columns.append('%s%.2f ms (%.1f %s)' % (
-                        idx == 0 and ' ' or '',
-                        time,
-                        size / 1024.0,
-                        idx == 0 and '\\*' or ['=', '>', '<'][
-                            cmp(size, benched['sizes'][0])
-                        ],
-                    ))
+                    columns.append(
+                        "%s%.2f ms (%.1f %s)"
+                        % (
+                            idx == 0 and " " or "",
+                            time,
+                            size / 1024.0,
+                            idx == 0
+                            and "\\*"
+                            or ["=", ">", "<"][
+                                cmp(size, benched["sizes"][0])
+                            ],
+                        )
+                    )
                 rows.append(columns)
 
             # calculate column widths (global for all tables)
@@ -147,47 +167,63 @@ def write_table(filename, results):
             tables.append(zip(*rows))
         pythons.append((version, tables))
 
-        if versions[-1].startswith('2.'):
+        if versions[-1].startswith("2."):
             break
 
     # Second we create a rest table from it
     lines = []
-    separator = lambda c='-': '+'.join([''] + [
-        c * (width + 2) for width in widths
-    ] + [''])
+    separator = lambda c="-": "+".join(
+        [""] + [c * (width + 2) for width in widths] + [""]
+    )
 
     for idx, (version, tables) in enumerate(pythons):
         if idx:
-            lines.append('')
-            lines.append('')
+            lines.append("")
+            lines.append("")
 
-        line = 'Python %s' % (version,)
+        line = "Python %s" % (version,)
         lines.append(line)
-        lines.append('~' * len(line))
+        lines.append("~" * len(line))
 
         for table in tables:
-            lines.append('')
-            lines.append('.. rst-class:: benchmark')
-            lines.append('')
+            lines.append("")
+            lines.append(".. rst-class:: benchmark")
+            lines.append("")
 
             for idx, row in enumerate(table):
                 if idx == 0:
                     # header
                     lines.append(separator())
-                    lines.append('|'.join([''] + [
-                        ' %s%*s ' % (col, len(col) - width, '')
-                        for width, col in zip(widths, row)
-                    ] + ['']))
-                    lines.append(separator('='))
-                else: # data
-                    lines.append('|'.join([''] + [
-                        j == 0 and (
-                            ' %s%*s ' % (col, len(col) - widths[j], '')
-                        ) or (
-                            ['%*s  ', ' %*s '][idx == 1] % (widths[j], col)
+                    lines.append(
+                        "|".join(
+                            [""]
+                            + [
+                                " %s%*s " % (col, len(col) - width, "")
+                                for width, col in zip(widths, row)
+                            ]
+                            + [""]
                         )
-                        for j, col in enumerate(row)
-                    ] + ['']))
+                    )
+                    lines.append(separator("="))
+                else:  # data
+                    lines.append(
+                        "|".join(
+                            [""]
+                            + [
+                                j == 0
+                                and (
+                                    " %s%*s "
+                                    % (col, len(col) - widths[j], "")
+                                )
+                                or (
+                                    ["%*s  ", " %*s "][idx == 1]
+                                    % (widths[j], col)
+                                )
+                                for j, col in enumerate(row)
+                            ]
+                            + [""]
+                        )
+                    )
                     lines.append(separator())
 
     fplines = []
@@ -196,16 +232,16 @@ def write_table(filename, results):
         fpiter = iter(fp)
         for line in fpiter:
             line = line.rstrip()
-            if line == '.. begin tables':
+            if line == ".. begin tables":
                 buf = []
                 for line in fpiter:
                     line = line.rstrip()
-                    if line == '.. end tables':
-                        fplines.append('.. begin tables')
-                        fplines.append('')
+                    if line == ".. end tables":
+                        fplines.append(".. begin tables")
+                        fplines.append("")
                         fplines.extend(lines)
-                        fplines.append('')
-                        fplines.append('.. end tables')
+                        fplines.append("")
+                        fplines.append(".. end tables")
                         buf = []
                         break
                     else:
@@ -218,9 +254,9 @@ def write_table(filename, results):
     finally:
         fp.close()
 
-    fp = open(filename, 'w')
+    fp = open(filename, "w")
     try:
-        fp.write('\n'.join(fplines) + '\n')
+        fp.write("\n".join(fplines) + "\n")
     finally:
         fp.close()
 
@@ -237,65 +273,77 @@ def write_plain(filename, results):
         Results
     """
     lines = []
-    results = sorted(results,
-                     key=(lambda x: [int(a) for a in x[0].split('.')]),
-                     reverse=True)
+    results = sorted(
+        results,
+        key=(lambda x: [int(a) for a in x[0].split(".")]),
+        reverse=True,
+    )
     for idx, (version, import_notes, result) in enumerate(results):
         if idx:
-            lines.append('')
-            lines.append('')
+            lines.append("")
+            lines.append("")
 
-        lines.append('$ python%s -OO bench/main.py bench/*.js' % (
-            '.'.join(version.split('.')[:2])
-        ))
-        lines.append('~' * 72)
+        lines.append(
+            "$ python%s -OO bench/main.py bench/*.js"
+            % (".".join(version.split(".")[:2]))
+        )
+        lines.append("~" * 72)
         for note in import_notes:
             lines.append(uni(note))
-        lines.append('Python Release: %s' % (version,))
+        lines.append("Python Release: %s" % (version,))
 
         for single in result:
-            lines.append('')
-            lines.append('Benchmarking %r... (%.1f KiB)' % (
-                uni(single['filename']), single['size'] / 1024.0
-            ))
-            for msg in single['messages']:
+            lines.append("")
+            lines.append(
+                "Benchmarking %r... (%.1f KiB)"
+                % (uni(single["filename"]), single["size"] / 1024.0)
+            )
+            for msg in single["messages"]:
                 lines.append(msg)
             times = []
-            space = max([len(uni(port)) for port, _ in single['times']])
-            for idx, (port, time) in enumerate(single['times']):
+            space = max([len(uni(port)) for port, _ in single["times"]])
+            for idx, (port, time) in enumerate(single["times"]):
                 port = uni(port)
                 if time is None:
                     lines.append("  FAILED %s" % (port,))
                 else:
                     times.append(time)
                     lines.append(
-                        "  Timing %s%s ... (%5.1f KiB %s) %8.2f ms" % (
+                        "  Timing %s%s ... (%5.1f KiB %s) %8.2f ms"
+                        % (
                             port,
                             " " * (space - len(port)),
-                            single['sizes'][idx] / 1024.0,
-                            idx == 0 and '*' or ['=', '>', '<'][
-                                cmp(single['sizes'][idx], single['sizes'][0])
+                            single["sizes"][idx] / 1024.0,
+                            idx == 0
+                            and "*"
+                            or ["=", ">", "<"][
+                                cmp(single["sizes"][idx], single["sizes"][0])
                             ],
-                            time
+                            time,
                         )
                     )
                     if len(times) > 1:
-                        lines[-1] += " (factor: %s)" % (', '.join([
-                            '%.2f' % (timed / time) for timed in times[:-1]
-                        ]))
+                        lines[-1] += " (factor: %s)" % (
+                            ", ".join(
+                                [
+                                    "%.2f" % (timed / time)
+                                    for timed in times[:-1]
+                                ]
+                            )
+                        )
 
-    lines.append('')
-    lines.append('')
-    lines.append('# vim: nowrap')
-    fp = open(filename, 'w')
+    lines.append("")
+    lines.append("")
+    lines.append("# vim: nowrap")
+    fp = open(filename, "w")
     try:
-        fp.write('\n'.join(lines) + '\n')
+        fp.write("\n".join(lines) + "\n")
     finally:
         fp.close()
 
 
 def main(argv=None):
-    """ Main """
+    """Main"""
     import getopt as _getopt
     import pickle as _pickle
 
@@ -315,23 +363,22 @@ def main(argv=None):
     for key, value in opts:
         if key in ("-h", "--help"):
             print >> _sys.stderr, (
-                "%s -mbench.write [-p plain] [-t table] <pickled" % (
-                    _os.path.basename(_sys.executable),
-                )
+                "%s -mbench.write [-p plain] [-t table] <pickled"
+                % (_os.path.basename(_sys.executable),)
             )
             _sys.exit(0)
-        elif key == '-p':
+        elif key == "-p":
             plain = str(value)
-        elif key == '-t':
+        elif key == "-t":
             table = str(value)
 
     struct = []
-    _sys.stdin = getattr(_sys.stdin, 'detach', lambda: _sys.stdin)()
+    _sys.stdin = getattr(_sys.stdin, "detach", lambda: _sys.stdin)()
     try:
         while True:
             version, import_notes, result = _pickle.load(_sys.stdin)
-            if hasattr(version, 'decode'):
-                version = version.decode('latin-1')
+            if hasattr(version, "decode"):
+                version = version.decode("latin-1")
             struct.append((version, import_notes, result))
     except EOFError:
         pass
@@ -343,5 +390,5 @@ def main(argv=None):
         write_table(table, struct)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
