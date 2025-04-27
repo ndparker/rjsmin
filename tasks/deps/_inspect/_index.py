@@ -20,11 +20,19 @@ Inspect package versions in index
 
 """
 
+import json as _json
 import logging as _logging
 
-from setuptools import package_index as _pkg_index
 import pkg_resources as _pkg_resources
 
+try:
+    from setuptools import package_index as _pkg_index
+except ImportError:
+    _pkg_index = None
+import invoke as _invoke
+
+from ... import pypi as _pypi
+from ..._inv import tasks as _tasks
 from .. import _parse
 
 # pylint: disable = import-outside-toplevel
@@ -32,12 +40,91 @@ from .. import _parse
 logger = _logging.getLogger("deps.inspect.index")
 
 
+class PipIndex(_pkg_resources.Environment):
+    """Query the index using pip"""
+
+    _is_available = None
+
+    def __init__(self, *args, **kwargs):
+        super(PipIndex, self).__init__(*args, **kwargs)
+        self._ctx = _tasks.new_context()
+        self._cache = set()
+
+    @classmethod
+    def is_available(cls):
+        """Is the pip index available?"""
+        if cls._is_available is not None:
+            return cls._is_available
+
+        ctx = _tasks.new_context()
+        try:
+            ctx.run(
+                ctx.c(
+                    "pip index -i %s versions --json pip",
+                    _pypi.index_url(ctx),
+                ),
+                hide=True,
+                echo=False,
+            )
+        except _invoke.UnexpectedExit:
+            cls._is_available = False
+        else:
+            cls._is_available = True
+
+        return cls._is_available
+
+    def find_packages(self, requirement):
+        """Find packages"""
+        if requirement.key in self._cache:
+            return
+
+        ctx = self._ctx
+        index_info = _json.loads(
+            ctx.run(
+                ctx.c(
+                    [
+                        "pip",
+                        "index",
+                        "-i",
+                        _pypi.index_url(ctx),
+                        "versions",
+                        "--json",
+                        requirement.project_name,
+                    ]
+                ),
+                hide=True,
+            ).stdout.strip()
+        )
+        for version in index_info.get("versions", ()):
+            self.add(
+                _pkg_resources.Distribution(
+                    project_name=requirement.project_name,
+                    version=version,
+                    precedence=_pkg_resources.EGG_DIST + 1,
+                )
+            )
+        self._cache.add(requirement.key)
+
+    def obtain(self, requirement, installer=None):
+        self.find_packages(requirement)
+        for dist in self[requirement.key]:
+            if dist in requirement:
+                return dist
+        return super().obtain(requirement, installer)
+
+
 class Index(object):
     """Python package index container"""
 
     def __init__(self):
         """Initialization"""
-        self._index = _pkg_index.PackageIndex(search_path=[])
+        if PipIndex.is_available():
+            self._index = PipIndex(search_path=[])
+        elif _pkg_index is not None:
+            self._index = _pkg_index.PackageIndex(search_path=[])
+        else:
+            raise RuntimeError("No index access tool available")
+
         self._wset = _pkg_resources.WorkingSet([])
 
     def lookup(self, req):
@@ -132,7 +219,11 @@ class PackageScanner(object):
             The requirement to look up
         """
         # we want a specifically typed copy
-        req = _pkg_index.Requirement.parse(str(req))
+        if PipIndex.is_available():
+            req = _pkg_resources.Requirement.parse(str(req))
+        else:
+            req = _pkg_index.Requirement.parse(str(req))
+
         self._update_field("unchanged", req)
         self._find_compat(req)
         self._find_latest(req)

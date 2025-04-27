@@ -141,12 +141,16 @@ confidence=
 disable=
     locally-disabled,
     file-ignored,
+    fixme,
     bad-file-encoding,
     invalid-name,
     consider-using-f-string,
     use-dict-literal,
     useless-object-inheritance,
     super-with-arguments,
+
+    cyclic-import,
+    duplicate-code,
 
 
 # Enable the message, report, category or checker with the given id(s). You can
@@ -357,7 +361,7 @@ max-locals=15
 max-parents=7
 
 # Maximum number of positional arguments for function / method.
-max-positional-arguments=5
+max-positional-arguments=10
 
 # Maximum number of public methods for a class (see R0904).
 max-public-methods=20

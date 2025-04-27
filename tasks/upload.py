@@ -40,7 +40,7 @@ def source(ctx):
 @_invoke.task()
 def wheels(ctx):
     """Upload wheels"""
-    files = list(ctx.shell.files("wheel/dist", "*.whl"))
+    files = list(ctx.shell.files("dist", "*.whl"))
     if not files:
         ctx.fail("No wheel found")
 

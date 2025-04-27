@@ -25,6 +25,7 @@ import sys as _sys
 
 import invoke as _invoke
 
+from .. import pypi as _pypi
 from .._inv import tasks as _tasks
 from .._inv import util as _util
 
@@ -77,7 +78,7 @@ def _default_config(ctx):
 def old(ctx):
     """List outdated python packages"""
     with ctx.shell.root_dir():
-        ctx.run("pip list -o", echo=True)
+        ctx.run(ctx.c("pip list -i %s -o", _pypi.index_url(ctx)), echo=True)
 
 
 @_invoke.task()
@@ -89,7 +90,7 @@ def package(ctx, upgrade=False):
       upgrade (bool):
         Run pip install with ``-U`` flag?
     """
-    cmd = ["pip", "install"]
+    cmd = ["pip", "install", "-i", _pypi.index_url(ctx)]
     if upgrade:
         cmd += ["-U"]
     cmd += ["-e", "."]
@@ -107,7 +108,7 @@ def dev(ctx, upgrade=False):
       upgrade (bool):
         Run pip install with ``-U`` flag?
     """
-    cmd = ["pip", "install"]
+    cmd = ["pip", "install", "-i", _pypi.index_url(ctx)]
     if upgrade:
         cmd += ["-U"]
     cmd += ["-r", "development.txt"]

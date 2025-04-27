@@ -1,6 +1,6 @@
 # -*- coding: ascii -*-
 #
-# Copyright 2018 - 2025
+# Copyright 2007 - 2025
 # Andr\xe9 Malo or his licensors, as applicable
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,26 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-Compile tasks
-~~~~~~~~~~~~~
+Build tasks
+~~~~~~~~~~~
 
 """
-
-import os as _os
-
-import invoke as _invoke
-
-from . import _features
-from . import pypi as _pypi
-from ._inv import tasks as _tasks
-
-
-@_tasks.optional(None, _features.python_package)
-@_invoke.task(default=True)
-def compile(ctx):  # pylint: disable = redefined-builtin
-    """Compile the package"""
-    with ctx.shell.root_dir():
-        ctx.run(
-            ctx.c("pip install -i %s -e .", _pypi.index_url(ctx)),
-            env=dict(_os.environ, SETUP_CEXT_REQUIRED="1"),
-        )

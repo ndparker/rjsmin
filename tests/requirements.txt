@@ -1,21 +1,23 @@
 # Requirements file for tests
 -r coverage.txt
 
-invoke ~= 2.2.0; python_version >= "3.6"
+invoke ~= 2.2.1; python_version >= "3.6"
 invoke == 1.6.0; python_version == "2.7"
 
-pytest == 8.3.4; python_version >= "3.8"
+pytest == 8.4.2; python_version >= "3.9"
+pytest == 8.3.5; python_version == "3.8"
 pytest == 7.4.4; python_version == "3.7"
 pytest == 7.0.1; python_version == "3.6"
 pytest < 5.0.0; python_version == "2.7"
 
-pytest-cov == 6.0.0; python_version >= "3.9"
+pytest-cov == 7.0.0; python_version >= "3.9"
 pytest-cov == 5.0.0; python_version == "3.8"
 pytest-cov == 4.1.0; python_version == "3.7"
 pytest-cov == 4.0.0; python_version == "3.6"
 pytest-cov == 2.12.1; python_version == "2.7"
 
-pytest-mock == 3.14.0; python_version >= "3.8"
+pytest-mock == 3.15.1; python_version >= "3.9"
+pytest-mock == 3.14.1; python_version == "3.8"
 pytest-mock == 3.11.1; python_version == "3.7"
 pytest-mock == 3.6.1; python_version == "3.6"
 pytest-mock == 1.12.1; python_version == "2.7"

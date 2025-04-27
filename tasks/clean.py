@@ -35,6 +35,7 @@ def py(ctx):
 def dist(ctx):
     """Wipe all"""
     _tasks.execute(ctx, "clean.clean", so=True, cache=True)
+    ctx.shell.rm_rf(ctx.shell.glob("*.egg-info"))
 
 
 @_invoke.task(py, default=True)
@@ -55,7 +56,13 @@ def clean(ctx, so=False, cache=False):
         gpath = ctx.shell.glob_escape(path.rstrip("/")) + "/**/"
         ctx.shell.rm_rf(ctx.shell.glob(gpath + "*.auto.tfvars.json"))
         ctx.shell.rm_rf(ctx.shell.glob(gpath + "*.tf.json"))
+    path = ctx.paths.get("cloudformation")
+    if path:
+        gpath = ctx.shell.glob_escape(path.rstrip("/")) + "/**/"
+        ctx.shell.rm_rf(ctx.shell.glob(gpath + "*.auto.*.yaml"))
+        ctx.shell.rm_rf(ctx.shell.glob(gpath + "*.zip"))
 
+    ctx.shell.rm_rf(ctx.shell.glob("tasks/**/*.generated*"))
     ctx.shell.rm_rf(
         "gcov.out",
         "setup.cfg",
@@ -63,7 +70,8 @@ def clean(ctx, so=False, cache=False):
         "docs/gcov/",
         "build/",
         "dist/",
-        "wheel/dist/",
+        ".sdist/",
+        ".bdist/",
         ctx.doc.userdoc,
         ctx.doc.sphinx.build,
         ctx.doc.website.source,

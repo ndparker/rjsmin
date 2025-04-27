@@ -18,6 +18,7 @@ envlist =
 [testenv]
 deps =
     -rtests/requirements.txt
+    setuptools
     -e .
 
 setenv =
@@ -102,7 +103,7 @@ directory = "docs/coverage"
 skip-string-normalization = true
 # skip-magic-trailing-comma = true
 line-length = 78
-# target-version = ['py312']
+# target-version = ['py313']
 include='''
 (
     tests/.*\.py
@@ -112,5 +113,13 @@ include='''
 extend-exclude='''
     tasks/_inv/shell.py
 '''
+
+
+# =======================================
+# isort
+# =======================================
+[tool.isort]
+profile = "black"
+force_single_line = true
 
 # vim: nowrap

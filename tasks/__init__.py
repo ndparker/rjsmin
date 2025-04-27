@@ -1,4 +1,4 @@
-# -*- encoding: ascii -*-
+# -*- coding: ascii -*-
 """
 invoke tasks
 ~~~~~~~~~~~~

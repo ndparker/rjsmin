@@ -1,6 +1,6 @@
 # -*- coding: ascii -*-
 #
-# Copyright 2018 - 2025
+# Copyright 2019 - 2025
 # Andr\xe9 Malo or his licensors, as applicable
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,26 +15,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-Compile tasks
-~~~~~~~~~~~~~
+Meta information
+~~~~~~~~~~~~~~~~
 
 """
 
-import os as _os
+from .._inv import shell as _shell
 
-import invoke as _invoke
-
-from . import _features
-from . import pypi as _pypi
-from ._inv import tasks as _tasks
+# pylint: disable = import-outside-toplevel
 
 
-@_tasks.optional(None, _features.python_package)
-@_invoke.task(default=True)
-def compile(ctx):  # pylint: disable = redefined-builtin
-    """Compile the package"""
-    with ctx.shell.root_dir():
-        ctx.run(
-            ctx.c("pip install -i %s -e .", _pypi.index_url(ctx)),
-            env=dict(_os.environ, SETUP_CEXT_REQUIRED="1"),
+def find_meta():
+    """
+    Find package meta data
+
+    Returns:
+      dict: Package metadata
+    """
+    # pylint: disable = import-error, no-name-in-module
+    from build import util as _build_util
+
+    if find_meta.found is None:
+        find_meta.found = _build_util.project_wheel_metadata(
+            _shell.native(".")
         )
+
+    return find_meta.found
+
+
+find_meta.found = None

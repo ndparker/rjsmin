@@ -5,8 +5,8 @@ __pycache__
 /setup.cfg
 /dist
 /build
-/wheel/dist
-/wheel/*.tar.gz
+/.sdist
+/.bdist
 /docs/_userdoc/_build/
 /docs/_userdoc/apidoc/*
 /docs/apidoc/
@@ -18,8 +18,11 @@ __pycache__
 *.ebuild
 .sw?
 .*.sw?
+.idea
+.vscode
 MANIFEST
 
+.DS_Store
 /.venv
 /.tox
 .pytest_cache
@@ -30,6 +33,10 @@ gcov.out
 /bench/.out.*
 
 .terraform
+.terraform.lock.hcl
 .state
 *.auto.tfvars.json
 *.tf.json
+*.auto.*.yaml
+*.generated.*
+*.zip

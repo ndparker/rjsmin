@@ -20,12 +20,38 @@ Run code formatters
 
 """
 
+import os as _os
+
 import invoke as _invoke
 
 from . import _features
 from ._inv import tasks as _tasks
 
 _FORMATTERS = []
+
+
+@_tasks.optional(_FORMATTERS, _features.isort)
+@_invoke.task()
+def isort(ctx, diff=False):
+    """
+    Format python code using isort formatter
+
+    Parameters:
+      diff (bool):
+        Just emit a diff instead of changing files inline? Default: false
+    """
+    cmd = [ctx.which("isort")]
+    if diff:
+        cmd += ctx.s("--diff --color")
+    cmd += ctx.s("--settings-path pyproject.toml")
+    cmd += ["tasks"]
+    if ctx.get("package"):
+        cmd += [ctx.package]
+    if _os.path.exists(ctx.shell.native("tests")):
+        cmd += ["tests"]
+
+    with ctx.shell.root_dir():
+        ctx.run(ctx.c(cmd), echo=True)
 
 
 @_tasks.optional(_FORMATTERS, _features.black)

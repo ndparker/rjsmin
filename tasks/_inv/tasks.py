@@ -260,9 +260,9 @@ def _find_modules():
         while dirname:
             if not is_valid_dir(_os.path.basename(dirname)):
                 break
-            dirname = _os.path.dirname(dirname)
             if not _os.path.exists(_os.path.join(path, dirname, init)):
                 break
+            dirname = _os.path.dirname(dirname)
 
         # import module/package and yield if there are any tasks
         else:

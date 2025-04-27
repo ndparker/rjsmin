@@ -22,7 +22,6 @@ Utilities
 
 import functools as _ft
 
-
 basestring_ = (
     str
     if str is not bytes
@@ -60,7 +59,7 @@ def cached(func):
     return inner
 
 
-def dictmerge(dict1, dict2):
+def dictmerge(dict1, dict2, resolve_left=None):
     """
     Merge nested dict2 into dict1
 
@@ -70,6 +69,10 @@ def dictmerge(dict1, dict2):
 
       dict2 (dict or adict):
         Dict to merge
+
+      resolve_left (callable):
+        A resolver to be called on each callable left-side item. If omitted or
+        ``None``, the items will be passed through as-is
 
     Returns:
       dict or adict: The updated dict1. If it was an adict, a new adict is
@@ -81,11 +84,24 @@ def dictmerge(dict1, dict2):
     elif type1 not in (dict, adict):
         type1 = adict
 
+    if dict1 is None:
+        if not isinstance(dict2, (dict, adict)):
+            return dict2
+        dict1 = {}
+
     dict1 = dict(dict1.items())
+    if resolve_left is not None:
+        for key, value in list(dict1.items()):
+            if callable(value) and isinstance(dict2.get(key), (adict, dict)):
+                dict1[key] = resolve_left(value)
 
     for key, value in dict2.items():
         if isinstance(value, (dict, adict)):
-            value = dictmerge(dict1.get(key, {}), value)
+            value = dictmerge(
+                dict1.get(key, {}),
+                value,
+                resolve_left=resolve_left,
+            )
         dict1[key] = value
 
     return type1(dict1)
@@ -108,6 +124,26 @@ class adict(object):
             Keyword dict args
         """
         self.__x__ = dict(*args, **kwargs)
+
+    def __repr__(self):
+        """
+        Return debug representation
+
+        Returns:
+          str: Debug representation
+        """
+        return "%s(%r)" % (self.__class__.__name__, self.__x__)
+
+    def __bool__(self):
+        """
+        Return bool value of the object
+
+        Returns:
+          bool: False if empty, True otherwise
+        """
+        return bool(self.__x__)
+
+    __nonzero__ = __bool__
 
     def __iter__(self):
         """
@@ -134,6 +170,19 @@ class adict(object):
         """
         return self.__x__[name]
 
+    def __setitem__(self, name, value):
+        """
+        Set value by subscript
+
+        Parameters:
+          name (str):
+            The key
+
+          value (any):
+            The value
+        """
+        self.__x__[name] = value
+
     def __getattr__(self, name):
         """
         Get value for dot notation
@@ -151,9 +200,39 @@ class adict(object):
         if name == "__setstate__":
             raise AttributeError(name)
         try:
-            return self.__x__[name]
-        except KeyError:
-            raise AttributeError(name)  # pylint: disable = raise-missing-from
+            return super(adict, self).__getattr__(name)
+        except AttributeError:
+            try:
+                return self.__x__[name]
+            except KeyError:
+                raise AttributeError(  # pylint: disable = raise-missing-from
+                    name
+                )
+
+    def __setattr__(self, name, value):
+        """
+        Set value with dot notation
+
+        Parameters:
+          name (str):
+            The key
+
+          value (any):
+            The value
+        """
+        if name == "__x__" or hasattr(self.__class__, name):
+            super(adict, self).__setattr__(name, value)
+        else:
+            self.__x__[name] = value
+
+    def keys(self):
+        """
+        Create key iterator
+
+        Returns:
+          iterable: New key iterator
+        """
+        return self.__x__.keys()
 
     def items(self):
         """
@@ -179,3 +258,19 @@ class adict(object):
           any: The value or the default (if the key doesn't exist)
         """
         return self.__x__.get(*args, **kwargs)
+
+    def pop(self, *args, **kwargs):
+        """
+        Pop value
+
+        Parameters:
+          *args:
+            Positional dict.pop args
+
+          **kwargs:
+            Keyword dict.pop args
+
+        Returns:
+          any: The value or the default (if the key doesn't exist)
+        """
+        return self.__x__.pop(*args, **kwargs)

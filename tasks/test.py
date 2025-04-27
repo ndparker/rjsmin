@@ -20,9 +20,12 @@ Test suite tasks
 
 """
 
+import os as _os
+
 import invoke as _invoke
 
 from . import _features
+from . import pypi as _pypi
 from ._inv import tasks as _tasks
 
 
@@ -89,6 +92,7 @@ def local(
     for ignored in ctx.test.ignore:
         cmd += ["--ignore", ignored]
 
+    # cmd += [ctx.package.replace(".", "/")]
     cmd += ["tests"]
 
     with ctx.shell.root_dir():
@@ -120,4 +124,8 @@ def tox(ctx, rebuild=False, env=None, hashseed=None):
         cmd += ["--hashseed", hashseed]
 
     with ctx.shell.root_dir():
-        ctx.run(ctx.c(cmd), echo=True)
+        ctx.run(
+            ctx.c(cmd),
+            env=dict(_os.environ, PIP_INDEX_URL=_pypi.index_url(ctx)),
+            echo=True,
+        )

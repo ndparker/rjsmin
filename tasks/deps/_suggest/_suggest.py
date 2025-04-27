@@ -73,7 +73,7 @@ def suggest_updates(ctx, config, upgrade=False, verbose=True, debug=False):
     }
     if not candidates:
         logger.debug("No dependencies found to update")
-        return changes
+        return {"latest": {}, "replace": {}}
 
     latest = {}
     not_latest = set(_parse.normalize(item) for item in config.no_latest)
@@ -269,28 +269,33 @@ def _with_locations(ctx, candidates):
 
     with ctx.shell.root_dir():
         if _os.path.isfile("setup.py"):
-            setups = ["setup.py"]
-            if _os.path.isdir("setups"):
-                for name in sorted(_os.listdir("setups")):
-                    if name.startswith(".") or not name.endswith(".py"):
-                        continue
-                    setups.append("setups/%s" % (name,))
-            extra.extend(
-                _dep_file.DepFile.by_type("setup", name) for name in setups
-            )
+            extra.append(_dep_file.DepFile.by_type("setup", "setup.py"))
+            logger.debug("Extra location found: %r", extra[-1])
 
         if _os.path.isfile("pyproject.toml"):
-            tomls = ["pyproject.toml"]
-            if _os.path.isdir("setups"):
-                for name in sorted(_os.listdir("setups")):
-                    if name.startswith(".") or not name.endswith(".toml"):
-                        continue
-                    setups.append("setups/%s" % (name,))
-            extra.extend(
-                _dep_file.DepFile.by_type("toml", name) for name in tomls
-            )
+            extra.append(_dep_file.DepFile.by_type("toml", "pyproject.toml"))
+            logger.debug("Extra location found: %r", extra[-1])
 
-    logger.debug("Extra locations found: %r", extra)
+        if _os.path.isdir("setups"):
+            for name in sorted(_os.listdir("setups")):
+                if name.startswith("."):
+                    continue
+
+                if name.endswith(".py"):
+                    extra.append(
+                        _dep_file.DepFile.by_type(
+                            "setup", "setups/%s" % (name,)
+                        )
+                    )
+                    logger.debug("Extra location found: %r", extra[-1])
+
+                elif name.endswith(".toml"):
+                    extra.append(
+                        _dep_file.DepFile.by_type(
+                            "toml", "setups/%s" % (name,)
+                        )
+                    )
+                    logger.debug("Extra location found: %r", extra[-1])
 
     for name, info in candidates.items():
         info["locations"] = [

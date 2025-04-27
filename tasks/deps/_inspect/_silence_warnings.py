@@ -24,6 +24,7 @@ import warnings
 
 try:
     with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=UserWarning)
         import pkg_resources
 
     if hasattr(pkg_resources, "PkgResourcesDeprecationWarning"):

@@ -36,6 +36,19 @@ def current_branch(ctx):
     )
 
 
+def sha(ctx):
+    """
+    Find current sha
+
+    Returns:
+      str: The current commit ID
+    """
+    return (
+        command(ctx, ctx.s("log -1 --format=%H"), hide=True).stdout.strip()
+        or None
+    )
+
+
 def command(ctx, cmd, **kwargs):
     """
     Run git command
@@ -51,6 +64,6 @@ def command(ctx, cmd, **kwargs):
       The run result
     """
     env = dict(LC_ALL="C")
-    cmd = [ctx.which("git")] + cmd
+    cmd = [ctx.which("git"), "--no-pager"] + cmd
     with ctx.shell.root_dir():
         return ctx.run(ctx.c(cmd), env=env, **kwargs)

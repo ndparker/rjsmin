@@ -82,8 +82,7 @@ def patched_import(what, how=_unset):
 
     # pylint: disable = unnecessary-lambda-assignment
     _is_exc = lambda obj: isinstance(obj, BaseException) or (
-        isinstance(obj, (type, class_types))
-        and issubclass(obj, BaseException)
+        isinstance(obj, class_types) and issubclass(obj, BaseException)
     )
 
     class FinderLoader(object):

@@ -2,29 +2,31 @@
 -r compat-requirements.txt
 
 # Packaging
-pip ~= 25.0.1; python_version >= "3.8"
-setuptools == 75.8.0; python_version >= "3.9"
-build ~= 1.2.2; python_version >="3.8"
-twine == 6.1.0; python_version >= "3.8"
+pip ~= 25.2.0; python_version >= "3.9"
+setuptools == 80.9.0; python_version >= "3.9"
+build ~= 1.3.0; python_version >="3.9"
+twine == 6.2.0; python_version >= "3.9"
 
 # Testing
-tox >= 4.5.1.1, <= 4.24.1; python_version >= "3.8"
+tox >= 4.5.1.1, <= 4.31.0; python_version >= "3.10"
 -r tests/requirements.txt
 
 # Checking
-pylint == 3.3.4; python_version >= "3.8"
-astroid == 3.3.8; python_version >= "3.8"
-flake8 == 7.1.1; python_version >= "3.8"
-black ~= 25.1.0; python_version >= "3.9"
+pylint == 3.3.9; python_version >= "3.9"
+astroid == 3.3.11; python_version >= "3.9"
+flake8 == 7.3.0; python_version >= "3.9"
+black[colorama] ~= 25.9.0; python_version >= "3.9"
+isort[colors] >= 6.1.0, <= 7.0.0; python_version >= "3.10"
+# mypy ~= 1.18.2; python_version >= "3.9"
 
 # Management
-invoke ~= 2.2.0; python_version >= "3.6"
+invoke ~= 2.2.1; python_version >= "3.6"
 
 # IPython
 ipython >= 7.20; python_version >= "3.7"
 
-Sphinx ~= 8.1.3; python_version >= "3.10"
-furo ~= 2024.8.6
+Sphinx ~= 8.2.3; python_version >= "3.11"
+furo ~= 2025.9.25
 # cloud_sptheme ~= 1.10.1
 
 -e .

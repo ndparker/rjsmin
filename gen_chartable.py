@@ -26,6 +26,7 @@ Character table generator for rjsmin.c
  limitations under the License.
 """
 from __future__ import print_function
+
 __author__ = u"Andr\xe9 Malo"
 
 import re as _re

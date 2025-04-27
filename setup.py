@@ -102,7 +102,7 @@ package = dict(
 
 
 class BuildFailed(Exception):
-    """ The build has failed """
+    """The build has failed"""
 
 
 from distutils.command import build_ext as _build_ext  # pylint: disable = wrong-import-order

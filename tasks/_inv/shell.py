@@ -27,9 +27,9 @@ __author__ = "Andr\xe9 Malo"
 
 import contextlib as _contextlib
 import errno as _errno
-import glob as _glob
 import fnmatch as _fnmatch
 import functools as _ft
+import glob as _glob
 import os as _os
 import re as _re
 import shutil as _shutil
@@ -37,7 +37,6 @@ import sys as _sys
 import tempfile as _tempfile
 
 from . import util as _util
-
 
 root = _os.path.dirname(
     _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))

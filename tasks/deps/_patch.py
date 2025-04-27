@@ -57,7 +57,7 @@ def patch_updates(ctx, config, upgrade=False, verbose=True, debug=False):
         ctx, config, upgrade=upgrade, verbose=verbose, debug=debug
     )
     replace, latest = changes["replace"], changes["latest"]
-    if not latest.as_patch_info():
+    if latest and not latest.as_patch_info():
         latest = None
     if not replace and not latest:
         logger.info("Nothing to do.")
