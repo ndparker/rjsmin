@@ -12,7 +12,7 @@ legacy_tox_ini = """
 skip_missing_interpreters = True
 skipsdist = True
 envlist =
-    py{27,36,37,38,39,310,311,312,313}
+    py{27,36,37,38,39,310,311,312,313,314}
     cov-report
 
 [testenv]
