@@ -1,206 +1,247 @@
-$ python3.13 -OO bench/main.py bench/*.js
+$ python3.14 -OO bench/main.py bench/*.js
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Python Release: 3.13.0
+Python Release: 3.14.0
 
 Benchmarking 'bench/apiviewer.js'... (953.2 KiB)
-  Timing simple_port ... (951.5 KiB *)   398.06 ms
-  Timing jsmin_2_0_9 ... (951.5 KiB >)   819.37 ms (factor: 0.49)
-  Timing rjsmin      ... (951.5 KiB =)    27.59 ms (factor: 14.43, 29.70)
-  Timing _rjsmin     ... (951.5 KiB =)     2.91 ms (factor: 136.92, 281.83, 9.49)
+  Timing simple_port ... (951.5 KiB *)   394.29 ms
+  Timing jsmin_2_0_9 ... (951.5 KiB >)   817.36 ms (factor: 0.48)
+  Timing rjsmin      ... (951.5 KiB =)    26.57 ms (factor: 14.84, 30.76)
+  Timing _rjsmin     ... (951.5 KiB =)     2.67 ms (factor: 147.94, 306.67, 9.97)
 
 Benchmarking 'bench/bootstrap.js'... (49.0 KiB)
-  Timing simple_port ... ( 26.4 KiB *)    18.18 ms
-  Timing jsmin_2_0_9 ... ( 26.4 KiB >)    11.91 ms (factor: 1.53)
-  Timing rjsmin      ... ( 26.4 KiB >)     6.50 ms (factor: 2.80, 1.83)
-  Timing _rjsmin     ... ( 26.4 KiB >)     0.13 ms (factor: 136.92, 89.68, 48.95)
+  Timing simple_port ... ( 26.4 KiB *)    18.07 ms
+  Timing jsmin_2_0_9 ... ( 26.4 KiB >)    12.06 ms (factor: 1.50)
+  Timing rjsmin      ... ( 26.4 KiB >)     6.10 ms (factor: 2.96, 1.98)
+  Timing _rjsmin     ... ( 26.4 KiB >)     0.11 ms (factor: 162.16, 108.24, 54.70)
 
 Benchmarking 'bench/DateTimeShortcuts.js'... (18.3 KiB)
-  Timing simple_port ... ( 10.2 KiB *)     6.88 ms
-  Timing jsmin_2_0_9 ... ( 10.3 KiB >)     4.58 ms (factor: 1.50)
-  Timing rjsmin      ... ( 10.2 KiB >)     1.71 ms (factor: 4.03, 2.68)
-  Timing _rjsmin     ... ( 10.2 KiB >)     0.04 ms (factor: 180.50, 120.16, 44.77)
+  Timing simple_port ... ( 10.2 KiB *)     6.71 ms
+  Timing jsmin_2_0_9 ... ( 10.3 KiB >)     4.62 ms (factor: 1.45)
+  Timing rjsmin      ... ( 10.2 KiB >)     1.67 ms (factor: 4.03, 2.77)
+  Timing _rjsmin     ... ( 10.2 KiB >)     0.03 ms (factor: 205.71, 141.57, 51.09)
 
 Benchmarking 'bench/jquery-1.7.1.js'... (242.4 KiB)
-  Timing simple_port ... (135.9 KiB *)    96.47 ms
-  Timing jsmin_2_0_9 ... (136.8 KiB >)    79.07 ms (factor: 1.22)
-  Timing rjsmin      ... (135.9 KiB =)    42.41 ms (factor: 2.27, 1.86)
-  Timing _rjsmin     ... (135.9 KiB =)     0.85 ms (factor: 112.88, 92.53, 49.63)
+  Timing simple_port ... (135.9 KiB *)    96.35 ms
+  Timing jsmin_2_0_9 ... (136.8 KiB >)    79.81 ms (factor: 1.21)
+  Timing rjsmin      ... (135.9 KiB =)    41.28 ms (factor: 2.33, 1.93)
+  Timing _rjsmin     ... (135.9 KiB =)     0.75 ms (factor: 128.49, 106.43, 55.05)
 
 Benchmarking 'bench/knockout-2.0.0.js'... (38.9 KiB)
-  Timing simple_port ... ( 38.6 KiB *)    16.00 ms
-  Timing jsmin_2_0_9 ... ( 38.6 KiB >)    12.73 ms (factor: 1.26)
-  Timing rjsmin      ... ( 38.6 KiB >)     1.35 ms (factor: 11.82, 9.41)
-  Timing _rjsmin     ... ( 38.6 KiB >)     0.08 ms (factor: 190.62, 151.63, 16.12)
+  Timing simple_port ... ( 38.6 KiB *)    15.86 ms
+  Timing jsmin_2_0_9 ... ( 38.6 KiB >)    12.69 ms (factor: 1.25)
+  Timing rjsmin      ... ( 38.6 KiB >)     1.37 ms (factor: 11.55, 9.24)
+  Timing _rjsmin     ... ( 38.6 KiB >)     0.06 ms (factor: 259.44, 207.55, 22.47)
 
 Benchmarking 'bench/markermanager.js'... (28.6 KiB)
-  Timing simple_port ... ( 11.6 KiB *)     9.08 ms
-  Timing jsmin_2_0_9 ... ( 11.6 KiB >)     6.13 ms (factor: 1.48)
-  Timing rjsmin      ... ( 11.6 KiB =)     2.68 ms (factor: 3.39, 2.29)
-  Timing _rjsmin     ... ( 11.6 KiB =)     0.06 ms (factor: 145.43, 98.26, 42.90)
+  Timing simple_port ... ( 11.6 KiB *)     8.93 ms
+  Timing jsmin_2_0_9 ... ( 11.6 KiB >)     6.22 ms (factor: 1.44)
+  Timing rjsmin      ... ( 11.6 KiB =)     2.58 ms (factor: 3.46, 2.41)
+  Timing _rjsmin     ... ( 11.6 KiB =)     0.05 ms (factor: 184.00, 128.16, 53.13)
+
+
+$ python3.13 -OO bench/main.py bench/*.js
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Python Release: 3.13.5
+
+Benchmarking 'bench/apiviewer.js'... (953.2 KiB)
+  Timing simple_port ... (951.5 KiB *)   387.62 ms
+  Timing jsmin_2_0_9 ... (951.5 KiB >)   837.34 ms (factor: 0.46)
+  Timing rjsmin      ... (951.5 KiB =)    26.38 ms (factor: 14.70, 31.75)
+  Timing _rjsmin     ... (951.5 KiB =)     3.11 ms (factor: 124.58, 269.13, 8.48)
+
+Benchmarking 'bench/bootstrap.js'... (49.0 KiB)
+  Timing simple_port ... ( 26.4 KiB *)    19.26 ms
+  Timing jsmin_2_0_9 ... ( 26.4 KiB >)    13.16 ms (factor: 1.46)
+  Timing rjsmin      ... ( 26.4 KiB >)     6.79 ms (factor: 2.84, 1.94)
+  Timing _rjsmin     ... ( 26.4 KiB >)     0.14 ms (factor: 133.79, 91.44, 47.14)
+
+Benchmarking 'bench/DateTimeShortcuts.js'... (18.3 KiB)
+  Timing simple_port ... ( 10.2 KiB *)     7.42 ms
+  Timing jsmin_2_0_9 ... ( 10.3 KiB >)     5.27 ms (factor: 1.41)
+  Timing rjsmin      ... ( 10.2 KiB >)     2.33 ms (factor: 3.19, 2.27)
+  Timing _rjsmin     ... ( 10.2 KiB >)     0.04 ms (factor: 179.85, 127.73, 56.36)
+
+Benchmarking 'bench/jquery-1.7.1.js'... (242.4 KiB)
+  Timing simple_port ... (135.9 KiB *)    97.24 ms
+  Timing jsmin_2_0_9 ... (136.8 KiB >)    80.16 ms (factor: 1.21)
+  Timing rjsmin      ... (135.9 KiB =)    41.29 ms (factor: 2.35, 1.94)
+  Timing _rjsmin     ... (135.9 KiB =)     0.84 ms (factor: 115.17, 94.95, 48.91)
+
+Benchmarking 'bench/knockout-2.0.0.js'... (38.9 KiB)
+  Timing simple_port ... ( 38.6 KiB *)    16.63 ms
+  Timing jsmin_2_0_9 ... ( 38.6 KiB >)    13.50 ms (factor: 1.23)
+  Timing rjsmin      ... ( 38.6 KiB >)     1.61 ms (factor: 10.33, 8.39)
+  Timing _rjsmin     ... ( 38.6 KiB >)     0.08 ms (factor: 209.03, 169.74, 20.23)
+
+Benchmarking 'bench/markermanager.js'... (28.6 KiB)
+  Timing simple_port ... ( 11.6 KiB *)     9.75 ms
+  Timing jsmin_2_0_9 ... ( 11.6 KiB >)     6.32 ms (factor: 1.54)
+  Timing rjsmin      ... ( 11.6 KiB =)     2.62 ms (factor: 3.72, 2.41)
+  Timing _rjsmin     ... ( 11.6 KiB =)     0.06 ms (factor: 175.68, 113.83, 47.22)
 
 
 $ python3.12 -OO bench/main.py bench/*.js
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Python Release: 3.12.7
+Python Release: 3.12.11
 
 Benchmarking 'bench/apiviewer.js'... (953.2 KiB)
-  Timing simple_port ... (951.5 KiB *)   348.35 ms
-  Timing jsmin_2_0_9 ... (951.5 KiB >)   766.34 ms (factor: 0.45)
-  Timing rjsmin      ... (951.5 KiB =)    28.86 ms (factor: 12.07, 26.55)
-  Timing _rjsmin     ... (951.5 KiB =)     2.94 ms (factor: 118.47, 260.62, 9.82)
+  Timing simple_port ... (951.5 KiB *)   349.42 ms
+  Timing jsmin_2_0_9 ... (951.5 KiB >)   791.10 ms (factor: 0.44)
+  Timing rjsmin      ... (951.5 KiB =)    27.54 ms (factor: 12.69, 28.73)
+  Timing _rjsmin     ... (951.5 KiB =)     3.08 ms (factor: 113.48, 256.93, 8.94)
 
 Benchmarking 'bench/bootstrap.js'... (49.0 KiB)
-  Timing simple_port ... ( 26.4 KiB *)    16.43 ms
-  Timing jsmin_2_0_9 ... ( 26.4 KiB >)    10.40 ms (factor: 1.58)
-  Timing rjsmin      ... ( 26.4 KiB >)     6.52 ms (factor: 2.52, 1.59)
-  Timing _rjsmin     ... ( 26.4 KiB >)     0.14 ms (factor: 121.69, 77.06, 48.32)
+  Timing simple_port ... ( 26.4 KiB *)    16.92 ms
+  Timing jsmin_2_0_9 ... ( 26.4 KiB >)    10.77 ms (factor: 1.57)
+  Timing rjsmin      ... ( 26.4 KiB >)     6.09 ms (factor: 2.78, 1.77)
+  Timing _rjsmin     ... ( 26.4 KiB >)     0.13 ms (factor: 134.09, 85.38, 48.31)
 
 Benchmarking 'bench/DateTimeShortcuts.js'... (18.3 KiB)
-  Timing simple_port ... ( 10.2 KiB *)     6.32 ms
-  Timing jsmin_2_0_9 ... ( 10.3 KiB >)     4.01 ms (factor: 1.58)
-  Timing rjsmin      ... ( 10.2 KiB >)     2.08 ms (factor: 3.03, 1.92)
-  Timing _rjsmin     ... ( 10.2 KiB >)     0.04 ms (factor: 155.19, 98.37, 51.17)
+  Timing simple_port ... ( 10.2 KiB *)     6.64 ms
+  Timing jsmin_2_0_9 ... ( 10.3 KiB >)     4.16 ms (factor: 1.59)
+  Timing rjsmin      ... ( 10.2 KiB >)     1.63 ms (factor: 4.07, 2.55)
+  Timing _rjsmin     ... ( 10.2 KiB >)     0.04 ms (factor: 177.54, 111.40, 43.60)
 
 Benchmarking 'bench/jquery-1.7.1.js'... (242.4 KiB)
-  Timing simple_port ... (135.9 KiB *)    86.12 ms
-  Timing jsmin_2_0_9 ... (136.8 KiB >)    71.07 ms (factor: 1.21)
-  Timing rjsmin      ... (135.9 KiB =)    43.50 ms (factor: 1.98, 1.63)
-  Timing _rjsmin     ... (135.9 KiB =)     0.88 ms (factor: 98.36, 81.17, 49.68)
+  Timing simple_port ... (135.9 KiB *)    86.83 ms
+  Timing jsmin_2_0_9 ... (136.8 KiB >)    72.62 ms (factor: 1.20)
+  Timing rjsmin      ... (135.9 KiB =)    40.38 ms (factor: 2.15, 1.80)
+  Timing _rjsmin     ... (135.9 KiB =)     0.84 ms (factor: 103.02, 86.15, 47.91)
 
 Benchmarking 'bench/knockout-2.0.0.js'... (38.9 KiB)
-  Timing simple_port ... ( 38.6 KiB *)    14.22 ms
-  Timing jsmin_2_0_9 ... ( 38.6 KiB >)    10.77 ms (factor: 1.32)
-  Timing rjsmin      ... ( 38.6 KiB >)     1.41 ms (factor: 10.05, 7.61)
-  Timing _rjsmin     ... ( 38.6 KiB >)     0.08 ms (factor: 168.64, 127.76, 16.78)
+  Timing simple_port ... ( 38.6 KiB *)    14.45 ms
+  Timing jsmin_2_0_9 ... ( 38.6 KiB >)    12.13 ms (factor: 1.19)
+  Timing rjsmin      ... ( 38.6 KiB >)     1.32 ms (factor: 10.93, 9.17)
+  Timing _rjsmin     ... ( 38.6 KiB >)     0.08 ms (factor: 190.60, 159.91, 17.43)
 
 Benchmarking 'bench/markermanager.js'... (28.6 KiB)
-  Timing simple_port ... ( 11.6 KiB *)     8.46 ms
-  Timing jsmin_2_0_9 ... ( 11.6 KiB >)     5.58 ms (factor: 1.52)
-  Timing rjsmin      ... ( 11.6 KiB =)     3.53 ms (factor: 2.40, 1.58)
-  Timing _rjsmin     ... ( 11.6 KiB =)     0.06 ms (factor: 130.67, 86.19, 54.47)
+  Timing simple_port ... ( 11.6 KiB *)     8.12 ms
+  Timing jsmin_2_0_9 ... ( 11.6 KiB >)     5.72 ms (factor: 1.42)
+  Timing rjsmin      ... ( 11.6 KiB =)     2.59 ms (factor: 3.14, 2.21)
+  Timing _rjsmin     ... ( 11.6 KiB =)     0.06 ms (factor: 146.69, 103.44, 46.77)
 
 
 $ python3.11 -OO bench/main.py bench/*.js
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Python Release: 3.11.10
+Python Release: 3.11.13
 
 Benchmarking 'bench/apiviewer.js'... (953.2 KiB)
-  Timing simple_port ... (951.5 KiB *)   481.04 ms
-  Timing jsmin_2_0_9 ... (951.5 KiB >)   814.00 ms (factor: 0.59)
-  Timing rjsmin      ... (951.5 KiB =)    27.42 ms (factor: 17.54, 29.68)
-  Timing _rjsmin     ... (951.5 KiB =)     2.90 ms (factor: 165.60, 280.22, 9.44)
+  Timing simple_port ... (951.5 KiB *)   467.72 ms
+  Timing jsmin_2_0_9 ... (951.5 KiB >)   804.45 ms (factor: 0.58)
+  Timing rjsmin      ... (951.5 KiB =)    27.01 ms (factor: 17.32, 29.78)
+  Timing _rjsmin     ... (951.5 KiB =)     2.86 ms (factor: 163.65, 281.47, 9.45)
 
 Benchmarking 'bench/bootstrap.js'... (49.0 KiB)
-  Timing simple_port ... ( 26.4 KiB *)    18.67 ms
-  Timing jsmin_2_0_9 ... ( 26.4 KiB >)    11.07 ms (factor: 1.69)
-  Timing rjsmin      ... ( 26.4 KiB >)     6.13 ms (factor: 3.05, 1.81)
-  Timing _rjsmin     ... ( 26.4 KiB >)     0.13 ms (factor: 138.99, 82.43, 45.63)
+  Timing simple_port ... ( 26.4 KiB *)    18.40 ms
+  Timing jsmin_2_0_9 ... ( 26.4 KiB >)    11.18 ms (factor: 1.65)
+  Timing rjsmin      ... ( 26.4 KiB >)     6.80 ms (factor: 2.71, 1.64)
+  Timing _rjsmin     ... ( 26.4 KiB >)     0.11 ms (factor: 164.80, 100.17, 60.90)
 
 Benchmarking 'bench/DateTimeShortcuts.js'... (18.3 KiB)
-  Timing simple_port ... ( 10.2 KiB *)     7.00 ms
-  Timing jsmin_2_0_9 ... ( 10.3 KiB >)     4.29 ms (factor: 1.63)
-  Timing rjsmin      ... ( 10.2 KiB >)     1.62 ms (factor: 4.33, 2.65)
-  Timing _rjsmin     ... ( 10.2 KiB >)     0.04 ms (factor: 176.44, 108.05, 40.71)
+  Timing simple_port ... ( 10.2 KiB *)     7.34 ms
+  Timing jsmin_2_0_9 ... ( 10.3 KiB >)     4.54 ms (factor: 1.62)
+  Timing rjsmin      ... ( 10.2 KiB >)     1.67 ms (factor: 4.39, 2.71)
+  Timing _rjsmin     ... ( 10.2 KiB >)     0.03 ms (factor: 220.14, 136.06, 50.12)
 
 Benchmarking 'bench/jquery-1.7.1.js'... (242.4 KiB)
-  Timing simple_port ... (135.9 KiB *)    98.81 ms
-  Timing jsmin_2_0_9 ... (136.8 KiB >)    74.70 ms (factor: 1.32)
-  Timing rjsmin      ... (135.9 KiB =)    39.73 ms (factor: 2.49, 1.88)
-  Timing _rjsmin     ... (135.9 KiB =)     0.87 ms (factor: 113.17, 85.55, 45.50)
+  Timing simple_port ... (135.9 KiB *)    96.61 ms
+  Timing jsmin_2_0_9 ... (136.8 KiB >)    75.03 ms (factor: 1.29)
+  Timing rjsmin      ... (135.9 KiB =)    40.64 ms (factor: 2.38, 1.85)
+  Timing _rjsmin     ... (135.9 KiB =)     0.78 ms (factor: 124.02, 96.32, 52.18)
 
 Benchmarking 'bench/knockout-2.0.0.js'... (38.9 KiB)
-  Timing simple_port ... ( 38.6 KiB *)    16.59 ms
-  Timing jsmin_2_0_9 ... ( 38.6 KiB >)    11.75 ms (factor: 1.41)
-  Timing rjsmin      ... ( 38.6 KiB >)     1.28 ms (factor: 12.94, 9.16)
-  Timing _rjsmin     ... ( 38.6 KiB >)     0.08 ms (factor: 196.76, 139.33, 15.21)
+  Timing simple_port ... ( 38.6 KiB *)    16.60 ms
+  Timing jsmin_2_0_9 ... ( 38.6 KiB >)    11.72 ms (factor: 1.42)
+  Timing rjsmin      ... ( 38.6 KiB >)     1.29 ms (factor: 12.91, 9.12)
+  Timing _rjsmin     ... ( 38.6 KiB >)     0.06 ms (factor: 281.81, 199.00, 21.82)
 
 Benchmarking 'bench/markermanager.js'... (28.6 KiB)
-  Timing simple_port ... ( 11.6 KiB *)     9.20 ms
-  Timing jsmin_2_0_9 ... ( 11.6 KiB >)     5.67 ms (factor: 1.62)
-  Timing rjsmin      ... ( 11.6 KiB =)     2.73 ms (factor: 3.37, 2.08)
-  Timing _rjsmin     ... ( 11.6 KiB =)     0.06 ms (factor: 142.88, 88.15, 42.40)
+  Timing simple_port ... ( 11.6 KiB *)     8.89 ms
+  Timing jsmin_2_0_9 ... ( 11.6 KiB >)     5.63 ms (factor: 1.58)
+  Timing rjsmin      ... ( 11.6 KiB =)     2.75 ms (factor: 3.24, 2.05)
+  Timing _rjsmin     ... ( 11.6 KiB =)     0.05 ms (factor: 180.74, 114.39, 55.81)
 
 
 $ python3.10 -OO bench/main.py bench/*.js
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Python Release: 3.10.15
+Python Release: 3.10.18
 
 Benchmarking 'bench/apiviewer.js'... (953.2 KiB)
-  Timing simple_port ... (951.5 KiB *)  1008.40 ms
-  Timing jsmin_2_0_9 ... (951.5 KiB >)   932.13 ms (factor: 1.08)
-  Timing rjsmin      ... (951.5 KiB =)    30.07 ms (factor: 33.54, 31.00)
-  Timing _rjsmin     ... (951.5 KiB =)     3.23 ms (factor: 312.47, 288.84, 9.32)
+  Timing simple_port ... (951.5 KiB *)   999.11 ms
+  Timing jsmin_2_0_9 ... (951.5 KiB >)   936.70 ms (factor: 1.07)
+  Timing rjsmin      ... (951.5 KiB =)    30.85 ms (factor: 32.39, 30.37)
+  Timing _rjsmin     ... (951.5 KiB =)     2.87 ms (factor: 348.72, 326.94, 10.77)
 
 Benchmarking 'bench/bootstrap.js'... (49.0 KiB)
-  Timing simple_port ... ( 26.4 KiB *)    42.56 ms
-  Timing jsmin_2_0_9 ... ( 26.4 KiB >)    16.69 ms (factor: 2.55)
-  Timing rjsmin      ... ( 26.4 KiB >)     7.43 ms (factor: 5.73, 2.25)
-  Timing _rjsmin     ... ( 26.4 KiB >)     0.15 ms (factor: 284.90, 111.71, 49.73)
+  Timing simple_port ... ( 26.4 KiB *)    42.25 ms
+  Timing jsmin_2_0_9 ... ( 26.4 KiB >)    16.13 ms (factor: 2.62)
+  Timing rjsmin      ... ( 26.4 KiB >)     7.20 ms (factor: 5.87, 2.24)
+  Timing _rjsmin     ... ( 26.4 KiB >)     0.11 ms (factor: 377.43, 144.10, 64.32)
 
 Benchmarking 'bench/DateTimeShortcuts.js'... (18.3 KiB)
-  Timing simple_port ... ( 10.2 KiB *)    15.97 ms
-  Timing jsmin_2_0_9 ... ( 10.3 KiB >)     6.57 ms (factor: 2.43)
-  Timing rjsmin      ... ( 10.2 KiB >)     2.13 ms (factor: 7.49, 3.08)
-  Timing _rjsmin     ... ( 10.2 KiB >)     0.04 ms (factor: 398.12, 163.63, 53.14)
+  Timing simple_port ... ( 10.2 KiB *)    15.67 ms
+  Timing jsmin_2_0_9 ... ( 10.3 KiB >)     6.16 ms (factor: 2.54)
+  Timing rjsmin      ... ( 10.2 KiB >)     1.90 ms (factor: 8.25, 3.24)
+  Timing _rjsmin     ... ( 10.2 KiB >)     0.03 ms (factor: 486.96, 191.44, 59.00)
 
 Benchmarking 'bench/jquery-1.7.1.js'... (242.4 KiB)
-  Timing simple_port ... (135.9 KiB *)   223.00 ms
-  Timing jsmin_2_0_9 ... (136.8 KiB >)   103.68 ms (factor: 2.15)
-  Timing rjsmin      ... (135.9 KiB =)    48.03 ms (factor: 4.64, 2.16)
-  Timing _rjsmin     ... (135.9 KiB =)     0.87 ms (factor: 256.95, 119.46, 55.35)
+  Timing simple_port ... (135.9 KiB *)   221.41 ms
+  Timing jsmin_2_0_9 ... (136.8 KiB >)   101.67 ms (factor: 2.18)
+  Timing rjsmin      ... (135.9 KiB =)    47.53 ms (factor: 4.66, 2.14)
+  Timing _rjsmin     ... (135.9 KiB =)     0.75 ms (factor: 293.66, 134.84, 63.04)
 
 Benchmarking 'bench/knockout-2.0.0.js'... (38.9 KiB)
-  Timing simple_port ... ( 38.6 KiB *)    40.41 ms
-  Timing jsmin_2_0_9 ... ( 38.6 KiB >)    18.20 ms (factor: 2.22)
-  Timing rjsmin      ... ( 38.6 KiB >)     1.75 ms (factor: 23.05, 10.38)
-  Timing _rjsmin     ... ( 38.6 KiB >)     0.08 ms (factor: 482.51, 217.30, 20.93)
+  Timing simple_port ... ( 38.6 KiB *)    39.99 ms
+  Timing jsmin_2_0_9 ... ( 38.6 KiB >)    17.34 ms (factor: 2.31)
+  Timing rjsmin      ... ( 38.6 KiB >)     1.47 ms (factor: 27.16, 11.77)
+  Timing _rjsmin     ... ( 38.6 KiB >)     0.06 ms (factor: 680.75, 295.11, 25.06)
 
 Benchmarking 'bench/markermanager.js'... (28.6 KiB)
-  Timing simple_port ... ( 11.6 KiB *)    21.09 ms
-  Timing jsmin_2_0_9 ... ( 11.6 KiB >)     8.62 ms (factor: 2.45)
-  Timing rjsmin      ... ( 11.6 KiB =)     3.24 ms (factor: 6.52, 2.67)
-  Timing _rjsmin     ... ( 11.6 KiB =)     0.06 ms (factor: 330.92, 135.32, 50.76)
+  Timing simple_port ... ( 11.6 KiB *)    20.89 ms
+  Timing jsmin_2_0_9 ... ( 11.6 KiB >)     8.31 ms (factor: 2.51)
+  Timing rjsmin      ... ( 11.6 KiB =)     3.03 ms (factor: 6.89, 2.74)
+  Timing _rjsmin     ... ( 11.6 KiB =)     0.05 ms (factor: 444.42, 176.76, 64.51)
 
 
 $ python3.9 -OO bench/main.py bench/*.js
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Python Release: 3.9.20
+Python Release: 3.9.23
 
 Benchmarking 'bench/apiviewer.js'... (953.2 KiB)
-  Timing simple_port ... (951.5 KiB *)  1110.97 ms
-  Timing jsmin_2_0_9 ... (951.5 KiB >)   970.81 ms (factor: 1.14)
-  Timing rjsmin      ... (951.5 KiB =)    31.06 ms (factor: 35.77, 31.25)
-  Timing _rjsmin     ... (951.5 KiB =)     2.92 ms (factor: 380.98, 332.92, 10.65)
+  Timing simple_port ... (951.5 KiB *)  1092.45 ms
+  Timing jsmin_2_0_9 ... (951.5 KiB >)   969.25 ms (factor: 1.13)
+  Timing rjsmin      ... (951.5 KiB =)    30.37 ms (factor: 35.97, 31.91)
+  Timing _rjsmin     ... (951.5 KiB =)     2.82 ms (factor: 387.58, 343.87, 10.78)
 
 Benchmarking 'bench/bootstrap.js'... (49.0 KiB)
-  Timing simple_port ... ( 26.4 KiB *)    45.12 ms
-  Timing jsmin_2_0_9 ... ( 26.4 KiB >)    16.76 ms (factor: 2.69)
-  Timing rjsmin      ... ( 26.4 KiB >)     7.00 ms (factor: 6.44, 2.39)
-  Timing _rjsmin     ... ( 26.4 KiB >)     0.13 ms (factor: 337.16, 125.25, 52.33)
+  Timing simple_port ... ( 26.4 KiB *)    44.27 ms
+  Timing jsmin_2_0_9 ... ( 26.4 KiB >)    17.23 ms (factor: 2.57)
+  Timing rjsmin      ... ( 26.4 KiB >)     7.02 ms (factor: 6.31, 2.46)
+  Timing _rjsmin     ... ( 26.4 KiB >)     0.11 ms (factor: 395.47, 153.92, 62.68)
 
 Benchmarking 'bench/DateTimeShortcuts.js'... (18.3 KiB)
-  Timing simple_port ... ( 10.2 KiB *)    16.77 ms
-  Timing jsmin_2_0_9 ... ( 10.3 KiB >)     6.37 ms (factor: 2.63)
-  Timing rjsmin      ... ( 10.2 KiB >)     1.87 ms (factor: 8.98, 3.41)
-  Timing _rjsmin     ... ( 10.2 KiB >)     0.04 ms (factor: 451.46, 171.44, 50.25)
+  Timing simple_port ... ( 10.2 KiB *)    16.30 ms
+  Timing jsmin_2_0_9 ... ( 10.3 KiB >)     6.49 ms (factor: 2.51)
+  Timing rjsmin      ... ( 10.2 KiB >)     2.56 ms (factor: 6.37, 2.54)
+  Timing _rjsmin     ... ( 10.2 KiB >)     0.03 ms (factor: 519.80, 206.87, 81.55)
 
 Benchmarking 'bench/jquery-1.7.1.js'... (242.4 KiB)
-  Timing simple_port ... (135.9 KiB *)   237.04 ms
-  Timing jsmin_2_0_9 ... (136.8 KiB >)   106.42 ms (factor: 2.23)
-  Timing rjsmin      ... (135.9 KiB =)    47.09 ms (factor: 5.03, 2.26)
-  Timing _rjsmin     ... (135.9 KiB =)     0.84 ms (factor: 283.54, 127.30, 56.32)
+  Timing simple_port ... (135.9 KiB *)   228.31 ms
+  Timing jsmin_2_0_9 ... (136.8 KiB >)   106.77 ms (factor: 2.14)
+  Timing rjsmin      ... (135.9 KiB =)    48.19 ms (factor: 4.74, 2.22)
+  Timing _rjsmin     ... (135.9 KiB =)     0.75 ms (factor: 303.63, 141.99, 64.09)
 
 Benchmarking 'bench/knockout-2.0.0.js'... (38.9 KiB)
-  Timing simple_port ... ( 38.6 KiB *)    44.20 ms
-  Timing jsmin_2_0_9 ... ( 38.6 KiB >)    18.45 ms (factor: 2.40)
-  Timing rjsmin      ... ( 38.6 KiB >)     1.46 ms (factor: 30.30, 12.65)
-  Timing _rjsmin     ... ( 38.6 KiB >)     0.08 ms (factor: 522.79, 218.19, 17.25)
+  Timing simple_port ... ( 38.6 KiB *)    43.38 ms
+  Timing jsmin_2_0_9 ... ( 38.6 KiB >)    18.44 ms (factor: 2.35)
+  Timing rjsmin      ... ( 38.6 KiB >)     1.44 ms (factor: 30.03, 12.77)
+  Timing _rjsmin     ... ( 38.6 KiB >)     0.06 ms (factor: 774.36, 329.27, 25.78)
 
 Benchmarking 'bench/markermanager.js'... (28.6 KiB)
-  Timing simple_port ... ( 11.6 KiB *)    22.15 ms
-  Timing jsmin_2_0_9 ... ( 11.6 KiB >)     8.50 ms (factor: 2.61)
-  Timing rjsmin      ... ( 11.6 KiB =)     2.97 ms (factor: 7.46, 2.86)
-  Timing _rjsmin     ... ( 11.6 KiB =)     0.06 ms (factor: 360.99, 138.47, 48.37)
+  Timing simple_port ... ( 11.6 KiB *)    21.58 ms
+  Timing jsmin_2_0_9 ... ( 11.6 KiB >)     8.77 ms (factor: 2.46)
+  Timing rjsmin      ... ( 11.6 KiB =)     3.25 ms (factor: 6.64, 2.70)
+  Timing _rjsmin     ... ( 11.6 KiB =)     0.05 ms (factor: 456.18, 185.45, 68.73)
 
 
 $ python3.8 -OO bench/main.py bench/*.js
@@ -208,40 +249,40 @@ $ python3.8 -OO bench/main.py bench/*.js
 Python Release: 3.8.20
 
 Benchmarking 'bench/apiviewer.js'... (953.2 KiB)
-  Timing simple_port ... (951.5 KiB *)  1140.80 ms
-  Timing jsmin_2_0_9 ... (951.5 KiB >)  1021.33 ms (factor: 1.12)
-  Timing rjsmin      ... (951.5 KiB =)    30.79 ms (factor: 37.05, 33.17)
-  Timing _rjsmin     ... (951.5 KiB =)     3.33 ms (factor: 342.72, 306.83, 9.25)
+  Timing simple_port ... (951.5 KiB *)  1072.53 ms
+  Timing jsmin_2_0_9 ... (951.5 KiB >)  1002.72 ms (factor: 1.07)
+  Timing rjsmin      ... (951.5 KiB =)    31.58 ms (factor: 33.96, 31.75)
+  Timing _rjsmin     ... (951.5 KiB =)     3.29 ms (factor: 325.59, 304.40, 9.59)
 
 Benchmarking 'bench/bootstrap.js'... (49.0 KiB)
-  Timing simple_port ... ( 26.4 KiB *)    47.02 ms
-  Timing jsmin_2_0_9 ... ( 26.4 KiB >)    18.29 ms (factor: 2.57)
-  Timing rjsmin      ... ( 26.4 KiB >)     7.18 ms (factor: 6.55, 2.55)
-  Timing _rjsmin     ... ( 26.4 KiB >)     0.14 ms (factor: 343.79, 133.70, 52.52)
+  Timing simple_port ... ( 26.4 KiB *)    44.87 ms
+  Timing jsmin_2_0_9 ... ( 26.4 KiB >)    18.30 ms (factor: 2.45)
+  Timing rjsmin      ... ( 26.4 KiB >)     7.74 ms (factor: 5.80, 2.37)
+  Timing _rjsmin     ... ( 26.4 KiB >)     0.13 ms (factor: 336.42, 137.25, 58.03)
 
 Benchmarking 'bench/DateTimeShortcuts.js'... (18.3 KiB)
-  Timing simple_port ... ( 10.2 KiB *)    17.36 ms
-  Timing jsmin_2_0_9 ... ( 10.3 KiB >)     6.93 ms (factor: 2.50)
-  Timing rjsmin      ... ( 10.2 KiB >)     1.93 ms (factor: 9.01, 3.60)
-  Timing _rjsmin     ... ( 10.2 KiB >)     0.04 ms (factor: 466.01, 186.06, 51.72)
+  Timing simple_port ... ( 10.2 KiB *)    16.94 ms
+  Timing jsmin_2_0_9 ... ( 10.3 KiB >)     6.88 ms (factor: 2.46)
+  Timing rjsmin      ... ( 10.2 KiB >)     2.56 ms (factor: 6.63, 2.69)
+  Timing _rjsmin     ... ( 10.2 KiB >)     0.04 ms (factor: 483.57, 196.45, 72.98)
 
 Benchmarking 'bench/jquery-1.7.1.js'... (242.4 KiB)
-  Timing simple_port ... (135.9 KiB *)   245.09 ms
-  Timing jsmin_2_0_9 ... (136.8 KiB >)   112.64 ms (factor: 2.18)
-  Timing rjsmin      ... (135.9 KiB =)    48.34 ms (factor: 5.07, 2.33)
-  Timing _rjsmin     ... (135.9 KiB =)     0.83 ms (factor: 293.70, 134.98, 57.92)
+  Timing simple_port ... (135.9 KiB *)   230.75 ms
+  Timing jsmin_2_0_9 ... (136.8 KiB >)   110.08 ms (factor: 2.10)
+  Timing rjsmin      ... (135.9 KiB =)    48.77 ms (factor: 4.73, 2.26)
+  Timing _rjsmin     ... (135.9 KiB =)     0.80 ms (factor: 289.35, 138.04, 61.16)
 
 Benchmarking 'bench/knockout-2.0.0.js'... (38.9 KiB)
-  Timing simple_port ... ( 38.6 KiB *)    45.75 ms
-  Timing jsmin_2_0_9 ... ( 38.6 KiB >)    20.06 ms (factor: 2.28)
-  Timing rjsmin      ... ( 38.6 KiB >)     1.50 ms (factor: 30.49, 13.37)
-  Timing _rjsmin     ... ( 38.6 KiB >)     0.08 ms (factor: 544.42, 238.76, 17.86)
+  Timing simple_port ... ( 38.6 KiB *)    42.92 ms
+  Timing jsmin_2_0_9 ... ( 38.6 KiB >)    19.54 ms (factor: 2.20)
+  Timing rjsmin      ... ( 38.6 KiB >)     1.49 ms (factor: 28.86, 13.14)
+  Timing _rjsmin     ... ( 38.6 KiB >)     0.07 ms (factor: 596.68, 271.63, 20.67)
 
 Benchmarking 'bench/markermanager.js'... (28.6 KiB)
-  Timing simple_port ... ( 11.6 KiB *)    22.98 ms
-  Timing jsmin_2_0_9 ... ( 11.6 KiB >)     9.48 ms (factor: 2.42)
-  Timing rjsmin      ... ( 11.6 KiB =)     3.01 ms (factor: 7.64, 3.15)
-  Timing _rjsmin     ... ( 11.6 KiB =)     0.06 ms (factor: 375.41, 154.90, 49.14)
+  Timing simple_port ... ( 11.6 KiB *)    22.11 ms
+  Timing jsmin_2_0_9 ... ( 11.6 KiB >)     9.16 ms (factor: 2.41)
+  Timing rjsmin      ... ( 11.6 KiB =)     3.12 ms (factor: 7.09, 2.94)
+  Timing _rjsmin     ... ( 11.6 KiB =)     0.05 ms (factor: 410.30, 169.96, 57.86)
 
 
 $ python3.7 -OO bench/main.py bench/*.js
@@ -249,40 +290,40 @@ $ python3.7 -OO bench/main.py bench/*.js
 Python Release: 3.7.13
 
 Benchmarking 'bench/apiviewer.js'... (953.2 KiB)
-  Timing simple_port ... (951.5 KiB *)  1216.13 ms
-  Timing jsmin_2_0_9 ... (951.5 KiB >)  1084.09 ms (factor: 1.12)
-  Timing rjsmin      ... (951.5 KiB =)    31.55 ms (factor: 38.55, 34.36)
-  Timing _rjsmin     ... (951.5 KiB =)     3.29 ms (factor: 369.49, 329.37, 9.59)
+  Timing simple_port ... (951.5 KiB *)  1212.56 ms
+  Timing jsmin_2_0_9 ... (951.5 KiB >)  1089.86 ms (factor: 1.11)
+  Timing rjsmin      ... (951.5 KiB =)    31.07 ms (factor: 39.02, 35.07)
+  Timing _rjsmin     ... (951.5 KiB =)     3.08 ms (factor: 393.95, 354.09, 10.10)
 
 Benchmarking 'bench/bootstrap.js'... (49.0 KiB)
-  Timing simple_port ... ( 26.4 KiB *)    50.35 ms
-  Timing jsmin_2_0_9 ... ( 26.4 KiB >)    20.75 ms (factor: 2.43)
-  Timing rjsmin      ... ( 26.4 KiB >)     7.41 ms (factor: 6.80, 2.80)
-  Timing _rjsmin     ... ( 26.4 KiB >)     0.14 ms (factor: 369.63, 152.34, 54.40)
+  Timing simple_port ... ( 26.4 KiB *)    50.43 ms
+  Timing jsmin_2_0_9 ... ( 26.4 KiB >)    21.69 ms (factor: 2.32)
+  Timing rjsmin      ... ( 26.4 KiB >)     8.07 ms (factor: 6.25, 2.69)
+  Timing _rjsmin     ... ( 26.4 KiB >)     0.14 ms (factor: 363.72, 156.46, 58.20)
 
 Benchmarking 'bench/DateTimeShortcuts.js'... (18.3 KiB)
-  Timing simple_port ... ( 10.2 KiB *)    18.74 ms
-  Timing jsmin_2_0_9 ... ( 10.3 KiB >)     7.81 ms (factor: 2.40)
-  Timing rjsmin      ... ( 10.2 KiB >)     2.00 ms (factor: 9.37, 3.91)
-  Timing _rjsmin     ... ( 10.2 KiB >)     0.04 ms (factor: 479.86, 200.05, 51.20)
+  Timing simple_port ... ( 10.2 KiB *)    18.84 ms
+  Timing jsmin_2_0_9 ... ( 10.3 KiB >)     8.06 ms (factor: 2.34)
+  Timing rjsmin      ... ( 10.2 KiB >)     2.04 ms (factor: 9.24, 3.95)
+  Timing _rjsmin     ... ( 10.2 KiB >)     0.03 ms (factor: 542.27, 231.86, 58.67)
 
 Benchmarking 'bench/jquery-1.7.1.js'... (242.4 KiB)
-  Timing simple_port ... (135.9 KiB *)   262.91 ms
-  Timing jsmin_2_0_9 ... (136.8 KiB >)   126.37 ms (factor: 2.08)
-  Timing rjsmin      ... (135.9 KiB =)    49.25 ms (factor: 5.34, 2.57)
-  Timing _rjsmin     ... (135.9 KiB =)     0.87 ms (factor: 302.96, 145.61, 56.75)
+  Timing simple_port ... (135.9 KiB *)   264.05 ms
+  Timing jsmin_2_0_9 ... (136.8 KiB >)   128.78 ms (factor: 2.05)
+  Timing rjsmin      ... (135.9 KiB =)    51.75 ms (factor: 5.10, 2.49)
+  Timing _rjsmin     ... (135.9 KiB =)     0.77 ms (factor: 341.43, 166.52, 66.91)
 
 Benchmarking 'bench/knockout-2.0.0.js'... (38.9 KiB)
-  Timing simple_port ... ( 38.6 KiB *)    48.58 ms
-  Timing jsmin_2_0_9 ... ( 38.6 KiB >)    22.22 ms (factor: 2.19)
-  Timing rjsmin      ... ( 38.6 KiB >)     1.54 ms (factor: 31.60, 14.46)
-  Timing _rjsmin     ... ( 38.6 KiB >)     0.08 ms (factor: 576.53, 263.73, 18.24)
+  Timing simple_port ... ( 38.6 KiB *)    48.39 ms
+  Timing jsmin_2_0_9 ... ( 38.6 KiB >)    22.78 ms (factor: 2.12)
+  Timing rjsmin      ... ( 38.6 KiB >)     1.54 ms (factor: 31.34, 14.75)
+  Timing _rjsmin     ... ( 38.6 KiB >)     0.08 ms (factor: 609.07, 286.70, 19.44)
 
 Benchmarking 'bench/markermanager.js'... (28.6 KiB)
-  Timing simple_port ... ( 11.6 KiB *)    24.80 ms
-  Timing jsmin_2_0_9 ... ( 11.6 KiB >)    10.59 ms (factor: 2.34)
-  Timing rjsmin      ... ( 11.6 KiB =)     3.06 ms (factor: 8.11, 3.46)
-  Timing _rjsmin     ... ( 11.6 KiB =)     0.06 ms (factor: 396.24, 169.18, 48.83)
+  Timing simple_port ... ( 11.6 KiB *)    25.00 ms
+  Timing jsmin_2_0_9 ... ( 11.6 KiB >)    11.14 ms (factor: 2.25)
+  Timing rjsmin      ... ( 11.6 KiB =)     3.15 ms (factor: 7.93, 3.53)
+  Timing _rjsmin     ... ( 11.6 KiB =)     0.05 ms (factor: 464.66, 206.95, 58.61)
 
 
 $ python3.6 -OO bench/main.py bench/*.js
@@ -290,40 +331,40 @@ $ python3.6 -OO bench/main.py bench/*.js
 Python Release: 3.6.15
 
 Benchmarking 'bench/apiviewer.js'... (953.2 KiB)
-  Timing simple_port ... (951.5 KiB *)  1353.19 ms
-  Timing jsmin_2_0_9 ... (951.5 KiB >)  1146.15 ms (factor: 1.18)
-  Timing rjsmin      ... (951.5 KiB =)    34.96 ms (factor: 38.71, 32.78)
-  Timing _rjsmin     ... (951.5 KiB =)     3.39 ms (factor: 399.35, 338.25, 10.32)
+  Timing simple_port ... (951.5 KiB *)  1461.19 ms
+  Timing jsmin_2_0_9 ... (951.5 KiB >)  1141.88 ms (factor: 1.28)
+  Timing rjsmin      ... (951.5 KiB =)    34.13 ms (factor: 42.81, 33.46)
+  Timing _rjsmin     ... (951.5 KiB =)     2.44 ms (factor: 598.80, 467.95, 13.99)
 
 Benchmarking 'bench/bootstrap.js'... (49.0 KiB)
-  Timing simple_port ... ( 26.4 KiB *)    56.51 ms
-  Timing jsmin_2_0_9 ... ( 26.4 KiB >)    22.65 ms (factor: 2.49)
-  Timing rjsmin      ... ( 26.4 KiB >)     8.34 ms (factor: 6.78, 2.72)
-  Timing _rjsmin     ... ( 26.4 KiB >)     0.14 ms (factor: 417.24, 167.23, 61.58)
+  Timing simple_port ... ( 26.4 KiB *)    60.63 ms
+  Timing jsmin_2_0_9 ... ( 26.4 KiB >)    23.58 ms (factor: 2.57)
+  Timing rjsmin      ... ( 26.4 KiB >)     8.78 ms (factor: 6.90, 2.68)
+  Timing _rjsmin     ... ( 26.4 KiB >)     0.12 ms (factor: 506.20, 196.83, 73.32)
 
 Benchmarking 'bench/DateTimeShortcuts.js'... (18.3 KiB)
-  Timing simple_port ... ( 10.2 KiB *)    20.99 ms
-  Timing jsmin_2_0_9 ... ( 10.3 KiB >)     8.65 ms (factor: 2.43)
-  Timing rjsmin      ... ( 10.2 KiB >)     2.19 ms (factor: 9.59, 3.95)
-  Timing _rjsmin     ... ( 10.2 KiB >)     0.04 ms (factor: 488.70, 201.36, 50.94)
+  Timing simple_port ... ( 10.2 KiB *)    22.57 ms
+  Timing jsmin_2_0_9 ... ( 10.3 KiB >)     8.64 ms (factor: 2.61)
+  Timing rjsmin      ... ( 10.2 KiB >)     2.18 ms (factor: 10.34, 3.96)
+  Timing _rjsmin     ... ( 10.2 KiB >)     0.03 ms (factor: 762.91, 292.12, 73.79)
 
 Benchmarking 'bench/jquery-1.7.1.js'... (242.4 KiB)
-  Timing simple_port ... (135.9 KiB *)   296.21 ms
-  Timing jsmin_2_0_9 ... (136.8 KiB >)   138.13 ms (factor: 2.14)
-  Timing rjsmin      ... (135.9 KiB =)    56.30 ms (factor: 5.26, 2.45)
-  Timing _rjsmin     ... (135.9 KiB =)     0.88 ms (factor: 336.87, 157.09, 64.03)
+  Timing simple_port ... (135.9 KiB *)   313.65 ms
+  Timing jsmin_2_0_9 ... (136.8 KiB >)   138.22 ms (factor: 2.27)
+  Timing rjsmin      ... (135.9 KiB =)    54.81 ms (factor: 5.72, 2.52)
+  Timing _rjsmin     ... (135.9 KiB =)     0.72 ms (factor: 435.14, 191.76, 76.04)
 
 Benchmarking 'bench/knockout-2.0.0.js'... (38.9 KiB)
-  Timing simple_port ... ( 38.6 KiB *)    54.18 ms
-  Timing jsmin_2_0_9 ... ( 38.6 KiB >)    24.53 ms (factor: 2.21)
-  Timing rjsmin      ... ( 38.6 KiB >)     2.36 ms (factor: 22.95, 10.39)
-  Timing _rjsmin     ... ( 38.6 KiB >)     0.09 ms (factor: 635.78, 287.85, 27.70)
+  Timing simple_port ... ( 38.6 KiB *)    58.36 ms
+  Timing jsmin_2_0_9 ... ( 38.6 KiB >)    24.64 ms (factor: 2.37)
+  Timing rjsmin      ... ( 38.6 KiB >)     1.68 ms (factor: 34.83, 14.71)
+  Timing _rjsmin     ... ( 38.6 KiB >)     0.06 ms (factor: 1046.59, 441.98, 30.05)
 
 Benchmarking 'bench/markermanager.js'... (28.6 KiB)
-  Timing simple_port ... ( 11.6 KiB *)    27.90 ms
-  Timing jsmin_2_0_9 ... ( 11.6 KiB >)    11.82 ms (factor: 2.36)
-  Timing rjsmin      ... ( 11.6 KiB =)     3.56 ms (factor: 7.84, 3.32)
-  Timing _rjsmin     ... ( 11.6 KiB =)     0.06 ms (factor: 446.33, 189.08, 56.93)
+  Timing simple_port ... ( 11.6 KiB *)    29.54 ms
+  Timing jsmin_2_0_9 ... ( 11.6 KiB >)    11.69 ms (factor: 2.53)
+  Timing rjsmin      ... ( 11.6 KiB =)     3.38 ms (factor: 8.74, 3.46)
+  Timing _rjsmin     ... ( 11.6 KiB =)     0.05 ms (factor: 632.31, 250.12, 72.35)
 
 
 $ python2.7 -OO bench/main.py bench/*.js
@@ -331,40 +372,40 @@ $ python2.7 -OO bench/main.py bench/*.js
 Python Release: 2.7.18
 
 Benchmarking 'bench/apiviewer.js'... (953.2 KiB)
-  Timing simple_port ... (951.5 KiB *)  1227.72 ms
-  Timing jsmin_2_0_9 ... (951.5 KiB >)  1129.07 ms (factor: 1.09)
-  Timing rjsmin      ... (951.5 KiB =)    29.17 ms (factor: 42.09, 38.71)
-  Timing _rjsmin     ... (951.5 KiB =)     2.34 ms (factor: 525.75, 483.50, 12.49)
+  Timing simple_port ... (951.5 KiB *)  1239.53 ms
+  Timing jsmin_2_0_9 ... (951.5 KiB >)  1136.84 ms (factor: 1.09)
+  Timing rjsmin      ... (951.5 KiB =)    28.64 ms (factor: 43.28, 39.70)
+  Timing _rjsmin     ... (951.5 KiB =)     1.75 ms (factor: 708.47, 649.77, 16.37)
 
 Benchmarking 'bench/bootstrap.js'... (49.0 KiB)
-  Timing simple_port ... ( 26.4 KiB *)    49.81 ms
-  Timing jsmin_2_0_9 ... ( 26.4 KiB >)    21.14 ms (factor: 2.36)
-  Timing rjsmin      ... ( 26.4 KiB >)     7.23 ms (factor: 6.89, 2.93)
-  Timing _rjsmin     ... ( 26.4 KiB >)     0.14 ms (factor: 351.20, 149.09, 50.97)
+  Timing simple_port ... ( 26.4 KiB *)    50.12 ms
+  Timing jsmin_2_0_9 ... ( 26.4 KiB >)    21.57 ms (factor: 2.32)
+  Timing rjsmin      ... ( 26.4 KiB >)     7.49 ms (factor: 6.69, 2.88)
+  Timing _rjsmin     ... ( 26.4 KiB >)     0.12 ms (factor: 406.88, 175.10, 60.83)
 
 Benchmarking 'bench/DateTimeShortcuts.js'... (18.3 KiB)
-  Timing simple_port ... ( 10.2 KiB *)    18.44 ms
-  Timing jsmin_2_0_9 ... ( 10.3 KiB >)     7.97 ms (factor: 2.31)
-  Timing rjsmin      ... ( 10.2 KiB >)     1.90 ms (factor: 9.69, 4.19)
-  Timing _rjsmin     ... ( 10.2 KiB >)     0.04 ms (factor: 442.62, 191.41, 45.69)
+  Timing simple_port ... ( 10.2 KiB *)    18.67 ms
+  Timing jsmin_2_0_9 ... ( 10.3 KiB >)     8.12 ms (factor: 2.30)
+  Timing rjsmin      ... ( 10.2 KiB >)     1.96 ms (factor: 9.50, 4.14)
+  Timing _rjsmin     ... ( 10.2 KiB >)     0.03 ms (factor: 534.13, 232.38, 56.20)
 
 Benchmarking 'bench/jquery-1.7.1.js'... (242.4 KiB)
-  Timing simple_port ... (135.9 KiB *)   257.42 ms
-  Timing jsmin_2_0_9 ... (136.8 KiB >)   131.19 ms (factor: 1.96)
-  Timing rjsmin      ... (135.9 KiB =)    49.17 ms (factor: 5.23, 2.67)
-  Timing _rjsmin     ... (135.9 KiB =)     0.88 ms (factor: 291.05, 148.33, 55.60)
+  Timing simple_port ... (135.9 KiB *)   260.30 ms
+  Timing jsmin_2_0_9 ... (136.8 KiB >)   134.42 ms (factor: 1.94)
+  Timing rjsmin      ... (135.9 KiB =)    49.72 ms (factor: 5.24, 2.70)
+  Timing _rjsmin     ... (135.9 KiB =)     0.79 ms (factor: 331.37, 171.11, 63.30)
 
 Benchmarking 'bench/knockout-2.0.0.js'... (38.9 KiB)
-  Timing simple_port ... ( 38.6 KiB *)    49.81 ms
-  Timing jsmin_2_0_9 ... ( 38.6 KiB >)    23.67 ms (factor: 2.10)
-  Timing rjsmin      ... ( 38.6 KiB >)     1.48 ms (factor: 33.67, 16.00)
-  Timing _rjsmin     ... ( 38.6 KiB >)     0.10 ms (factor: 517.93, 246.16, 15.38)
+  Timing simple_port ... ( 38.6 KiB *)    49.72 ms
+  Timing jsmin_2_0_9 ... ( 38.6 KiB >)    24.07 ms (factor: 2.07)
+  Timing rjsmin      ... ( 38.6 KiB >)     1.51 ms (factor: 32.82, 15.89)
+  Timing _rjsmin     ... ( 38.6 KiB >)     0.07 ms (factor: 671.75, 325.27, 20.47)
 
 Benchmarking 'bench/markermanager.js'... (28.6 KiB)
-  Timing simple_port ... ( 11.6 KiB *)    24.48 ms
-  Timing jsmin_2_0_9 ... ( 11.6 KiB >)    10.74 ms (factor: 2.28)
-  Timing rjsmin      ... ( 11.6 KiB =)     3.01 ms (factor: 8.14, 3.57)
-  Timing _rjsmin     ... ( 11.6 KiB =)     0.07 ms (factor: 369.79, 162.17, 45.45)
+  Timing simple_port ... ( 11.6 KiB *)    24.99 ms
+  Timing jsmin_2_0_9 ... ( 11.6 KiB >)    10.89 ms (factor: 2.30)
+  Timing rjsmin      ... ( 11.6 KiB =)     3.13 ms (factor: 7.99, 3.48)
+  Timing _rjsmin     ... ( 11.6 KiB =)     0.05 ms (factor: 458.25, 199.66, 57.34)
 
 
 # vim: nowrap
