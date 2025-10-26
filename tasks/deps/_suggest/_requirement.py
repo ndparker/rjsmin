@@ -1,6 +1,6 @@
 # -*- coding: ascii -*-
 #
-# Copyright 2018 - 2025
+# Copyright 2018 - 2026
 # Andr\xe9 Malo or his licensors, as applicable
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,12 +28,9 @@ from .. import _parse
 logger = _logging.getLogger("deps.suggest.requirement")
 
 
-_spec_sub = _re.compile(
-    r"""(?x)
+_spec_sub = _re.compile(r"""(?x)
         ( (?:[^=]==|[<~]=|<) %(wsp)s* ) ( %(version_str)s )
-    """
-    % vars(_parse.regex)
-).sub
+    """ % vars(_parse.regex)).sub
 
 
 def replace(original, updates, upgrade=False, compat=True, latest=False):

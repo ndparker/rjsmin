@@ -5,7 +5,6 @@ Project Settings
 
 """
 
-
 settings = dict(
     package="rjsmin",
     #
@@ -36,9 +35,10 @@ settings = dict(
                 "312": dict(manylinux="2014", musllinux="1_1"),
                 "313": dict(manylinux="2014", musllinux="1_1"),
                 "314": dict(manylinux="2014", musllinux="1_2"),
+                "315": dict(manylinux="2014", musllinux="1_2"),
             },
             "x86_64": {
-                "27": dict(manylinux="1"),
+                # "27": dict(manylinux="1"),
                 "36": dict(manylinux="1", musllinux="1_1"),
                 "37": dict(manylinux="1", musllinux="1_1"),
                 "38": dict(manylinux="1", musllinux="1_1"),
@@ -48,9 +48,10 @@ settings = dict(
                 "312": dict(manylinux="2014", musllinux="1_1"),
                 "313": dict(manylinux="2014", musllinux="1_1"),
                 "314": dict(manylinux="2014", musllinux="1_2"),
+                "315": dict(manylinux="2014", musllinux="1_2"),
             },
             "i686": {
-                "27": dict(manylinux="1"),
+                # "27": dict(manylinux="1"),
                 "36": dict(manylinux="1", musllinux="1_1"),
                 "37": dict(manylinux="1", musllinux="1_1"),
                 "38": dict(manylinux="1", musllinux="1_1"),
@@ -60,6 +61,7 @@ settings = dict(
                 "312": dict(manylinux="2014", musllinux="1_1"),
                 "313": dict(manylinux="2014", musllinux="1_1"),
                 "314": dict(manylinux="2014", musllinux="1_2"),
+                "315": dict(manylinux="2014", musllinux="1_2"),
             },
         },
     ),

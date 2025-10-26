@@ -1,6 +1,6 @@
 # -*- coding: ascii -*-
 #
-# Copyright 2018 - 2025
+# Copyright 2018 - 2026
 # Andr\xe9 Malo or his licensors, as applicable
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,12 +24,12 @@ import os as _os
 
 import invoke as _invoke
 
-from . import _features
+from . import features as _features
 from ._inv import tasks as _tasks
 
-_CHECKERS = []
-_CHECKERS_TF = []
-_CHECKERS_SAM = []
+_CHECKERS = []  # type: ignore
+_CHECKERS_TF = []  # type: ignore
+_CHECKERS_SAM = []  # type: ignore
 
 
 @_tasks.optional(_CHECKERS, _features.pylint)
@@ -43,9 +43,22 @@ def lint(ctx):
         with ctx.shell.root_dir():
             ctx.run(ctx.c(cmd), echo=True)
 
-    cmd = [ctx.which("pylint")] + ctx.s("--rcfile tasks/pylintrc") + ["tasks"]
-    with ctx.shell.root_dir():
-        ctx.run(ctx.c(cmd), echo=True)
+    pylintrc = None
+    for _, path in _tasks.task_paths("local", "builtin"):
+        full_path = _os.path.join(path, "pylintrc")
+        if _os.path.exists(full_path):
+            pylintrc = full_path
+            break
+
+    if pylintrc:
+        cmd = [
+            ctx.which("pylint"),
+            "--rcfile",
+            pylintrc,
+            _tasks.package("local"),
+        ]
+        with ctx.shell.root_dir():
+            ctx.run(ctx.c(cmd), echo=True)
 
 
 @_tasks.optional(_CHECKERS, _features.mypy)
@@ -76,7 +89,7 @@ def flake8(ctx):
         with ctx.shell.root_dir():
             ctx.run(ctx.c(cmd), echo=True)
 
-    cmd = [ctx.which("flake8"), "tasks"]
+    cmd = [ctx.which("flake8"), _tasks.package("local")]
     with ctx.shell.root_dir():
         ctx.run(ctx.c(cmd), echo=True)
 
@@ -99,7 +112,7 @@ def isort(ctx):
     """Run isort"""
     cmd = [ctx.which("isort")]
     cmd += ctx.s("--check --diff --color --settings-path pyproject.toml")
-    cmd += ["tasks"]
+    cmd += [_tasks.package("local")]
     if ctx.get("package"):
         cmd += [ctx.package]
     if _os.path.exists(ctx.shell.native("tests")):

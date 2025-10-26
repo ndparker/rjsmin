@@ -1,6 +1,6 @@
 # -*- coding: ascii -*-
 #
-# Copyright 2018 - 2025
+# Copyright 2018 - 2026
 # Andr\xe9 Malo or his licensors, as applicable
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +24,7 @@ import os as _os
 
 import invoke as _invoke
 
-from . import _features
+from . import features as _features
 from . import pypi as _pypi
 from ._inv import tasks as _tasks
 

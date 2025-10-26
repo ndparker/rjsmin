@@ -1,6 +1,6 @@
 # -*- coding: ascii -*-
 #
-# Copyright 2018 - 2025
+# Copyright 2018 - 2026
 # Andr\xe9 Malo or his licensors, as applicable
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,10 +24,10 @@ import os as _os
 
 import invoke as _invoke
 
-from . import _features
+from . import features as _features
 from ._inv import tasks as _tasks
 
-_FORMATTERS = []
+_FORMATTERS = []  # type: ignore
 
 
 @_tasks.optional(_FORMATTERS, _features.isort)
@@ -44,7 +44,7 @@ def isort(ctx, diff=False):
     if diff:
         cmd += ctx.s("--diff --color")
     cmd += ctx.s("--settings-path pyproject.toml")
-    cmd += ["tasks"]
+    cmd += [_tasks.package("local")]
     if ctx.get("package"):
         cmd += [ctx.package]
     if _os.path.exists(ctx.shell.native("tests")):

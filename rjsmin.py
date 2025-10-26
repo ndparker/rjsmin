@@ -11,7 +11,7 @@ The minifier is based on the semantics of `jsmin.c by Douglas Crockford`_\\.
 
 :Copyright:
 
- Copyright 2011 - 2025
+ Copyright 2011 - 2026
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -58,7 +58,7 @@ file for details.
 
 rjsmin.c is a reimplementation of rjsmin.py in C and speeds it up even more.
 
-Supported python versions are 2.7 and 3.6+.
+Supported python versions are 3.6+.
 
 .. _jsmin.c by Douglas Crockford:
    http://www.crockford.com/javascript/jsmin.c

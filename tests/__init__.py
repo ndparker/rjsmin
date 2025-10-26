@@ -1,8 +1,8 @@
 # -*- coding: ascii -*-
-u"""
+"""
 :Copyright:
 
- Copyright 2018 - 2025
+ Copyright 2018 - 2026
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -25,4 +25,5 @@ u"""
 
 rJSMin Tests.
 """
-__author__ = u"Andr\xe9 Malo"
+
+__author__ = "Andr\xe9 Malo"

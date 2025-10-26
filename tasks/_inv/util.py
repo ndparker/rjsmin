@@ -1,6 +1,6 @@
 # -*- coding: ascii -*-
 #
-# Copyright 2024 - 2025
+# Copyright 2024 - 2026
 # Andr\xe9 Malo or his licensors, as applicable
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +25,8 @@ import functools as _ft
 basestring_ = (
     str
     if str is not bytes
-    else basestring  # noqa pylint: disable = undefined-variable
+    # pylint: disable-next = undefined-variable
+    else basestring  # type: ignore  # noqa
 )
 
 
