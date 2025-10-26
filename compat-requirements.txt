@@ -1,21 +1,25 @@
 # Compat requirements
 
 # Packaging
+pip ~= 26.0.1; python_version == "3.9"
 pip ~= 25.0.1; python_version == "3.8"
 pip ~= 24.0.0; python_version == "3.7"
 pip ~= 21.3.1; python_version == "3.6"
 pip ~= 20.2.4; python_version == "2.7"
 
+setuptools == 82.0.1; python_version == "3.9"
 setuptools == 75.3.0; python_version == "3.8"
 setuptools == 68.0.0; python_version == "3.7"
 setuptools == 59.6.0; python_version == "3.6"
 setuptools == 44.0.0; python_version == "2.7"
 
+build ~= 1.4.4; python_version == "3.9"
 build ~= 1.2.2; python_version == "3.8"
 build ~= 1.1.1; python_version == "3.7"
 build ~= 0.9.0; python_version == "3.6"
 build ~= 0.5.1; python_version == "2.7"
 
+twine == 6.2.0; python_version == "3.9"
 twine == 6.1.0; python_version == "3.8"
 twine == 4.0.2; python_version == "3.7"
 twine == 3.8.0; python_version == "3.6"
@@ -28,11 +32,13 @@ tox >= 4.5.1.1, <= 4.8.0; python_version == "3.7"
 tox ~= 3.25.1; python_version == "3.6"
 
 # Checking
+pylint == 3.3.9; python_version == "3.9"
 pylint == 3.2.7; python_version == "3.8"
 pylint == 2.17.7; python_version == "3.7"
 pylint == 2.13.9; python_version == "3.6"
 pylint == 1.9.5; python_version == "2.7"
 
+astroid == 3.3.11; python_version == "3.9"
 astroid == 3.2.4; python_version == "3.8"
 astroid == 2.15.8; python_version == "3.7"
 astroid == 2.11.7; python_version == "3.6"
@@ -42,6 +48,7 @@ flake8 == 7.1.2; python_version == "3.8"
 flake8 == 5.0.4; python_version >= "3.6" and python_version < "3.8"
 flake8 == 3.9.2; python_version == "2.7"
 
+black[colorama] == 25.11.0; python_version == "3.9"
 black[colorama] == 24.8.0; python_version == "3.8"
 black[colorama] == 23.3.0; python_version == "3.7"
 black[colorama] == 22.8.0; python_full_version >= "3.6.2" and python_version < "3.7"
@@ -51,11 +58,13 @@ isort[colors] == 5.13.2; python_version == "3.8"
 isort[colors] == 5.11.5; python_version == "3.7"
 isort[colors] == 5.10.1; python_full_version >= "3.6.1" and python_version < "3.7"
 
+# mypy == 1.19.1 ; python_version == "3.9"
 # mypy == 1.14.1 ; python_version == "3.8"
 # mypy == 1.4.1; python_version == "3.7"
 # mypy == 0.971; python_version == "3.6"
 
 # Management
+invoke == 2.2.1; python_version >= "3.6" and python_version < "3.9"
 invoke == 1.6.0; python_version == "2.7"
 
 # IPython
@@ -68,6 +77,7 @@ jedi < 0.18.0; python_version == "2.7"
 traitlets < 5.0; python_version == "2.7"
 decorator < 5.0; python_version == "2.7"
 
+Sphinx ~= 9.0.4; python_version == "3.11"
 Sphinx ~= 8.1.3; python_version == "3.10"
 Sphinx ~= 7.4.7; python_version == "3.9"
 Sphinx ~= 7.1.2; python_version == "3.8"
@@ -77,4 +87,4 @@ Sphinx ~= 5.3.0; python_version == "3.6"
 
 # tox / venv; python <= 3.7 support
 virtualenv <= 20.16.2; python_version < "3.8"
-virtualenv < 20.22; python_version >= "3.8"
+virtualenv ~= 21.3.1; python_version >= "3.8"

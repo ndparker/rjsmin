@@ -1,6 +1,6 @@
 # -*- coding: ascii -*-
 #
-# Copyright 2018 - 2025
+# Copyright 2018 - 2026
 # Andr\xe9 Malo or his licensors, as applicable
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +19,7 @@ Suggest dependency updates
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 """
+
 __all__ = ["suggest_updates"]
 
 from ._suggest import suggest_updates

@@ -1,6 +1,6 @@
 # -*- coding: ascii -*-
 #
-# Copyright 2018 - 2025
+# Copyright 2018 - 2026
 # Andr\xe9 Malo or his licensors, as applicable
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -97,9 +97,9 @@ class Model(object):
 class ReqFile(Model):
     """Requirement file container"""
 
-    type = "text"
+    type = "text"  # type: ignore
     encoding = "latin-1"
-    require_version = False
+    require_version = False  # type: ignore
 
     @classmethod
     def _parse_stream(cls, fp):
@@ -121,9 +121,9 @@ class ReqFile(Model):
 class SetupFile(Model):
     """Setup file container"""
 
-    type = "setup"
+    type = "setup"  # type: ignore
     encoding = "latin-1"
-    require_version = True
+    require_version = True  # type: ignore
 
     @classmethod
     def _parse_stream(cls, fp):
@@ -157,9 +157,9 @@ class TomlFile(Model):
     TOML file container
     """
 
-    type = "toml"
+    type = "toml"  # type: ignore
     encoding = "utf-8"
-    require_version = True
+    require_version = True  # type: ignore
 
     @classmethod
     def _parse_stream(cls, fp):

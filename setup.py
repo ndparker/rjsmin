@@ -3,7 +3,7 @@
 u"""
 :Copyright:
 
- Copyright 2011 - 2025
+ Copyright 2011 - 2026
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -77,8 +77,6 @@ package = dict(
         "Operating System :: OS Independent",
         "Programming Language :: C",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
@@ -89,6 +87,7 @@ package = dict(
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.13",
         "Programming Language :: Python :: 3.14",
+        "Programming Language :: Python :: 3.15",
         "Programming Language :: Python :: Implementation :: CPython",
         "Programming Language :: Python :: Implementation :: Jython",
         "Programming Language :: Python :: Implementation :: PyPy",

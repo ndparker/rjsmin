@@ -1,6 +1,6 @@
 # -*- coding: ascii -*-
 #
-# Copyright 2007 - 2025
+# Copyright 2007 - 2026
 # Andr\xe9 Malo or his licensors, as applicable
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,9 +38,15 @@ import tempfile as _tempfile
 
 from . import util as _util
 
-root = _os.path.dirname(
-    _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
-)
+
+def _default_root():
+    """ Find default root """
+    path = _os.path.abspath(__file__)
+    for _ in range(__name__.count(".") + 1):
+        path = _os.path.dirname(path)
+    return path
+
+root = _default_root()
 
 
 @_contextlib.contextmanager

@@ -1,6 +1,6 @@
 # -*- coding: ascii -*-
 #
-# Copyright 2018 - 2025
+# Copyright 2018 - 2026
 # Andr\xe9 Malo or his licensors, as applicable
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -62,7 +62,10 @@ def clean(ctx, so=False, cache=False):
         ctx.shell.rm_rf(ctx.shell.glob(gpath + "*.auto.*.yaml"))
         ctx.shell.rm_rf(ctx.shell.glob(gpath + "*.zip"))
 
-    ctx.shell.rm_rf(ctx.shell.glob("tasks/**/*.generated*"))
+    for _, pkg_path in _tasks.task_paths("local"):
+        pkg_path = ctx.shell.glob_escape(pkg_path)
+        ctx.shell.rm_rf(ctx.shell.glob(pkg_path + "/**/*.generated*"))
+
     ctx.shell.rm_rf(
         "gcov.out",
         "setup.cfg",

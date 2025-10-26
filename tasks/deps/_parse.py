@@ -1,6 +1,6 @@
 # -*- coding: ascii -*-
 #
-# Copyright 2018 - 2025
+# Copyright 2018 - 2026
 # Andr\xe9 Malo or his licensors, as applicable
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +20,7 @@ Regular expressions
 
 :See: https://www.python.org/dev/peps/pep-0508/
 """
+
 import functools as _ft
 import re as _re
 
@@ -34,9 +35,7 @@ class regex(object):
     extra = r"""(?: \[
         %(wsp)s* %(idre)s+ %(wsp)s*
         (?:,%(wsp)s* %(idre)s %(wsp)s*)*
-    \] )""" % dict(
-        idre=idre, wsp=wsp
-    )
+    \] )""" % dict(idre=idre, wsp=wsp)
 
     version_cmp = r"(?:===|[<!=>~]=|[<>])"
     version_str = r"[a-zA-Z0-9_.*+!-]+"
@@ -50,9 +49,7 @@ class regex(object):
     version = r"""(?:
         %(version1)s %(wsp)s*
         (?:, %(wsp)s* %(version1)s %(wsp)s* )*
-    )""" % dict(
-        version1=version1, wsp=wsp
-    )
+    )""" % dict(version1=version1, wsp=wsp)
 
     marker = r"""(?:
         (?: ; %(wsp)s*
@@ -61,9 +58,7 @@ class regex(object):
                 %(wsp)s*
             )+
         )+
-    )""" % dict(
-        wsp=wsp
-    )
+    )""" % dict(wsp=wsp)
 
     # the # character is enclosed in a character class, so it can be used
     # with re.X
@@ -158,8 +153,7 @@ find_py_str_or_comment = _re.compile(
         | %(py_mstr_single)s
         | %(py_str_double)s
         | %(py_str_single)s
-    ) """
-    % vars(regex),
+    ) """ % vars(regex),
     _re.X,
 ).finditer
 
@@ -170,8 +164,7 @@ find_toml_str_or_comment = _re.compile(
         | %(toml_mstr_single)s
         | %(toml_str_double)s
         | %(toml_str_single)s
-    ) """
-    % vars(regex),
+    ) """ % vars(regex),
     _re.X,
 ).finditer
 

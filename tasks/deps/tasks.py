@@ -1,6 +1,6 @@
 # -*- coding: ascii -*-
 #
-# Copyright 2018 - 2025
+# Copyright 2018 - 2026
 # Andr\xe9 Malo or his licensors, as applicable
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +19,7 @@ Dependency Management Tasks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 """
+
 import json as _json
 import os as _os
 import sys as _sys

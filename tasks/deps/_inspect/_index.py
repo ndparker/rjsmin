@@ -1,6 +1,6 @@
 # -*- coding: ascii -*-
 #
-# Copyright 2018 - 2025
+# Copyright 2018 - 2026
 # Andr\xe9 Malo or his licensors, as applicable
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,12 +23,28 @@ Inspect package versions in index
 import json as _json
 import logging as _logging
 
-import pkg_resources as _pkg_resources
+import setuptools as _  # noqa
 
 try:
-    from setuptools import package_index as _pkg_index
+    from packaging import requirements as _requirements
+    from packaging import specifiers as _specifiers
+    from packaging import version as _pversion
+except ImportError:
+    from setuptools._vendor.packaging import requirements as _requirements  # type: ignore
+    from setuptools._vendor.packaging import specifiers as _specifiers  # type: ignore
+    from setuptools._vendor.packaging import version as _pversion  # type: ignore
+
+try:
+    from setuptools import package_index as _pkg_index  # type: ignore
 except ImportError:
     _pkg_index = None
+
+try:
+    import pkg_resources as _pkg_resources
+except ImportError:
+    _pkg_resources = None
+
+
 import invoke as _invoke
 
 from ... import pypi as _pypi
@@ -40,15 +56,75 @@ from .. import _parse
 logger = _logging.getLogger("deps.inspect.index")
 
 
-class PipIndex(_pkg_resources.Environment):
+class _Distribution(object):
+    """Simple distribution container"""
+
+    def __init__(self, project_name, version):
+        self.project_name = project_name
+        self.version = version
+
+    def __repr__(self):
+        return "%s(%r, %r)" % (
+            self.__class__.__name__,
+            self.project_name,
+            self.version,
+        )
+
+
+def _copy_req(req):
+    """
+    Copy a requirement
+
+    Works with both ``packaging.requirements.Requirement`` and
+    ``pkg_resources``-style requirements.
+
+    Parameters:
+      req (Requirement):
+        The requirement to copy
+
+    Returns:
+      Requirement: A fresh copy
+    """
+    if isinstance(req, _requirements.Requirement):
+        return _requirements.Requirement(str(req))
+    return req.parse(str(req))
+
+
+def _set_specifier(req, spec_str, prereleases=False):
+    """
+    Set a new specifier on a requirement
+
+    Works with both ``packaging.requirements.Requirement`` and
+    ``pkg_resources``-style requirements.
+
+    Parameters:
+      req (Requirement):
+        The requirement to update (mutated in place)
+
+      spec_str (str):
+        The new specifier string
+
+      prereleases (bool):
+        Allow pre-releases?
+    """
+    if isinstance(req, _requirements.Requirement):
+        req.specifier = _specifiers.SpecifierSet(
+            spec_str, prereleases=prereleases
+        )
+    else:
+        # pylint: disable-next = unnecessary-dunder-call
+        req.specifier.__init__(spec_str, prereleases=prereleases)
+
+
+class PipIndex(object):
     """Query the index using pip"""
 
     _is_available = None
 
-    def __init__(self, *args, **kwargs):
-        super(PipIndex, self).__init__(*args, **kwargs)
+    def __init__(self):
         self._ctx = _tasks.new_context()
         self._cache = set()
+        self._versions = {}  # normalize(name) -> list of version strings
 
     @classmethod
     def is_available(cls):
@@ -73,10 +149,20 @@ class PipIndex(_pkg_resources.Environment):
 
         return cls._is_available
 
-    def find_packages(self, requirement):
-        """Find packages"""
-        if requirement.key in self._cache:
-            return
+    def _fetch(self, req):
+        """
+        Fetch package versions from the index if not already cached
+
+        Parameters:
+          req (Requirement):
+            The requirement whose package versions to fetch
+
+        Returns:
+          str: Normalized package name (cache key)
+        """
+        key = _parse.normalize(req.name)
+        if key in self._cache:
+            return key
 
         ctx = self._ctx
         index_info = _json.loads(
@@ -89,28 +175,44 @@ class PipIndex(_pkg_resources.Environment):
                         _pypi.index_url(ctx),
                         "versions",
                         "--json",
-                        requirement.project_name,
+                        req.name,
                     ]
                 ),
                 hide=True,
             ).stdout.strip()
         )
-        for version in index_info.get("versions", ()):
-            self.add(
-                _pkg_resources.Distribution(
-                    project_name=requirement.project_name,
-                    version=version,
-                    precedence=_pkg_resources.EGG_DIST + 1,
-                )
-            )
-        self._cache.add(requirement.key)
+        self._versions[key] = index_info.get("versions", [])
+        self._cache.add(key)
+        return key
 
-    def obtain(self, requirement, installer=None):
-        self.find_packages(requirement)
-        for dist in self[requirement.key]:
-            if dist in requirement:
-                return dist
-        return super().obtain(requirement, installer)
+    def best_match(self, req):
+        """
+        Find the best matching distribution for a requirement
+
+        Parameters:
+          req (packaging.requirements.Requirement):
+            The requirement to match against
+
+        Returns:
+          _Distribution: Best matching distribution, or ``None``
+        """
+        key = self._fetch(req)
+
+        versions = []
+        for ver_str in self._versions.get(key, ()):
+            try:
+                versions.append(_pversion.Version(ver_str))
+            except _pversion.InvalidVersion:
+                pass
+
+        matching = list(req.specifier.filter(versions))
+        if not matching:
+            return None
+
+        return _Distribution(
+            project_name=req.name,
+            version=str(max(matching)),
+        )
 
 
 class Index(object):
@@ -118,14 +220,15 @@ class Index(object):
 
     def __init__(self):
         """Initialization"""
-        if PipIndex.is_available():
-            self._index = PipIndex(search_path=[])
+        self._use_pip = PipIndex.is_available()
+        if self._use_pip:
+            self._index = PipIndex()
+            self._wset = None
         elif _pkg_index is not None:
             self._index = _pkg_index.PackageIndex(search_path=[])
+            self._wset = _pkg_resources.WorkingSet([])
         else:
             raise RuntimeError("No index access tool available")
-
-        self._wset = _pkg_resources.WorkingSet([])
 
     def lookup(self, req):
         """
@@ -138,7 +241,10 @@ class Index(object):
         Returns:
           Distribution: The found distribution or ``None``
         """
-        dist = self._index.best_match(req, self._wset)
+        if self._use_pip:
+            dist = self._index.best_match(req)
+        else:
+            dist = self._index.best_match(req, self._wset)
         logger.debug("Index lookup result of %r: %r", str(req), dist)
         return dist
 
@@ -220,7 +326,7 @@ class PackageScanner(object):
         """
         # we want a specifically typed copy
         if PipIndex.is_available():
-            req = _pkg_resources.Requirement.parse(str(req))
+            req = _requirements.Requirement(str(req))
         else:
             req = _pkg_index.Requirement.parse(str(req))
 
@@ -236,7 +342,7 @@ class PackageScanner(object):
           req (Requirement):
             The requirement to look up
         """
-        req = req.parse(str(req))  # copy
+        req = _copy_req(req)
 
         # We turn == into ~=, which finds compatible versions
         # (last digit update)
@@ -248,9 +354,8 @@ class PackageScanner(object):
             specs.append("%s%s" % (operator, spec.version))
 
         try:
-            # pylint: disable = unnecessary-dunder-call
-            req.specifier.__init__(",".join(specs), prereleases=False)
-        except _pkg_resources.packaging.specifiers.InvalidSpecifier:
+            _set_specifier(req, ",".join(specs), prereleases=False)
+        except ValueError:
             logger.debug("Invalid compat %r", ",".join(specs))
             return
 
@@ -265,17 +370,16 @@ class PackageScanner(object):
           req (Requirement):
             The requirement to look up
         """
-        req = req.parse(str(req))  # copy
+        req = _copy_req(req)
 
         spec = None if self._version is None else ">=%s" % (self._version,)
-        # pylint: disable = unnecessary-dunder-call
-        req.specifier.__init__(spec or "", prereleases=False)
+        _set_specifier(req, spec or "", prereleases=False)
 
         correction = self._update_field("latest", req)
         if correction:
             correction = "< %s" % (correction,)
             spec = ", ".join((spec, correction)) if spec else correction
-            req.specifier.__init__(spec or "", prereleases=False)
+            _set_specifier(req, spec or "", prereleases=False)
             self._update_field("latest", req)
 
     def _update_field(self, field, req):
@@ -289,7 +393,7 @@ class PackageScanner(object):
           req (Requirement):
             The requirement to evaluate
         """
-        dist = self._index.lookup(req.parse(str(req)))
+        dist = self._index.lookup(_copy_req(req))
         if dist is None:
             return None
 
