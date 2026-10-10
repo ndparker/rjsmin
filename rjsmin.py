@@ -65,7 +65,7 @@ Supported python versions are 3.6+.
 """
 __author__ = u"Andr\xe9 Malo"
 __license__ = "Apache License, Version 2.0"
-__version__ = '1.2.5'
+__version__ = '1.3.0'
 __all__ = ['jsmin']
 
 import functools as _ft

@@ -28,7 +28,7 @@ settings = dict(
             "aarch64": {
                 "36": dict(manylinux="2014:2025.05.03-1", musllinux="1_1"),
                 "37": dict(manylinux="2014:2025.05.03-1", musllinux="1_1"),
-                "38": dict(manylinux="2014", musllinux="1_1"),
+                "38": dict(manylinux="2014:2026.05.02-2", musllinux="1_1"),
                 "39": dict(manylinux="2014", musllinux="1_1"),
                 "310": dict(manylinux="2014", musllinux="1_1"),
                 "311": dict(manylinux="2014", musllinux="1_1"),
